@@ -13,5 +13,68 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\shader">
+      <UniqueIdentifier>{50296bc6-25fb-42b5-80ab-3f8704bfd684}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="library">
+      <UniqueIdentifier>{e2556326-772c-4c2c-bf33-7b5924c3ad3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="library\imgui">
+      <UniqueIdentifier>{a91f6a53-3a87-48f0-835b-9e6bb9b9620f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGUIManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\library\imgui\imgui.cpp">
+      <Filter>library\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\library\imgui\imgui_demo.cpp">
+      <Filter>library\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\library\imgui\imgui_impl_glfw_gl3.cpp">
+      <Filter>library\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\library\imgui\imgui_draw.cpp">
+      <Filter>library\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\library\glad\src\glad.c">
+      <Filter>library</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGUIManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\library\imgui\imgui_impl_glfw_gl3.h">
+      <Filter>library\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\library\imgui\imgui.h">
+      <Filter>library\imgui</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shader.frag">
+      <Filter>Source Files\shader</Filter>
+    </None>
+    <None Include="shader.vert">
+      <Filter>Source Files\shader</Filter>
+    </None>
   </ItemGroup>
 </Project>
