@@ -73,8 +73,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)..\library\imgui;$(ProjectDir)..\library\glm-0.9.8.5\glm;$(ProjectDir)..\library\glfw-3.2.1.bin.WIN32\include;$(ProjectDir)..\library\glad\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)..\library\glfw-3.2.1.bin.WIN32\lib-vc2015;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\library\stb;$(ProjectDir)..\library\assimp-4.1.0\include;$(ProjectDir)..\library\imgui;$(ProjectDir)..\library\glm-0.9.8.5\glm;$(ProjectDir)..\library\glfw-3.2.1.bin.WIN32\include;$(ProjectDir)..\library\glad\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)..\library\assimp-4.1.0\lib;$(ProjectDir)..\library\glfw-3.2.1.bin.WIN32\lib-vc2015;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -85,7 +85,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -131,20 +131,30 @@
     <ClCompile Include="..\library\imgui\imgui_draw.cpp" />
     <ClCompile Include="..\library\imgui\imgui_impl_glfw_gl3.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="GLManager.cpp" />
-    <ClCompile Include="ImGUIManager.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GLPlatform.cpp" />
+    <ClCompile Include="GLShader.cpp" />
+    <ClCompile Include="GUI.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Model.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\library\imgui\imgui.h" />
     <ClInclude Include="..\library\imgui\imgui_impl_glfw_gl3.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="GLManager.h" />
-    <ClInclude Include="ImGUIManager.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GLPlatform.h" />
+    <ClInclude Include="GLShader.h" />
+    <ClInclude Include="GUI.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Model.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader.frag" />
-    <None Include="shader.vert" />
+    <None Include="shader\shader.frag" />
+    <None Include="shader\shader.vert" />
+    <None Include="shader\shadow.frag" />
+    <None Include="shader\shadow.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
