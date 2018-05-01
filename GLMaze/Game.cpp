@@ -8,7 +8,7 @@ Game::Game() {
 	initShader();
 	GUIManager = new GUI(platfrom.getContext().window);
 	initCamera();
-	model = new Model("C:/Users/Koishi/Documents/CodeStudy/LearnOpenGL-master/resources/objects/nanosuit/nanosuit.obj");
+	model = new Model("C:/Users/Koishi/source/repos/GLMaze/GLMaze/resource/test.obj");
 }
 
 Game::~Game() {
@@ -39,17 +39,17 @@ void Game::start() {
 }
 
 void Game::initShader() {
-	shadowShader = new GLShader("shadow.vert", "shadow.frag");
-	viewShader = new GLShader("shader.vert", "shader.frag");
+	shadowShader = new GLShader("./shader/shadow.vert", "./shader/shadow.frag");
+	viewShader = new GLShader("./shader/shader.vert", "./shader/shader.frag");
 	viewShader->use();
 	viewShader->setInt("shadowMap", 0);
 }
 
 void Game::initCamera() {
 	Camera::Parameter cameraParameter;
-	cameraParameter.position = glm::vec3(0.0f, 0.0f, 3.0f);
+	cameraParameter.position = glm::vec3(0.0f, 0.0f, 0.0f);
 	cameraParameter.front = glm::vec3(0.0f, 0.0f, -1.0f);
-	cameraParameter.up = glm::vec3(0.0f, 1.0f, 0.0f);
+	cameraParameter.up = glm::vec3(0.0f, -1.0f, 0.0f);
 	camera = new Camera(cameraParameter);
 }
 
@@ -79,11 +79,11 @@ void Game::renderScene() {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, platfrom.getContext().shadowDepthMap);
 
-	drawObjects();
+	drawObjects(viewShader);
 }
 
-void Game::drawObjects() {
-	model->draw(viewShader);
+void Game::drawObjects(GLShader* shader) {
+	model->draw(shader);
 }
 
 void Game::calculateShadowDepth() {
@@ -93,7 +93,7 @@ void Game::calculateShadowDepth() {
 	glViewport(0, 0, 1024, 1024);
 	glBindFramebuffer(GL_FRAMEBUFFER, platfrom.getContext().shadowDepthFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
-	drawObjects();
+	drawObjects(shadowShader);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glViewport(0, 0, 800, 600);

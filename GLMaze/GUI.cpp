@@ -41,17 +41,25 @@ void GUI::recordMouseInput() {
 		userInput.currentMouseX = io->MousePos.x;
 		userInput.mouseXMovement = mouseSensitivity * (userInput.currentMouseX - userInput.lastMouseX);
 	}
+	else {
+		userInput.mouseXMovement = 0.0f;
+	}
+
 
 	if (io->MousePos.y != userInput.currentMouseY) {
 		userInput.lastMouseY = userInput.currentMouseY;
 		userInput.currentMouseY = io->MousePos.y;
 		userInput.mouseYMovement = mouseSensitivity * (userInput.currentMouseY - userInput.lastMouseY);
 	}
+	else {
+		userInput.mouseYMovement = 0.0f;
+	}
+
 }
 
 void GUI::recordKeyboardInput() {
-	userInput.w = keyboardSensitivity * io->KeysDownDuration[GLFW_KEY_W];
-	userInput.a = keyboardSensitivity * io->KeysDownDuration[GLFW_KEY_A];
-	userInput.s = keyboardSensitivity * io->KeysDownDuration[GLFW_KEY_S];
-	userInput.d = keyboardSensitivity * io->KeysDownDuration[GLFW_KEY_D];
+	userInput.w = io->KeysDownDuration[GLFW_KEY_W] >= 0.0f ? keyboardSensitivity * io->KeysDownDuration[GLFW_KEY_W] : 0.0f;
+	userInput.a = io->KeysDownDuration[GLFW_KEY_A] >= 0.0f ? keyboardSensitivity * io->KeysDownDuration[GLFW_KEY_A] : 0.0f;
+	userInput.s = io->KeysDownDuration[GLFW_KEY_S] >= 0.0f ? keyboardSensitivity * io->KeysDownDuration[GLFW_KEY_S] : 0.0f;
+	userInput.d = io->KeysDownDuration[GLFW_KEY_D] >= 0.0f ? keyboardSensitivity * io->KeysDownDuration[GLFW_KEY_D] : 0.0f;
 }

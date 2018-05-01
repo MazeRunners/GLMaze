@@ -8,7 +8,11 @@ in vec2 texCoord;
 in vec4 fragLightSpacePos;
 
 uniform sampler2D shadowMap;
+
 uniform sampler2D texture_diffuse1;
+uniform sampler2D texture_specular1;
+uniform sampler2D texture_normal1;
+uniform sampler2D texture_height1;
 
 uniform vec3 viewPos; 
 uniform vec3 lightPos;
@@ -31,10 +35,11 @@ void main()
 	float c_ambient = 0.15;
 	float c_diffuse = 1.0;
 	float c_specular = 1.0;
-	float shininess = 64.0;
+	float shininess = 1.0;
 
 	vec3 lightColor = vec3(1.0, 1.0, 1.0);
 	vec3 textureColor = texture(texture_diffuse1, texCoord).rgb;
+	textureColor = vec3(0.5, 0.5, 0.5);
 	vec3 color = lightColor * textureColor;
 
     vec3 ambient = c_ambient * textureColor;

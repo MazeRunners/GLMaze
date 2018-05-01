@@ -34,6 +34,6 @@ private:
 
 	void renderScene();
 	void calculateShadowDepth();
-	void drawObjects();
+	void drawObjects(GLShader* shader);
 };
 

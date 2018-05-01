@@ -87,6 +87,12 @@
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy $(ProjectDir)shader\shadow.vert  $(TargetDir)shader\shadow.vert   /y
+copy $(ProjectDir)shader\shadow.frag  $(TargetDir)shader\shadow.frag  /y
+copy $(ProjectDir)shader\shader.vert    $(TargetDir)shader\shader.vert    /y
+copy $(ProjectDir)shader\shader.frag    $(TargetDir)shader\shader.frag   /y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
