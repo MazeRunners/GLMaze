@@ -17,7 +17,7 @@ GUI::~GUI() {
 	ImGui::DestroyContext();
 }
 
-void GUI::toNextFrame() {
+void GUI::draw() {
 	ImGui_ImplGlfwGL3_NewFrame();
 }
 
@@ -26,7 +26,7 @@ void GUI::render() {
 	ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void GUI::recordUserInput() {
+void GUI::handleUserInput() {
 	recordMouseInput();
 	recordKeyboardInput();
 }
@@ -49,7 +49,9 @@ void GUI::recordMouseInput() {
 	if (io->MousePos.y != userInput.currentMouseY) {
 		userInput.lastMouseY = userInput.currentMouseY;
 		userInput.currentMouseY = io->MousePos.y;
-		userInput.mouseYMovement = mouseSensitivity * (userInput.currentMouseY - userInput.lastMouseY);
+
+		// turn to negative due to different coordinate
+		userInput.mouseYMovement = -1.0f *mouseSensitivity * (userInput.currentMouseY - userInput.lastMouseY);
 	}
 	else {
 		userInput.mouseYMovement = 0.0f;

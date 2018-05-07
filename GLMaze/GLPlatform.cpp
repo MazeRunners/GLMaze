@@ -24,7 +24,7 @@ void GLPlatform::initWindow() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	context.window = glfwCreateWindow(800, 600, "GLMaze", NULL, NULL);
+	context.window = glfwCreateWindow(1280, 720, "GLMaze", NULL, NULL);
 	glfwMakeContextCurrent(context.window);
 
 	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
@@ -32,7 +32,7 @@ void GLPlatform::initWindow() {
 
 void GLPlatform::initShadowMap() {
 	glBindTexture(GL_TEXTURE_2D, context.shadowDepthFBO);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1024, 1024, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1280, 720, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);

@@ -55,7 +55,7 @@ void main()
     vec3 specular = c_specular * spec * color; 
 
 	float isInShadow = depthCompare(fragLightSpacePos);
-    vec3 result =  ambient + (1.0 - isInShadow) * (diffuse + specular);
+    vec3 result =  ambient + (1.0 - 0.0) * (diffuse + specular);
 
     fragColor = vec4(result, 1.0);
 }

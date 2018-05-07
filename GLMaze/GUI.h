@@ -24,18 +24,18 @@ public:
 	GUI(GLFWwindow * window);
 	~GUI();
 
-	void toNextFrame();
+	void draw();
 	void render();
 
-	void recordUserInput();
+	void handleUserInput();
 	UserInput getUserInput();
 
 private:
 	bool visible;
 
 	ImGuiIO* io;
-	float mouseSensitivity = 0.1f;
-	float keyboardSensitivity = 0.01f;
+	float mouseSensitivity = 0.5f;
+	float keyboardSensitivity = 0.1f;
 
 	UserInput userInput;
 

@@ -37,7 +37,7 @@ void Camera::moveCamera(GUI::UserInput userInput) {
 
 	glm::mat4 transformaton(1.0f);
 	transformaton = glm::lookAt(parameter.position, parameter.position + parameter.front, parameter.up) * transformaton;
-	transformaton = glm::perspective(glm::radians(60.0f), 1.5f, 0.5f, -0.5f) * transformaton;
+	transformaton = glm::perspective(glm::radians(15.0f), 1.5f, 0.5f, -0.5f) * transformaton;
 	viewTransformation = transformaton;
 }
 

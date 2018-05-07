@@ -8,7 +8,7 @@ Game::Game() {
 	initShader();
 	GUIManager = new GUI(platfrom.getContext().window);
 	initCamera();
-	model = new Model("C:/Users/Koishi/source/repos/GLMaze/GLMaze/resource/test.obj");
+	model = new Model("./resource/test.obj");
 }
 
 Game::~Game() {
@@ -26,10 +26,10 @@ void Game::start() {
 
 	while (!glfwWindowShouldClose(context.window)) {
 		glfwPollEvents();
-		GUIManager->recordUserInput();
+		GUIManager->handleUserInput();
 		camera->moveCamera(GUIManager->getUserInput());
 
-		GUIManager->toNextFrame();
+		GUIManager->draw();
 		renderScene();
 		GUIManager->render();
 
@@ -49,7 +49,7 @@ void Game::initCamera() {
 	Camera::Parameter cameraParameter;
 	cameraParameter.position = glm::vec3(0.0f, 0.0f, 0.0f);
 	cameraParameter.front = glm::vec3(0.0f, 0.0f, -1.0f);
-	cameraParameter.up = glm::vec3(0.0f, -1.0f, 0.0f);
+	cameraParameter.up = glm::vec3(0.0f, 1.0f, 0.0f);
 	camera = new Camera(cameraParameter);
 }
 
@@ -90,12 +90,12 @@ void Game::calculateShadowDepth() {
 	shadowShader->use();
 	shadowShader->setMat4("lightSpaceTransformation", lightSpace.transformation);
 
-	glViewport(0, 0, 1024, 1024);
+	glViewport(0, 0, 1280, 720);
 	glBindFramebuffer(GL_FRAMEBUFFER, platfrom.getContext().shadowDepthFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	drawObjects(shadowShader);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	glViewport(0, 0, 800, 600);
+	glViewport(0, 0, 1280, 720);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }

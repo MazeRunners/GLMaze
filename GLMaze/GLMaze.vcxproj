@@ -73,8 +73,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)..\library\stb;$(ProjectDir)..\library\assimp-4.1.0\include;$(ProjectDir)..\library\imgui;$(ProjectDir)..\library\glm-0.9.8.5\glm;$(ProjectDir)..\library\glfw-3.2.1.bin.WIN32\include;$(ProjectDir)..\library\glad\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)..\library\assimp-4.1.0\lib;$(ProjectDir)..\library\glfw-3.2.1.bin.WIN32\lib-vc2015;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\library\stb;$(ProjectDir)..\library\assimp-4.1.0\include;$(ProjectDir)..\library\imgui;$(ProjectDir)..\library\glm-0.9.8.5\glm;$(ProjectDir)..\library\glfw-3.2.1.bin.WIN32\include;$(ProjectDir)..\library\glad\include;$(ProjectDir)..\library\libconfig-1.7.2\lib;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)..\library\assimp-4.1.0\lib;$(ProjectDir)..\library\glfw-3.2.1.bin.WIN32\lib-vc2015;$(ProjectDir)..\library\libconfig-1.7.2\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -85,7 +85,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc140-mt.lib;libconfig++.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy $(ProjectDir)shader\shadow.vert  $(TargetDir)shader\shadow.vert   /y
