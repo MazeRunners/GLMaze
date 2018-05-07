@@ -32,7 +32,7 @@ float depthCompare(vec4 fragLightSpacePos)
 
 void main() 
 {
-	float c_ambient = 0.15;
+	float c_ambient = 0.3;
 	float c_diffuse = 1.0;
 	float c_specular = 1.0;
 	float shininess = 1.0;

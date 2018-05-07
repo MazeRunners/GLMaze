@@ -17,9 +17,9 @@ Model::Model(const char* path) {
 	loadModel(path);
 }
 
-void Model::draw(GLShader* shader) {
+void Model::draw(GLShader* shader, bool no_texture) {
 	for (unsigned int i = 0; i < meshes.size(); i++)
-		meshes[i].draw(shader);
+		meshes[i].draw(shader, no_texture);
 }
 
 

@@ -138,6 +138,7 @@ copy $(ProjectDir)shader\shader.frag    $(TargetDir)shader\shader.frag   /y</Com
     <ClCompile Include="..\library\imgui\imgui_impl_glfw_gl3.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameConfig.cpp" />
     <ClCompile Include="GLPlatform.cpp" />
     <ClCompile Include="GLShader.cpp" />
     <ClCompile Include="GUI.cpp" />
@@ -150,6 +151,7 @@ copy $(ProjectDir)shader\shader.frag    $(TargetDir)shader\shader.frag   /y</Com
     <ClInclude Include="..\library\imgui\imgui_impl_glfw_gl3.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameConfig.h" />
     <ClInclude Include="GLPlatform.h" />
     <ClInclude Include="GLShader.h" />
     <ClInclude Include="GUI.h" />

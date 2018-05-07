@@ -6,7 +6,7 @@
 class Model {
 public:
 	Model(const char* modelPath);
-	void draw(GLShader* shader);
+	void draw(GLShader* shader, bool no_texture);
 
 private:
 	std::string modelDirectory;

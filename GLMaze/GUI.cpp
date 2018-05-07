@@ -3,13 +3,15 @@
 
 #include <GLFW/glfw3.h>
 
-GUI::GUI(GLFWwindow * window) {
+GUI::GUI(GLFWwindow * window, GameConfig::Parameters config) {
 	visible = true;
 
 	ImGui::CreateContext();
 	ImGui_ImplGlfwGL3_Init(window, true);
 
 	io = &ImGui::GetIO();
+	mouseSensitivity = config.mouseSensitivity;
+	keyboardSensitivity = config.keyboardSensitivity;
 }
 
 GUI::~GUI() {
@@ -26,7 +28,7 @@ void GUI::render() {
 	ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void GUI::handleUserInput() {
+void GUI::recordUserInput() {
 	recordMouseInput();
 	recordKeyboardInput();
 }

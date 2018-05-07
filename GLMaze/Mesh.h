@@ -24,7 +24,7 @@ struct Texture {
 class Mesh {
 public:
 	Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> texture);
-	void draw(GLShader* shader);
+	void draw(GLShader* shader, bool no_texture);
 
 private:
 	std::vector<Vertex> vertices;
