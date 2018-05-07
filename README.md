@@ -10,3 +10,4 @@ VS 2015 导入项目方法
 
 4.把library文件夹下的assimp里的dll文件复制到二进制文件夹里
 
+5.把library文件夹下的libconfig里的dll文件复制到二进制文件夹里
