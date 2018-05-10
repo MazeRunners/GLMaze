@@ -19,7 +19,7 @@ Mesh::Mesh(std::vector<Vertex> vertices,
 	setupMesh();
 }
 
-void Mesh::draw(GLShader* shader) {
+void Mesh::draw(GLShader* shader, bool no_texture) {
 	unsigned int diffuseNum = 1;
 	unsigned int specularNum = 1;
 	unsigned int normalNum = 1;
@@ -27,23 +27,25 @@ void Mesh::draw(GLShader* shader) {
 
 	shader->use();
 
-	for (unsigned int i = 0; i < textures.size(); i++) {
-		glActiveTexture(GL_TEXTURE0 + i);
+	if (!no_texture) {
+		for (unsigned int i = 0; i < textures.size(); i++) {
+			glActiveTexture(GL_TEXTURE0 + i);
 
-		std::string number;
-		std::string name = textures[i].type;
+			std::string number;
+			std::string name = textures[i].type;
 
-		if (name == "texture_diffuse")
-			number = std::to_string(diffuseNum++);
-		if (name == "texture_specular")
-			number = std::to_string(specularNum++);
-		if (name == "texture_normal")
-			number = std::to_string(normalNum++);
-		if (name == "texture_height")
-			number = std::to_string(heightNum++);
+			if (name == "texture_diffuse")
+				number = std::to_string(diffuseNum++);
+			if (name == "texture_specular")
+				number = std::to_string(specularNum++);
+			if (name == "texture_normal")
+				number = std::to_string(normalNum++);
+			if (name == "texture_height")
+				number = std::to_string(heightNum++);
 
-		shader->setInt((name + number).c_str(), i);
-		glBindTexture(GL_TEXTURE_2D, textures[i].id);
+			shader->setInt((name + number).c_str(), i);
+			glBindTexture(GL_TEXTURE_2D, textures[i].id);
+		}
 	}
 
 	glBindVertexArray(VAO);

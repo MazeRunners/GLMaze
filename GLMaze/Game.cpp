@@ -6,9 +6,12 @@
 
 Game::Game() {
 	initShader();
-	GUIManager = new GUI(platfrom.getContext().window);
-	initCamera();
-	model = new Model("C:/Users/Koishi/source/repos/GLMaze/GLMaze/resource/test.obj");
+
+	GameConfig::Parameters configuration = config.getParameters();
+	GUIManager = new GUI(platfrom.getContext().window, configuration);
+	initCamera(configuration);
+
+	model = new Model("./resource/test.obj");
 }
 
 Game::~Game() {
@@ -29,7 +32,7 @@ void Game::start() {
 		GUIManager->recordUserInput();
 		camera->moveCamera(GUIManager->getUserInput());
 
-		GUIManager->toNextFrame();
+		GUIManager->draw();
 		renderScene();
 		GUIManager->render();
 
@@ -45,11 +48,17 @@ void Game::initShader() {
 	viewShader->setInt("shadowMap", 0);
 }
 
-void Game::initCamera() {
-	Camera::Parameter cameraParameter;
-	cameraParameter.position = glm::vec3(0.0f, 0.0f, 0.0f);
-	cameraParameter.front = glm::vec3(0.0f, 0.0f, -1.0f);
-	cameraParameter.up = glm::vec3(0.0f, -1.0f, 0.0f);
+void Game::initCamera(GameConfig::Parameters config) {
+	Camera::Parameters cameraParameter;
+	cameraParameter.position = config.cameraPos;
+	cameraParameter.front = config.cameraFront;
+	cameraParameter.up = config.cameraUp;
+	
+	cameraParameter.fovy = config.fovy;
+	cameraParameter.aspect = config.aspect;
+	cameraParameter.z_near = config.z_near;
+	cameraParameter.z_far = config.z_far;
+
 	camera = new Camera(cameraParameter);
 }
 
@@ -79,23 +88,23 @@ void Game::renderScene() {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, platfrom.getContext().shadowDepthMap);
 
-	drawObjects(viewShader);
+	drawObjects(viewShader, false);
 }
 
-void Game::drawObjects(GLShader* shader) {
-	model->draw(shader);
+void Game::drawObjects(GLShader* shader, bool no_texture) {
+	model->draw(shader, no_texture);
 }
 
 void Game::calculateShadowDepth() {
 	shadowShader->use();
 	shadowShader->setMat4("lightSpaceTransformation", lightSpace.transformation);
 
-	glViewport(0, 0, 1024, 1024);
+	glViewport(0, 0, 1280, 720);
 	glBindFramebuffer(GL_FRAMEBUFFER, platfrom.getContext().shadowDepthFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
-	drawObjects(shadowShader);
+	drawObjects(shadowShader, true);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	glViewport(0, 0, 800, 600);
+	glViewport(0, 0, 1280, 720);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }

@@ -3,13 +3,15 @@
 
 #include <GLFW/glfw3.h>
 
-GUI::GUI(GLFWwindow * window) {
+GUI::GUI(GLFWwindow * window, GameConfig::Parameters config) {
 	visible = true;
 
 	ImGui::CreateContext();
 	ImGui_ImplGlfwGL3_Init(window, true);
 
 	io = &ImGui::GetIO();
+	mouseSensitivity = config.mouseSensitivity;
+	keyboardSensitivity = config.keyboardSensitivity;
 }
 
 GUI::~GUI() {
@@ -17,7 +19,7 @@ GUI::~GUI() {
 	ImGui::DestroyContext();
 }
 
-void GUI::toNextFrame() {
+void GUI::draw() {
 	ImGui_ImplGlfwGL3_NewFrame();
 }
 
@@ -49,7 +51,9 @@ void GUI::recordMouseInput() {
 	if (io->MousePos.y != userInput.currentMouseY) {
 		userInput.lastMouseY = userInput.currentMouseY;
 		userInput.currentMouseY = io->MousePos.y;
-		userInput.mouseYMovement = mouseSensitivity * (userInput.currentMouseY - userInput.lastMouseY);
+
+		// turn to negative due to different coordinate
+		userInput.mouseYMovement = -1.0f *mouseSensitivity * (userInput.currentMouseY - userInput.lastMouseY);
 	}
 	else {
 		userInput.mouseYMovement = 0.0f;

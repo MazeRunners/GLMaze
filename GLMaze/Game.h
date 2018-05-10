@@ -5,6 +5,7 @@
 #include "GUI.h"
 #include "Camera.h"
 #include "Model.h"
+#include "GameConfig.h"
 
 class Game {
 public:
@@ -19,9 +20,10 @@ private:
 	GUI* GUIManager;
 	Camera* camera;
 	Model * model;
+	GameConfig config;
 
 	void initShader();
-	void initCamera();
+	void initCamera(GameConfig::Parameters config);
 
 	struct LightSpace {
 		glm::vec3 position;
@@ -34,6 +36,6 @@ private:
 
 	void renderScene();
 	void calculateShadowDepth();
-	void drawObjects(GLShader* shader);
+	void drawObjects(GLShader* shader, bool no_texture);
 };
 
