@@ -9,7 +9,27 @@ Camera::Camera(Parameters parameter) {
 Camera::~Camera() {
 }
 
-void Camera::moveCamera(GUI::UserInput userInput) {
+void Camera::translateCamera(GUI::UserInput userInput) {
+	float xMove = userInput.right - userInput.left;
+	float yMove = userInput.up - userInput.down;
+	float zMove = userInput.front - userInput.back;
+
+	parameters.position.x += xMove;
+	parameters.position.y += yMove;
+	parameters.position.z += zMove;
+
+	if (xMove > 0.0 || yMove > 0.0 || zMove > 0.0) {
+		parameters.front = glm::vec3(0.0, 0.0, -1.0);
+	}
+
+	glm::mat4 transformaton(1.0f);
+	transformaton = glm::lookAt(parameters.position, parameters.position + parameters.front, parameters.up) * transformaton;
+	transformaton = glm::perspective(glm::radians(parameters.fovy), parameters.aspect,
+		parameters.z_near, parameters.z_far) * transformaton;
+	viewTransformation = transformaton;
+}
+
+void Camera::moveWithUser(GUI::UserInput userInput) {
 	parameters.yaw += userInput.mouseXMovement;
 	parameters.pitch += userInput.mouseYMovement;
 

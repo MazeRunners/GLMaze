@@ -66,4 +66,11 @@ void GUI::recordKeyboardInput() {
 	userInput.a = io->KeysDownDuration[GLFW_KEY_A] >= 0.0f ? keyboardSensitivity * io->KeysDownDuration[GLFW_KEY_A] : 0.0f;
 	userInput.s = io->KeysDownDuration[GLFW_KEY_S] >= 0.0f ? keyboardSensitivity * io->KeysDownDuration[GLFW_KEY_S] : 0.0f;
 	userInput.d = io->KeysDownDuration[GLFW_KEY_D] >= 0.0f ? keyboardSensitivity * io->KeysDownDuration[GLFW_KEY_D] : 0.0f;
+	
+	userInput.up = io->KeysDownDuration[GLFW_KEY_UP] >= 0.0f ? keyboardSensitivity * io->KeysDownDuration[GLFW_KEY_UP] : 0.0f;
+	userInput.down = io->KeysDownDuration[GLFW_KEY_DOWN] >= 0.0f ? keyboardSensitivity * io->KeysDownDuration[GLFW_KEY_DOWN] : 0.0f;
+	userInput.left = io->KeysDownDuration[GLFW_KEY_LEFT] >= 0.0f ? keyboardSensitivity * io->KeysDownDuration[GLFW_KEY_LEFT] : 0.0f;
+	userInput.right = io->KeysDownDuration[GLFW_KEY_RIGHT] >= 0.0f ? keyboardSensitivity * io->KeysDownDuration[GLFW_KEY_RIGHT] : 0.0f;
+	userInput.front = io->KeysDownDuration[GLFW_KEY_EQUAL] >= 0.0f ? keyboardSensitivity * io->KeysDownDuration[GLFW_KEY_EQUAL] : 0.0f;
+	userInput.back = io->KeysDownDuration[GLFW_KEY_MINUS] >= 0.0f ? keyboardSensitivity * io->KeysDownDuration[GLFW_KEY_MINUS] : 0.0f;
 }

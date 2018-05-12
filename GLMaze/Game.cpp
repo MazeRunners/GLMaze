@@ -30,7 +30,9 @@ void Game::start() {
 	while (!glfwWindowShouldClose(context.window)) {
 		glfwPollEvents();
 		GUIManager->recordUserInput();
-		camera->moveCamera(GUIManager->getUserInput());
+
+		camera->translateCamera(GUIManager->getUserInput());
+		camera->moveWithUser(GUIManager->getUserInput());
 
 		GUIManager->draw();
 		renderScene();
@@ -53,7 +55,7 @@ void Game::initCamera(GameConfig::Parameters config) {
 	cameraParameter.position = config.cameraPos;
 	cameraParameter.front = config.cameraFront;
 	cameraParameter.up = config.cameraUp;
-	
+
 	cameraParameter.fovy = config.fovy;
 	cameraParameter.aspect = config.aspect;
 	cameraParameter.z_near = config.z_near;
