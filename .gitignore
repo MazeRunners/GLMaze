@@ -7,7 +7,6 @@
 *.userosscache
 *.sln.docstates
 *.sln
-*.vcxproj
 
 
 # User-specific files (MonoDevelop/Xamarin Studio)
@@ -262,6 +261,6 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
-*.vcxproj
-GLMaze/GLMaze.vcxproj
+
+
 GLMaze/GLMaze.vcxproj
