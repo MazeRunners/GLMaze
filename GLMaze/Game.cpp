@@ -11,7 +11,7 @@ Game::Game() {
 	GUIManager = new GUI(platfrom.getContext().window, configuration);
 	initCamera(configuration);
 
-	model = new Model("./resource/test.obj");
+	model = new Model("./resource/maze.obj");
 }
 
 Game::~Game() {
@@ -31,7 +31,6 @@ void Game::start() {
 		glfwPollEvents();
 		GUIManager->recordUserInput();
 
-		camera->translateCamera(GUIManager->getUserInput());
 		camera->moveWithUser(GUIManager->getUserInput());
 
 		GUIManager->draw();
