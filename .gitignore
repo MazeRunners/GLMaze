@@ -264,3 +264,5 @@ __pycache__/
 
 
 GLMaze/GLMaze.vcxproj
+/GLMaze/resource/maze.blend1
+/GLMaze/resource/maze.blend

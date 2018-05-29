@@ -33,8 +33,8 @@ void Game::start() {
 
 		camera->moveWithUser(GUIManager->getUserInput());
 
-		GUIManager->draw();
 		renderScene();
+		GUIManager->draw();
 		GUIManager->render();
 
 		glfwSwapBuffers(context.window);
@@ -89,7 +89,7 @@ void Game::renderScene() {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, platfrom.getContext().shadowDepthMap);
 
-	drawObjects(viewShader, false);
+	drawObjects(viewShader, true);
 }
 
 void Game::drawObjects(GLShader* shader, bool no_texture) {
@@ -103,7 +103,7 @@ void Game::calculateShadowDepth() {
 	glViewport(0, 0, 1280, 720);
 	glBindFramebuffer(GL_FRAMEBUFFER, platfrom.getContext().shadowDepthFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
-	drawObjects(shadowShader, true);
+	drawObjects(shadowShader, false);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glViewport(0, 0, 1280, 720);

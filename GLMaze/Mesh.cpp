@@ -19,7 +19,7 @@ Mesh::Mesh(std::vector<Vertex> vertices,
 	setupMesh();
 }
 
-void Mesh::draw(GLShader* shader, bool no_texture) {
+void Mesh::draw(GLShader* shader, bool draw_texture) {
 	unsigned int diffuseNum = 1;
 	unsigned int specularNum = 1;
 	unsigned int normalNum = 1;
@@ -27,7 +27,7 @@ void Mesh::draw(GLShader* shader, bool no_texture) {
 
 	shader->use();
 
-	if (!no_texture) {
+	if (draw_texture) {
 		for (unsigned int i = 0; i < textures.size(); i++) {
 			glActiveTexture(GL_TEXTURE0 + i);
 
