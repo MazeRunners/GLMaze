@@ -17,9 +17,9 @@ Model::Model(const char* path) {
 	loadModel(path);
 }
 
-void Model::draw(GLShader* shader, bool no_texture) {
+void Model::draw(GLShader* shader, bool draw_texture) {
 	for (unsigned int i = 0; i < meshes.size(); i++)
-		meshes[i].draw(shader, no_texture);
+		meshes[i].draw(shader, draw_texture);
 }
 
 
@@ -71,6 +71,7 @@ Mesh Model::initMesh(aiMesh *mesh, const aiScene *scene) {
 
 			vec.x = mesh->mTextureCoords[0][i].x;
 			vec.y = mesh->mTextureCoords[0][i].y;
+
 			vertex.textureCoords = vec;
 		}
 		else {
@@ -130,7 +131,6 @@ std::vector<Texture> Model::loadTexturesForMesh(aiMaterial *material, aiTextureT
 	}
 	return textures;
 }
-
 
 unsigned int Model::loadTextureFromFile(const char *textureFile) {
 	std::string path = std::string(textureFile);

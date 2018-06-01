@@ -11,7 +11,7 @@ Game::Game() {
 	GUIManager = new GUI(platfrom.getContext().window, configuration);
 	initCamera(configuration);
 
-	model = new Model("./resource/test.obj");
+	model = new Model("./resource/maze.obj");
 }
 
 Game::~Game() {
@@ -30,10 +30,11 @@ void Game::start() {
 	while (!glfwWindowShouldClose(context.window)) {
 		glfwPollEvents();
 		GUIManager->recordUserInput();
-		camera->moveCamera(GUIManager->getUserInput());
 
-		GUIManager->draw();
+		camera->moveWithUser(GUIManager->getUserInput());
+
 		renderScene();
+		GUIManager->draw();
 		GUIManager->render();
 
 		glfwSwapBuffers(context.window);
@@ -53,7 +54,7 @@ void Game::initCamera(GameConfig::Parameters config) {
 	cameraParameter.position = config.cameraPos;
 	cameraParameter.front = config.cameraFront;
 	cameraParameter.up = config.cameraUp;
-	
+
 	cameraParameter.fovy = config.fovy;
 	cameraParameter.aspect = config.aspect;
 	cameraParameter.z_near = config.z_near;
@@ -76,19 +77,7 @@ void Game::calculateLightSpaceTransformation() {
 
 void Game::renderScene() {
 	calculateShadowDepth();
-
-	viewShader->use();
-	viewShader->setVec3("viewPos", camera->getParameter().position);
-	viewShader->setVec3("lightPos", lightSpace.position);
-
-	glm::mat4 viewTransformation = camera->getViewTransformation();
-	viewShader->setMat4("viewTransformation", viewTransformation);
-	viewShader->setMat4("lightSpaceTransformation", lightSpace.transformation);
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, platfrom.getContext().shadowDepthMap);
-
-	drawObjects(viewShader, false);
+	renderMaze();
 }
 
 void Game::drawObjects(GLShader* shader, bool no_texture) {
@@ -102,9 +91,25 @@ void Game::calculateShadowDepth() {
 	glViewport(0, 0, 1280, 720);
 	glBindFramebuffer(GL_FRAMEBUFFER, platfrom.getContext().shadowDepthFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
-	drawObjects(shadowShader, true);
+	// disable texture when shadow mapping
+	drawObjects(shadowShader, false);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Game::renderMaze() {
+	viewShader->use();
+	viewShader->setVec3("viewPos", camera->getParameter().position);
+	viewShader->setVec3("lightPos", lightSpace.position);
+
+	glm::mat4 viewTransformation = camera->getViewTransformation();
+	viewShader->setMat4("viewTransformation", viewTransformation);
+	viewShader->setMat4("lightSpaceTransformation", lightSpace.transformation);
 
 	glViewport(0, 0, 1280, 720);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, platfrom.getContext().shadowDepthMap);
+
+	drawObjects(viewShader, true);
 }

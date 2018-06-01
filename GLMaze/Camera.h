@@ -22,7 +22,8 @@ public:
 	Camera(Parameters parameter);
 	~Camera();
 
-	void moveCamera(GUI::UserInput userInput);
+	void translateCamera(GUI::UserInput userInput);
+	void moveWithUser(GUI::UserInput userInput);
 	glm::mat4 getViewTransformation();
 	Parameters getParameter();
 

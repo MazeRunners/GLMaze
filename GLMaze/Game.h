@@ -36,6 +36,7 @@ private:
 
 	void renderScene();
 	void calculateShadowDepth();
+	void renderMaze();
 	void drawObjects(GLShader* shader, bool no_texture);
 };
 
