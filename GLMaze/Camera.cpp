@@ -19,7 +19,7 @@ void Camera::moveCamera(GUI::UserInput userInput) {
 	if (parameters.pitch < -89.0f) {
 		parameters.pitch = -89.0f;
 	}
-
+	
 	float yaw = glm::radians(parameters.yaw);
 	float pitch = glm::radians(parameters.pitch);
 
