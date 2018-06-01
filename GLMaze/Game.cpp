@@ -77,19 +77,7 @@ void Game::calculateLightSpaceTransformation() {
 
 void Game::renderScene() {
 	calculateShadowDepth();
-
-	viewShader->use();
-	viewShader->setVec3("viewPos", camera->getParameter().position);
-	viewShader->setVec3("lightPos", lightSpace.position);
-
-	glm::mat4 viewTransformation = camera->getViewTransformation();
-	viewShader->setMat4("viewTransformation", viewTransformation);
-	viewShader->setMat4("lightSpaceTransformation", lightSpace.transformation);
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, platfrom.getContext().shadowDepthMap);
-
-	drawObjects(viewShader, true);
+	renderMaze();
 }
 
 void Game::drawObjects(GLShader* shader, bool no_texture) {
@@ -103,9 +91,25 @@ void Game::calculateShadowDepth() {
 	glViewport(0, 0, 1280, 720);
 	glBindFramebuffer(GL_FRAMEBUFFER, platfrom.getContext().shadowDepthFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
+	// disable texture when shadow mapping
 	drawObjects(shadowShader, false);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Game::renderMaze() {
+	viewShader->use();
+	viewShader->setVec3("viewPos", camera->getParameter().position);
+	viewShader->setVec3("lightPos", lightSpace.position);
+
+	glm::mat4 viewTransformation = camera->getViewTransformation();
+	viewShader->setMat4("viewTransformation", viewTransformation);
+	viewShader->setMat4("lightSpaceTransformation", lightSpace.transformation);
 
 	glViewport(0, 0, 1280, 720);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, platfrom.getContext().shadowDepthMap);
+
+	drawObjects(viewShader, true);
 }
