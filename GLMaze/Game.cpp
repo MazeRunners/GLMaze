@@ -12,6 +12,12 @@ Game::Game() {
 	initCamera(configuration);
 
 	model = new Model("./resource/maze.obj");
+	skybox = new Skybox("./resource/skybox/miramar_up.png",
+		"./resource/skybox/miramar_dn.png",
+		"./resource/skybox/miramar_ft.png",
+		"./resource/skybox/miramar_bk.png",
+		"./resource/skybox/miramar_lf.png",
+		"./resource/skybox/miramar_rt.png");
 }
 
 Game::~Game() {
@@ -20,6 +26,7 @@ Game::~Game() {
 	delete GUIManager;
 	delete camera;
 	delete model;
+	delete skybox;
 }
 
 void Game::start() {
@@ -45,6 +52,7 @@ void Game::start() {
 void Game::initShader() {
 	shadowShader = new GLShader("./shader/shadow.vert", "./shader/shadow.frag");
 	viewShader = new GLShader("./shader/shader.vert", "./shader/shader.frag");
+	skyShader = new GLShader("./shader/skyshader.vert", "./shader/skyshader.frag");
 	viewShader->use();
 	viewShader->setInt("shadowMap", 0);
 }
@@ -78,6 +86,7 @@ void Game::calculateLightSpaceTransformation() {
 void Game::renderScene() {
 	calculateShadowDepth();
 	renderMaze();
+	renderSkybox();
 }
 
 void Game::drawObjects(GLShader* shader, bool no_texture) {
@@ -104,6 +113,8 @@ void Game::renderMaze() {
 	glm::mat4 viewTransformation = camera->getViewTransformation();
 	viewShader->setMat4("viewTransformation", viewTransformation);
 	viewShader->setMat4("lightSpaceTransformation", lightSpace.transformation);
+	
+	skyShader->setMat4("viewTransformation", viewTransformation);
 
 	glViewport(0, 0, 1280, 720);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -112,4 +123,8 @@ void Game::renderMaze() {
 	glBindTexture(GL_TEXTURE_2D, platfrom.getContext().shadowDepthMap);
 
 	drawObjects(viewShader, true);
+}
+
+void Game::renderSkybox() {
+	skybox->draw(skyShader);
 }

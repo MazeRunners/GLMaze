@@ -5,6 +5,7 @@
 #include "GUI.h"
 #include "Camera.h"
 #include "Model.h"
+#include "Skybox.h"
 #include "GameConfig.h"
 
 class Game {
@@ -17,9 +18,11 @@ private:
 	GLPlatform platfrom;
 	GLShader* shadowShader;
 	GLShader* viewShader;
+	GLShader* skyShader;
 	GUI* GUIManager;
 	Camera* camera;
 	Model * model;
+	Skybox* skybox;
 	GameConfig config;
 
 	void initShader();
@@ -37,6 +40,7 @@ private:
 	void renderScene();
 	void calculateShadowDepth();
 	void renderMaze();
+	void renderSkybox();
 	void drawObjects(GLShader* shader, bool no_texture);
 };
 
