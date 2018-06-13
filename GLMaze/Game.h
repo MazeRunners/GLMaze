@@ -41,4 +41,3 @@ private:
 	void renderMaze();
 	void drawObjects(GLShader* shader, bool no_texture);
 };
-
