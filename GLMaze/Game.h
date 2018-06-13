@@ -4,7 +4,8 @@
 #include "GLShader.h"
 #include "GUI.h"
 #include "Camera.h"
-#include "Model.h"
+#include "GLModel.h"
+#include "Collision.h"
 #include "GameConfig.h"
 
 class Game {
@@ -19,8 +20,9 @@ private:
 	GLShader* viewShader;
 	GUI* GUIManager;
 	Camera* camera;
-	Model * model;
+	GLModel * model;
 	GameConfig config;
+	Collision collision;
 
 	void initShader();
 	void initCamera(GameConfig::Parameters config);

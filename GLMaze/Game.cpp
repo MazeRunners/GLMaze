@@ -11,7 +11,7 @@ Game::Game() {
 	GUIManager = new GUI(platfrom.getContext().window, configuration);
 	initCamera(configuration);
 
-	model = new Model("./resource/maze.obj");
+	model = new GLModel("./resource/maze.blend");
 }
 
 Game::~Game() {
@@ -27,11 +27,17 @@ void Game::start() {
 
 	calculateLightSpaceTransformation();
 
+	bool noMove = false;
+
 	while (!glfwWindowShouldClose(context.window)) {
 		glfwPollEvents();
 		GUIManager->recordUserInput();
 
-		camera->moveWithUser(GUIManager->getUserInput());
+		Camera::Parameters camera_args = camera->calcNextParameter(GUIManager->getUserInput());
+		collision.update(camera_args.position.x, camera_args.position.y, camera_args.position.z);
+		if (!collision.testCollision()) {
+			camera->moveTo(camera_args);
+		}
 
 		renderScene();
 		GUIManager->draw();
