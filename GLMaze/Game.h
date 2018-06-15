@@ -20,6 +20,7 @@ private:
 	GUI* GUIManager;
 	Camera* camera;
 	Model * model;
+	Model * modelIronman;
 	GameConfig config;
 
 	void initShader();

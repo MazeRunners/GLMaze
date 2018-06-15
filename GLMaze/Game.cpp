@@ -11,7 +11,9 @@ Game::Game() {
 	GUIManager = new GUI(platfrom.getContext().window, configuration);
 	initCamera(configuration);
 
-	model = new Model("./resource/test.obj");
+	model = new Model("./resource/maze.obj");
+	//model = new Model("./resource/Iron_Man.blend");
+	modelIronman = new Model("./resource/Iron_Man.blend");
 }
 
 Game::~Game() {
@@ -20,6 +22,7 @@ Game::~Game() {
 	delete GUIManager;
 	delete camera;
 	delete model;
+	delete modelIronman;
 }
 
 void Game::start() {
@@ -95,6 +98,7 @@ void Game::renderScene() {
 
 void Game::drawObjects(GLShader* shader, bool no_texture) {
 	model->draw(shader, no_texture);
+	modelIronman->draw(shader, no_texture);
 }
 
 void Game::calculateShadowDepth() {
