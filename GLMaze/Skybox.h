@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <vector>
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -17,14 +16,16 @@ public:
 		const char* back,
 		const char* left,
 		const char* right);
+	~Skybox();
 	void draw(GLShader* shader);
 private:
 	void generateVertices();
 	void init();
 	void loadTexture(const char* path);
 
-	std::vector<float> vertices;
-	unsigned int VAO, VBO;
+	float* vertices;
+	unsigned int* indices;
+	unsigned int VAO, VBO, EBO;
 	unsigned int texture;
 
 
