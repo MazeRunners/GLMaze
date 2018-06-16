@@ -142,5 +142,17 @@
     <None Include="shader\shadow.vert">
       <Filter>Source Files\shader</Filter>
     </None>
+    <None Include="shader\skyshader.vert">
+      <Filter>Source Files\shader</Filter>
+    </None>
+    <None Include="shader\skyshader.frag">
+      <Filter>Source Files\shader</Filter>
+    </None>
+    <None Include="shader\particle.vert">
+      <Filter>Source Files\shader</Filter>
+    </None>
+    <None Include="shader\particle.frag">
+      <Filter>Source Files\shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

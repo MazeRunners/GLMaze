@@ -169,10 +169,14 @@
     <ClInclude Include="Skybox.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shader\particle.frag" />
+    <None Include="shader\particle.vert" />
     <None Include="shader\shader.frag" />
     <None Include="shader\shader.vert" />
     <None Include="shader\shadow.frag" />
     <None Include="shader\shadow.vert" />
+    <None Include="shader\skyshader.frag" />
+    <None Include="shader\skyshader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

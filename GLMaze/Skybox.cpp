@@ -10,40 +10,113 @@ Skybox::Skybox()
 Skybox::Skybox(const char * path[6]) 
 {
 	init();
-	loadTexture(path);
+	texture = loadCubemap(path);
 }
 
 Skybox::~Skybox()
 {
-	delete [] vertices;
-	delete [] indices;
+	delete[] vertices;
 }
 
 void Skybox::draw(GLShader* shader)
 {
-	// bind Texture
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
-
 	// render container
 	shader->use();
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glActiveTexture(GL_TEXTURE10);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
 void Skybox::generateVertices()
 {
-	vertices = new float[32]{
-		// positions          // colors           // texture coords
-		6.0f,  12.0f, 6.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,
-		6.0f, 0.0f, 6.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
-		-6.0f, 0.0f, 6.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
-		-6.0f,  12.0f, 6.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f
-	};
-	indices = new unsigned int[6]{
-		0, 1, 3, // first triangle
-		1, 2, 3  // second triangle
+	/*
+	vertices = new float[180]{
+		// positions          // texture Coords
+        -6.0f, 0.0f, -6.0f,  0.0f, 0.0f,
+		6.0f,  0.0f, -6.0f,  1.0f, 0.0f,
+		6.0f, 12.0f, -6.0f,  1.0f, 1.0f,
+		6.0f, 12.0f, -6.0f,  1.0f, 1.0f,
+		-6.0f,12.0f, -6.0f,  0.0f, 1.0f,
+		-6.0f, 0.0f, -6.0f,  0.0f, 0.0f,
+
+		-6.0f, 0.0f,  6.0f,  0.0f, 0.0f,
+		6.0f,  0.0f,  6.0f,  1.0f, 0.0f,
+		6.0f, 12.0f,  6.0f,  1.0f, 1.0f,
+		6.0f, 12.0f,  6.0f,  1.0f, 1.0f,
+		-6.0f,12.0f,  6.0f,  0.0f, 1.0f,
+		-6.0f, 0.0f,  6.0f,  0.0f, 0.0f,
+
+		-6.0f, 12.0f,  6.0f,  1.0f, 0.0f,
+		-6.0f, 12.0f, -6.0f,  1.0f, 1.0f,
+		-6.0f,  0.0f, -6.0f,  0.0f, 1.0f,
+		-6.0f,  0.0f, -6.0f,  0.0f, 1.0f,
+		-6.0f,  0.0f,  6.0f,  0.0f, 0.0f,
+		-6.0f, 12.0f,  6.0f,  1.0f, 0.0f,
+
+		6.0f,  12.0f,  6.0f,  1.0f, 0.0f,
+		6.0f,  12.0f, -6.0f,  1.0f, 1.0f,
+		6.0f,   0.0f, -6.0f,  0.0f, 1.0f,
+		6.0f,   0.0f, -6.0f,  0.0f, 1.0f,
+		6.0f,   0.0f,  6.0f,  0.0f, 0.0f,
+		6.0f,  12.0f,  6.0f,  1.0f, 0.0f,
+
+		-6.0f,  0.0f, -6.0f,  0.0f, 1.0f,
+		6.0f,   0.0f, -6.0f,  1.0f, 1.0f,
+		6.0f,   0.0f,  6.0f,  1.0f, 0.0f,
+		6.0f,   0.0f,  6.0f,  1.0f, 0.0f,
+		-6.0f,  0.0f,  6.0f,  0.0f, 0.0f,
+		-6.0f,  0.0f, -6.0f,  0.0f, 1.0f,
+
+		-6.0f, 12.0f, -6.0f,  0.0f, 1.0f,
+		6.0f,  12.0f, -6.0f,  1.0f, 1.0f,
+		6.0f,  12.0f,  6.0f,  1.0f, 0.0f,
+		6.0f,  12.0f,  6.0f,  1.0f, 0.0f,
+		-6.0f, 12.0f,  6.0f,  0.0f, 0.0f,
+		-6.0f, 12.0f, -6.0f,  0.0f, 1.0f
+	};*/
+	vertices = new float[108]{
+		// positions          
+		-6.0f,  6.0f, -6.0f,
+		-6.0f, -6.0f, -6.0f,
+		6.0f, -6.0f, -6.0f,
+		6.0f, -6.0f, -6.0f,
+		6.0f,  6.0f, -6.0f,
+		-6.0f,  6.0f, -6.0f,
+
+		-6.0f, -6.0f,  6.0f,
+		-6.0f, -6.0f, -6.0f,
+		-6.0f,  6.0f, -6.0f,
+		-6.0f,  6.0f, -6.0f,
+		-6.0f,  6.0f,  6.0f,
+		-6.0f, -6.0f,  6.0f,
+
+		6.0f, -6.0f, -6.0f,
+		6.0f, -6.0f,  6.0f,
+		6.0f,  6.0f,  6.0f,
+		6.0f,  6.0f,  6.0f,
+		6.0f,  6.0f, -6.0f,
+		6.0f, -6.0f, -6.0f,
+
+		-6.0f, -6.0f,  6.0f,
+		-6.0f,  6.0f,  6.0f,
+		6.0f,  6.0f,  6.0f,
+		6.0f,  6.0f,  6.0f,
+		6.0f, -6.0f,  6.0f,
+		-6.0f, -6.0f,  6.0f,
+
+		-6.0f,  6.0f, -6.0f,
+		6.0f,  6.0f, -6.0f,
+		6.0f,  6.0f,  6.0f,
+		6.0f,  6.0f,  6.0f,
+		-6.0f,  6.0f,  6.0f,
+		-6.0f,  6.0f, -6.0f,
+
+		-6.0f, -6.0f, -6.0f,
+		-6.0f, -6.0f,  6.0f,
+		6.0f, -6.0f, -6.0f,
+		6.0f, -6.0f, -6.0f,
+		-6.0f, -6.0f,  6.0f,
+		6.0f, -6.0f,  6.0f
 	};
 }
 
@@ -53,27 +126,17 @@ void Skybox::init()
 
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
 
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, 32 * sizeof(float), vertices, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 108 * sizeof(float), vertices, GL_STATIC_DRAW);
 
 	// position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	// color attribute
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-	// texture coord attribute
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
 }
-
+/*
 void Skybox::loadTexture(const char* path[6])
 {
 	for (int i = 0; i < 6; i++) {
@@ -100,4 +163,34 @@ void Skybox::loadTexture(const char* path[6])
 		}
 		stbi_image_free(data);
 	}
+}*/
+
+unsigned int Skybox::loadCubemap(const char* faces[])
+{
+	unsigned int textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+	int width, height, nrChannels;
+	for (unsigned int i = 0; i < 6; i++)
+	{
+		unsigned char *data = stbi_load(faces[i], &width, &height, &nrChannels, 0);
+		if (data)
+		{
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			stbi_image_free(data);
+		}
+		else
+		{
+			std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
+			stbi_image_free(data);
+		}
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	return textureID;
 }
