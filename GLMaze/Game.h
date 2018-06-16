@@ -4,7 +4,8 @@
 #include "GLShader.h"
 #include "GUI.h"
 #include "Camera.h"
-#include "Model.h"
+#include "GLModel.h"
+#include "Collision.h"
 #include "GameConfig.h"
 
 class Game {
@@ -19,9 +20,14 @@ private:
 	GLShader* viewShader;
 	GUI* GUIManager;
 	Camera* camera;
+<<<<<<< HEAD
 	Model * model;
 	Model * modelIronman;
+=======
+	GLModel * model;
+>>>>>>> master
 	GameConfig config;
+	Collision collision;
 
 	void initShader();
 	void initCamera(GameConfig::Parameters config);
@@ -37,6 +43,6 @@ private:
 
 	void renderScene();
 	void calculateShadowDepth();
+	void renderMaze();
 	void drawObjects(GLShader* shader, bool no_texture);
 };
-

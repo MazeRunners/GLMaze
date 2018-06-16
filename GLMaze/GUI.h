@@ -13,13 +13,6 @@ public:
 		float s = 0.0f;
 		float d = 0.0f;
 
-		float up = 0.0f;
-		float down = 0.0f;
-		float left = 0.0f;
-		float right = 0.0f;
-		float front = 0.0f;
-		float back = 0.0f;
-
 		float currentMouseX = 0.0f;
 		float currentMouseY = 0.0f;
 

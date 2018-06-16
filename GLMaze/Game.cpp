@@ -11,9 +11,13 @@ Game::Game() {
 	GUIManager = new GUI(platfrom.getContext().window, configuration);
 	initCamera(configuration);
 
+<<<<<<< HEAD
 	model = new Model("./resource/maze.obj");
 	//model = new Model("./resource/Iron_Man.blend");
 	modelIronman = new Model("./resource/Iron_Man.blend");
+=======
+	model = new GLModel("./resource/maze.blend");
+>>>>>>> master
 }
 
 Game::~Game() {
@@ -30,15 +34,20 @@ void Game::start() {
 
 	calculateLightSpaceTransformation();
 
+	bool noMove = false;
+
 	while (!glfwWindowShouldClose(context.window)) {
 		glfwPollEvents();
 		GUIManager->recordUserInput();
 
-		camera->translateCamera(GUIManager->getUserInput());
-		camera->moveWithUser(GUIManager->getUserInput());
+		Camera::Parameters camera_args = camera->calcNextParameter(GUIManager->getUserInput());
+		collision.update(camera_args.position.x, camera_args.position.y, camera_args.position.z);
+		if (!collision.testCollision()) {
+			camera->moveTo(camera_args);
+		}
 
-		GUIManager->draw();
 		renderScene();
+		GUIManager->draw();
 		GUIManager->render();
 
 		glfwSwapBuffers(context.window);
@@ -81,19 +90,7 @@ void Game::calculateLightSpaceTransformation() {
 
 void Game::renderScene() {
 	calculateShadowDepth();
-
-	viewShader->use();
-	viewShader->setVec3("viewPos", camera->getParameter().position);
-	viewShader->setVec3("lightPos", lightSpace.position);
-
-	glm::mat4 viewTransformation = camera->getViewTransformation();
-	viewShader->setMat4("viewTransformation", viewTransformation);
-	viewShader->setMat4("lightSpaceTransformation", lightSpace.transformation);
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, platfrom.getContext().shadowDepthMap);
-
-	drawObjects(viewShader, false);
+	renderMaze();
 }
 
 void Game::drawObjects(GLShader* shader, bool no_texture) {
@@ -108,9 +105,25 @@ void Game::calculateShadowDepth() {
 	glViewport(0, 0, 1280, 720);
 	glBindFramebuffer(GL_FRAMEBUFFER, platfrom.getContext().shadowDepthFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
-	drawObjects(shadowShader, true);
+	// disable texture when shadow mapping
+	drawObjects(shadowShader, false);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Game::renderMaze() {
+	viewShader->use();
+	viewShader->setVec3("viewPos", camera->getParameter().position);
+	viewShader->setVec3("lightPos", lightSpace.position);
+
+	glm::mat4 viewTransformation = camera->getViewTransformation();
+	viewShader->setMat4("viewTransformation", viewTransformation);
+	viewShader->setMat4("lightSpaceTransformation", lightSpace.transformation);
 
 	glViewport(0, 0, 1280, 720);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, platfrom.getContext().shadowDepthMap);
+
+	drawObjects(viewShader, true);
 }
