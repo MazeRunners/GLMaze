@@ -13,12 +13,12 @@ Game::Game() {
 
 	model = new GLModel("./resource/maze.obj");
 	const char* path[] = {
-		"./resource/skybox/miramar_rt.png",
-		"./resource/skybox/miramar_lf.png",
+		"./resource/skybox/miramar_ft.png",
+		"./resource/skybox/miramar_bk.png",
 		"./resource/skybox/miramar_up.png",
 		"./resource/skybox/miramar_dn.png",
-		"./resource/skybox/miramar_ft.png",
-		"./resource/skybox/miramar_bk.png"
+		"./resource/skybox/miramar_rt.png",
+		"./resource/skybox/miramar_lf.png"
 	};
 	skybox = new Skybox(path);
 }
@@ -97,7 +97,7 @@ void Game::renderScene() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	calculateShadowDepth();
-	//renderSkybox();
+	renderSkybox();
 	renderMaze();
 }
 
@@ -136,5 +136,5 @@ void Game::renderSkybox() {
 	skyShader->use();
 	glm::mat4 viewTransformation = camera->getViewTransformation();
 	skyShader->setMat4("viewTransformation", viewTransformation);
-	skybox->draw(skyShader);
+	skybox->draw();
 }
