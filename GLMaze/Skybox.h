@@ -10,23 +10,18 @@
 class Skybox {
 public:
 	Skybox();
-	Skybox(const char* up,
-		const char* down,
-		const char* front,
-		const char* back,
-		const char* left,
-		const char* right);
+	Skybox(const char* path[6]);
 	~Skybox();
 	void draw(GLShader* shader);
 private:
 	void generateVertices();
 	void init();
-	void loadTexture(const char* path);
+	void loadTexture(const char* path[6]);
 
 	float* vertices;
 	unsigned int* indices;
 	unsigned int VAO, VBO, EBO;
-	unsigned int texture;
+	unsigned int texture[6];
 
 
 };

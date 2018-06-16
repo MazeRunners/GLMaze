@@ -12,12 +12,15 @@ Game::Game() {
 	initCamera(configuration);
 
 	model = new GLModel("./resource/maze.obj");
-	skybox = new Skybox("./resource/skybox/miramar_up.png",
+	const char* path[] = {
+		"./resource/skybox/miramar_up.png",
 		"./resource/skybox/miramar_dn.png",
 		"./resource/skybox/miramar_ft.png",
 		"./resource/skybox/miramar_bk.png",
 		"./resource/skybox/miramar_lf.png",
-		"./resource/skybox/miramar_rt.png");
+		"./resource/skybox/miramar_rt.png"
+	};
+	skybox = new Skybox(path);
 }
 
 Game::~Game() {
