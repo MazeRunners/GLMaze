@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{14E4E525-6850-492D-AE00-53D7BADBDFBB}</ProjectGuid>
     <RootNamespace>GLMaze</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -34,7 +34,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -61,17 +61,20 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="GLMaze.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="GLMaze.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="GLMaze.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)..\library\stb;$(ProjectDir)..\library\assimp-4.1.0\include;$(ProjectDir)..\library\imgui;$(ProjectDir)..\library\glm-0.9.8.5\glm;$(ProjectDir)..\library\glfw-3.2.1.bin.WIN32\include;$(ProjectDir)..\library\glad\include;$(ProjectDir)..\library\libconfig-1.7.2\lib;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)..\library\assimp-4.1.0\lib;$(ProjectDir)..\library\glfw-3.2.1.bin.WIN32\lib-vc2015;$(ProjectDir)..\library\libconfig-1.7.2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\library\reactphysics3d-master\testbed\common;$(ProjectDir)..\library\reactphysics3d-master\testbed\opengl-framework\src;$(ProjectDir)..\library\reactphysics3d-master\testbed\meshes;$(ProjectDir)..\library\reactphysics3d-master\src;$(ProjectDir)..\library\stb;$(ProjectDir)..\library\assimp-4.1.0\include;$(ProjectDir)..\library\imgui;$(ProjectDir)..\library\glm-0.9.8.5\glm;$(ProjectDir)..\library\glfw-3.2.1.bin.WIN32\include;$(ProjectDir)..\library\glad\include;$(ProjectDir)..\library\glew-2.1.0-win32\glew-2.1.0\include;$(ProjectDir)..\library\libconfig-1.7.2\lib;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)..\library\reactphysics3d-master\lib;$(ProjectDir)..\library\assimp-4.1.0\lib;$(ProjectDir)..\library\glfw-3.2.1.bin.WIN32\lib-vc2015;$(ProjectDir)..\library\libconfig-1.7.2\lib;$(ProjectDir)..\library\glew-2.1.0-win32\glew-2.1.0\lib\Release\Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -79,16 +82,17 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc140-mt.lib;libconfig++.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc140-mt.lib;libconfig++.lib;reactphysics3d.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(ProjectDir)shader\shadow.vert  $(TargetDir)shader\shadow.vert   /y
-copy $(ProjectDir)shader\shadow.frag  $(TargetDir)shader\shadow.frag  /y
-copy $(ProjectDir)shader\shader.vert    $(TargetDir)shader\shader.vert    /y
-copy $(ProjectDir)shader\shader.frag    $(TargetDir)shader\shader.frag   /y</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -133,27 +137,36 @@ copy $(ProjectDir)shader\shader.frag    $(TargetDir)shader\shader.frag   /y</Com
     <ClCompile Include="..\library\imgui\imgui_demo.cpp" />
     <ClCompile Include="..\library\imgui\imgui_draw.cpp" />
     <ClCompile Include="..\library\imgui\imgui_impl_glfw_gl3.cpp" />
+    <ClCompile Include="..\library\reactphysics3d-master\testbed\common\ConcaveMesh.cpp" />
+    <ClCompile Include="..\library\reactphysics3d-master\testbed\common\PhysicsObject.cpp" />
+    <ClCompile Include="..\library\reactphysics3d-master\testbed\opengl-framework\src\Mesh.cpp" />
+    <ClCompile Include="..\library\reactphysics3d-master\testbed\opengl-framework\src\MeshReaderWriter.cpp" />
+    <ClCompile Include="..\library\reactphysics3d-master\testbed\opengl-framework\src\Object3D.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameConfig.cpp" />
     <ClCompile Include="GLPlatform.cpp" />
     <ClCompile Include="GLShader.cpp" />
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="GLMesh.cpp" />
+    <ClCompile Include="GLModel.cpp" />
+    <ClCompile Include="Skybox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\library\imgui\imgui.h" />
     <ClInclude Include="..\library\imgui\imgui_impl_glfw_gl3.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Collision.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameConfig.h" />
     <ClInclude Include="GLPlatform.h" />
     <ClInclude Include="GLShader.h" />
     <ClInclude Include="GUI.h" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="Model.h" />
+    <ClInclude Include="GLMesh.h" />
+    <ClInclude Include="GLModel.h" />
+    <ClInclude Include="Skybox.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\shader.frag" />
