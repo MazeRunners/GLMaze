@@ -22,6 +22,9 @@
     <Filter Include="library\imgui">
       <UniqueIdentifier>{a91f6a53-3a87-48f0-835b-9e6bb9b9620f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="library\rp3d">
+      <UniqueIdentifier>{fe2e0943-0102-43ac-afad-e69c4e28ed0e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp">
@@ -54,16 +57,34 @@
     <ClCompile Include="GLPlatform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Model.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GameConfig.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\library\reactphysics3d-master\testbed\common\ConcaveMesh.cpp">
+      <Filter>library\rp3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\library\reactphysics3d-master\testbed\common\PhysicsObject.cpp">
+      <Filter>library\rp3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\library\reactphysics3d-master\testbed\opengl-framework\src\Mesh.cpp">
+      <Filter>library\rp3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\library\reactphysics3d-master\testbed\opengl-framework\src\MeshReaderWriter.cpp">
+      <Filter>library\rp3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\library\reactphysics3d-master\testbed\opengl-framework\src\Object3D.cpp">
+      <Filter>library\rp3d</Filter>
+    </ClCompile>
+    <ClCompile Include="GLMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Skybox.cpp">
@@ -89,16 +110,19 @@
     <ClInclude Include="GLPlatform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GameConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Skybox.h">

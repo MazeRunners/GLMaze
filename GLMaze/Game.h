@@ -4,7 +4,8 @@
 #include "GLShader.h"
 #include "GUI.h"
 #include "Camera.h"
-#include "Model.h"
+#include "GLModel.h"
+#include "Collision.h"
 #include "Skybox.h"
 #include "GameConfig.h"
 
@@ -21,9 +22,10 @@ private:
 	GLShader* skyShader;
 	GUI* GUIManager;
 	Camera* camera;
-	Model * model;
+	GLModel * model;
 	Skybox* skybox;
 	GameConfig config;
+	Collision collision;
 
 	void initShader();
 	void initCamera(GameConfig::Parameters config);
@@ -43,4 +45,3 @@ private:
 	void renderSkybox();
 	void drawObjects(GLShader* shader, bool no_texture);
 };
-

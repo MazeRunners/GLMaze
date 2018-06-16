@@ -9,32 +9,40 @@ Camera::Camera(Parameters parameter) {
 Camera::~Camera() {
 }
 
-void Camera::moveWithUser(GUI::UserInput userInput) {
-	parameters.yaw += userInput.mouseXMovement;
-	parameters.pitch += userInput.mouseYMovement;
+Camera::Parameters Camera::calcNextParameter(GUI::UserInput userInput) {
+	Parameters next = parameters;
 
-	if (parameters.pitch > 89.0f) {
-		parameters.pitch = 89.0f;
+	next.yaw = next.yaw + userInput.mouseXMovement;
+	next.pitch = next.pitch + userInput.mouseYMovement;
+
+	if (next.pitch > 89.0f) {
+		next.pitch = 89.0f;
 	}
-	if (parameters.pitch < -89.0f) {
-		parameters.pitch = -89.0f;
+	if (next.pitch < -89.0f) {
+		next.pitch = -89.0f;
 	}
-	
-	float yaw = glm::radians(parameters.yaw);
-	float pitch = glm::radians(parameters.pitch);
+
+	float yaw = glm::radians(next.yaw);
+	float pitch = glm::radians(next.pitch);
 
 	glm::vec3 front;
 	front.x = cos(yaw) * cos(pitch);
 	front.y = sin(pitch);
 	front.z = sin(yaw) * cos(pitch);
-	parameters.front = glm::normalize(front);
+	next.front = glm::normalize(front);
 
 	float xMove = userInput.d - userInput.a;
 	float zMove = userInput.w - userInput.s;
 
-	parameters.position += xMove * glm::normalize(glm::cross(parameters.front, parameters.up));
-	parameters.position += zMove * parameters.front;
-	parameters.position.y = 0.1;
+	next.position = next.position + xMove * glm::normalize(glm::cross(next.front, next.up));
+	next.position = next.position + zMove * next.front;
+	next.position.y = 0.1;
+
+	return next;
+}
+
+void Camera::moveTo(Camera::Parameters next) {
+	parameters = next;
 
 	glm::mat4 transformaton(1.0f);
 	transformaton = glm::lookAt(parameters.position, parameters.position + parameters.front, parameters.up) * transformaton;
