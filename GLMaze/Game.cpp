@@ -11,15 +11,7 @@ Game::Game() {
 	GUIManager = new GUI(platfrom.getContext().window, configuration);
 	initCamera(configuration);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-	model = new Model("./resource/maze.obj");
-	//model = new Model("./resource/Iron_Man.blend");
-	modelIronman = new Model("./resource/Iron_Man.blend");
-=======
-	model = new GLModel("./resource/maze.blend");
->>>>>>> master
-=======
+	modelIronman = new GLModel("./resource/Iron_Man.blend");
 	model = new GLModel("./resource/maze.obj");
 	const char* path[] = {
 		"./resource/skybox/miramar_up.png",
@@ -30,7 +22,6 @@ Game::Game() {
 		"./resource/skybox/miramar_rt.png"
 	};
 	skybox = new Skybox(path);
->>>>>>> feature/lun
 }
 
 Game::~Game() {
@@ -39,11 +30,8 @@ Game::~Game() {
 	delete GUIManager;
 	delete camera;
 	delete model;
-<<<<<<< HEAD
 	delete modelIronman;
-=======
 	delete skybox;
->>>>>>> feature/lun
 }
 
 void Game::start() {

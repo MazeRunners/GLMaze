@@ -22,16 +22,11 @@ private:
 	GLShader* skyShader;
 	GUI* GUIManager;
 	Camera* camera;
-<<<<<<< HEAD
-	Model * model;
-	Model * modelIronman;
-=======
+	GLModel * modelIronman;
 	GLModel * model;
-<<<<<<< HEAD
->>>>>>> master
-=======
+
 	Skybox* skybox;
->>>>>>> feature/lun
+
 	GameConfig config;
 	Collision collision;
 
