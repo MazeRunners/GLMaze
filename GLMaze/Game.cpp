@@ -11,7 +11,7 @@ Game::Game() {
 	GUIManager = new GUI(platfrom.getContext().window, configuration);
 	initCamera(configuration);
 
-	model = new Model("./resource/maze.obj");
+	model = new GLModel("./resource/maze.obj");
 	skybox = new Skybox("./resource/skybox/miramar_up.png",
 		"./resource/skybox/miramar_dn.png",
 		"./resource/skybox/miramar_ft.png",
