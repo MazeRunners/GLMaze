@@ -84,9 +84,12 @@ void Game::calculateLightSpaceTransformation() {
 }
 
 void Game::renderScene() {
+	glViewport(0, 0, 1280, 720);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	calculateShadowDepth();
-	renderSkybox();
 	renderMaze();
+	renderSkybox();
 }
 
 void Game::drawObjects(GLShader* shader, bool no_texture) {
@@ -115,8 +118,8 @@ void Game::renderMaze() {
 	viewShader->setMat4("lightSpaceTransformation", lightSpace.transformation);
 	
 
-	glViewport(0, 0, 1280, 720);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//	glViewport(0, 0, 1280, 720);
+//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, platfrom.getContext().shadowDepthMap);
@@ -125,6 +128,7 @@ void Game::renderMaze() {
 }
 
 void Game::renderSkybox() {
+	skyShader->use();
 	glm::mat4 viewTransformation = camera->getViewTransformation();
 	skyShader->setMat4("viewTransformation", viewTransformation);
 

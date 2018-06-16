@@ -15,7 +15,7 @@ Skybox::Skybox(const char * up,
 	const char * right) 
 {
 	init();
-	loadTexture(down);
+	loadTexture(front);
 }
 
 Skybox::~Skybox()
@@ -27,7 +27,6 @@ Skybox::~Skybox()
 void Skybox::draw(GLShader* shader)
 {
 	// bind Texture
-	glActiveTexture(GL_TEXTURE10);
 	glBindTexture(GL_TEXTURE_2D, texture);
 
 	// render container
