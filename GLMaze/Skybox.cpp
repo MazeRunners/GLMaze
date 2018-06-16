@@ -7,39 +7,22 @@ Skybox::Skybox()
 {
 }
 
-<<<<<<< HEAD
-Skybox::Skybox(const char * up, 
-	const char * down, 
-	const char * front, 
-	const char * back, 
-	const char * left, 
-	const char * right) 
-{
-	init();
-	loadTexture(down);
-=======
-Skybox::Skybox(const char * path[6]) 
+Skybox::Skybox(const char * path[6])
 {
 	init();
 	loadTexture(path);
->>>>>>> feature/lun
 }
 
 Skybox::~Skybox()
 {
-	delete [] vertices;
-	delete [] indices;
+	delete[] vertices;
+	delete[] indices;
 }
 
 void Skybox::draw(GLShader* shader)
 {
 	// bind Texture
-<<<<<<< HEAD
-	glActiveTexture(GL_TEXTURE10);
-	glBindTexture(GL_TEXTURE_2D, texture);
-=======
 	glBindTexture(GL_TEXTURE_2D, texture[0]);
->>>>>>> feature/lun
 
 	// render container
 	shader->use();
@@ -53,17 +36,10 @@ void Skybox::generateVertices()
 {
 	vertices = new float[32]{
 		// positions          // colors           // texture coords
-<<<<<<< HEAD
-		6.0f,  6.0f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,
-		6.0f, -6.0f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
-		-6.0f, -6.0f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
-		-6.0f,  6.0f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f
-=======
 		6.0f,  12.0f, 6.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,
 		6.0f, 0.0f, 6.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
 		-6.0f, 0.0f, 6.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
 		-6.0f,  12.0f, 6.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f
->>>>>>> feature/lun
 	};
 	indices = new unsigned int[6]{
 		0, 1, 3, // first triangle
@@ -98,38 +74,12 @@ void Skybox::init()
 	glEnableVertexAttribArray(2);
 }
 
-<<<<<<< HEAD
-void Skybox::loadTexture(const char* path)
-{
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
-										   // set the texture wrapping parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	// set texture filtering parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	// load image, create texture and generate mipmaps
-	int width, height, nrChannels;
-	// The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
-	unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0);
-	if (data)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else
-	{
-		std::cout << "Failed to load texture" << std::endl;
-	}
-	stbi_image_free(data);
-=======
 void Skybox::loadTexture(const char* path[6])
 {
 	for (int i = 0; i < 6; i++) {
 		glGenTextures(1, &texture[i]);
 		glBindTexture(GL_TEXTURE_2D, texture[i]); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
-											   // set the texture wrapping parameters
+												  // set the texture wrapping parameters
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		// set texture filtering parameters
@@ -150,5 +100,4 @@ void Skybox::loadTexture(const char* path[6])
 		}
 		stbi_image_free(data);
 	}
->>>>>>> feature/lun
 }
