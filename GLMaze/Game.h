@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include "GLModel.h"
 #include "Collision.h"
+#include "Skybox.h"
 #include "GameConfig.h"
 
 class Game {
@@ -18,6 +19,7 @@ private:
 	GLPlatform platfrom;
 	GLShader* shadowShader;
 	GLShader* viewShader;
+	GLShader* skyShader;
 	GUI* GUIManager;
 	Camera* camera;
 <<<<<<< HEAD
@@ -25,7 +27,11 @@ private:
 	Model * modelIronman;
 =======
 	GLModel * model;
+<<<<<<< HEAD
 >>>>>>> master
+=======
+	Skybox* skybox;
+>>>>>>> feature/lun
 	GameConfig config;
 	Collision collision;
 
@@ -44,5 +50,6 @@ private:
 	void renderScene();
 	void calculateShadowDepth();
 	void renderMaze();
+	void renderSkybox();
 	void drawObjects(GLShader* shader, bool no_texture);
 };

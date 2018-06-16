@@ -12,12 +12,25 @@ Game::Game() {
 	initCamera(configuration);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	model = new Model("./resource/maze.obj");
 	//model = new Model("./resource/Iron_Man.blend");
 	modelIronman = new Model("./resource/Iron_Man.blend");
 =======
 	model = new GLModel("./resource/maze.blend");
 >>>>>>> master
+=======
+	model = new GLModel("./resource/maze.obj");
+	const char* path[] = {
+		"./resource/skybox/miramar_up.png",
+		"./resource/skybox/miramar_dn.png",
+		"./resource/skybox/miramar_ft.png",
+		"./resource/skybox/miramar_bk.png",
+		"./resource/skybox/miramar_lf.png",
+		"./resource/skybox/miramar_rt.png"
+	};
+	skybox = new Skybox(path);
+>>>>>>> feature/lun
 }
 
 Game::~Game() {
@@ -26,7 +39,11 @@ Game::~Game() {
 	delete GUIManager;
 	delete camera;
 	delete model;
+<<<<<<< HEAD
 	delete modelIronman;
+=======
+	delete skybox;
+>>>>>>> feature/lun
 }
 
 void Game::start() {
@@ -58,6 +75,7 @@ void Game::start() {
 void Game::initShader() {
 	shadowShader = new GLShader("./shader/shadow.vert", "./shader/shadow.frag");
 	viewShader = new GLShader("./shader/shader.vert", "./shader/shader.frag");
+	skyShader = new GLShader("./shader/skyshader.vert", "./shader/skyshader.frag");
 	viewShader->use();
 	viewShader->setInt("shadowMap", 0);
 }
@@ -89,8 +107,12 @@ void Game::calculateLightSpaceTransformation() {
 }
 
 void Game::renderScene() {
+	glViewport(0, 0, 1280, 720);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	calculateShadowDepth();
 	renderMaze();
+	renderSkybox();
 }
 
 void Game::drawObjects(GLShader* shader, bool no_texture) {
@@ -119,11 +141,20 @@ void Game::renderMaze() {
 	viewShader->setMat4("viewTransformation", viewTransformation);
 	viewShader->setMat4("lightSpaceTransformation", lightSpace.transformation);
 
-	glViewport(0, 0, 1280, 720);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+//	glViewport(0, 0, 1280, 720);
+//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, platfrom.getContext().shadowDepthMap);
 
 	drawObjects(viewShader, true);
+}
+
+void Game::renderSkybox() {
+	skyShader->use();
+	glm::mat4 viewTransformation = camera->getViewTransformation();
+	skyShader->setMat4("viewTransformation", viewTransformation);
+
+	skybox->draw(skyShader);
 }
