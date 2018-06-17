@@ -11,7 +11,7 @@ Game::Game() {
 	GUIManager = new GUI(platfrom.getContext().window, configuration);
 	initCamera(configuration);
 
-	//modelIronman = new GLModel("./resource/Ironman.blend");
+	//modelIronman = new GLModel("./resource/Iron.blend");
 	model = new GLModel("./resource/maze.blend");
 	const char* path[] = {
 		"./resource/skybox/miramar_up.png",
@@ -104,8 +104,9 @@ void Game::renderScene() {
 }
 
 void Game::drawObjects(GLShader* shader, bool no_texture) {
-	model->draw(shader, no_texture);
 	//modelIronman->draw(shader, no_texture);
+	model->draw(shader, no_texture);
+	
 }
 
 void Game::calculateShadowDepth() {
