@@ -144,6 +144,8 @@
     <ClCompile Include="..\library\reactphysics3d-master\testbed\opengl-framework\src\Object3D.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="floor.cpp" />
+    <ClCompile Include="Fountain.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameConfig.cpp" />
     <ClCompile Include="GLPlatform.cpp" />
@@ -159,6 +161,8 @@
     <ClInclude Include="..\library\imgui\imgui_impl_glfw_gl3.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="floor.h" />
+    <ClInclude Include="Fountain.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameConfig.h" />
     <ClInclude Include="GLPlatform.h" />

@@ -1,13 +1,24 @@
 #pragma once
 
+#include <GL\glew.h>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <iostream>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <string>
 
 #include <glad/glad.h>
-#include <glm/glm.hpp>
 
 class GLShader {
 public:
 	GLShader(const char* vertShaderSrc, const char* fragShaderSrc);
+	GLShader(const GLchar* vertShaderSrc, const GLchar* fragShaderSrc, const GLchar* geometryPath);
+	GLShader(const GLchar* vertShaderSrc, const GLchar* fragShaderSrc, const GLchar* geometryPath,
+		const GLchar* varyings[], int count);
+
+
 	~GLShader();
 
 	void use();
