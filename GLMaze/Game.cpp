@@ -62,6 +62,7 @@ void Game::initShader() {
 	shadowShader = new GLShader("./shader/shadow.vert", "./shader/shadow.frag");
 	viewShader = new GLShader("./shader/shader.vert", "./shader/shader.frag");
 	skyShader = new GLShader("./shader/skyshader.vert", "./shader/skyshader.frag");
+	particleShader = new GLShader("./shader/particle.vs", "./shader/particle.fs");
 	viewShader->use();
 	viewShader->setInt("shadowMap", 0);
 }
@@ -137,4 +138,11 @@ void Game::renderSkybox() {
 	glm::mat4 viewTransformation = camera->getViewTransformation();
 	skyShader->setMat4("viewTransformation", viewTransformation);
 	skybox->draw();
+}
+
+void Game::renderParticles()
+{
+	glm::mat4 viewTransformation = camera->getViewTransformation();
+	Particle particle(viewTransformation, viewTransformation, camera->getParameter().position);
+	particle.draw();
 }

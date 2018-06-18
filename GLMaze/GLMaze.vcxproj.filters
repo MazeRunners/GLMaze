@@ -90,6 +90,15 @@
     <ClCompile Include="Skybox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -128,6 +137,15 @@
     <ClInclude Include="Skybox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="texture.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="shader.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\shader.frag">
@@ -148,10 +166,10 @@
     <None Include="shader\skyshader.frag">
       <Filter>Source Files\shader</Filter>
     </None>
-    <None Include="shader\particle.vert">
+    <None Include="particle.fs">
       <Filter>Source Files\shader</Filter>
     </None>
-    <None Include="shader\particle.frag">
+    <None Include="particle.vs">
       <Filter>Source Files\shader</Filter>
     </None>
   </ItemGroup>

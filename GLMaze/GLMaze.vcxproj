@@ -152,7 +152,10 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GLMesh.cpp" />
     <ClCompile Include="GLModel.cpp" />
+    <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="shader.cpp" />
     <ClCompile Include="Skybox.cpp" />
+    <ClCompile Include="texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\library\imgui\imgui.h" />
@@ -166,11 +169,14 @@
     <ClInclude Include="GUI.h" />
     <ClInclude Include="GLMesh.h" />
     <ClInclude Include="GLModel.h" />
+    <ClInclude Include="Particle.h" />
+    <ClInclude Include="shader.hpp" />
     <ClInclude Include="Skybox.h" />
+    <ClInclude Include="texture.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader\particle.frag" />
-    <None Include="shader\particle.vert" />
+    <None Include="particle.fs" />
+    <None Include="particle.vs" />
     <None Include="shader\shader.frag" />
     <None Include="shader\shader.vert" />
     <None Include="shader\shadow.frag" />
