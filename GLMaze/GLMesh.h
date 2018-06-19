@@ -3,8 +3,6 @@
 #include <string>
 #include <vector>
 
-#include <glad/glad.h>
-
 #include <glm/glm.hpp>
 
 #include "GLShader.h"
@@ -23,14 +21,14 @@ struct Texture {
 
 class GLMesh {
 public:
-	GLMesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> texture);
+	GLMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> texture);
 	void draw(GLShader* shader, bool no_texture);
 
 private:
 	std::vector<Vertex> vertices;
-	std::vector<GLuint> indices;
+	std::vector<unsigned int> indices;
 	std::vector<Texture> textures;
 
-	GLuint VAO, VBO, EBO;
+	unsigned int VAO, VBO, EBO;
 	void setupMesh();
 };
