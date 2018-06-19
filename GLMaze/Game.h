@@ -7,7 +7,10 @@
 #include "GLModel.h"
 #include "Collision.h"
 #include "Skybox.h"
+#include "Fountain.h"
+#include "floor.h"
 #include "GameConfig.h"
+
 
 class Game {
 public:
@@ -26,6 +29,9 @@ private:
 	GLModel * model;
 
 	Skybox* skybox;
+
+	Floor floor;
+	Fountain::Fountain fountain;
 
 	GameConfig config;
 	Collision collision;
@@ -46,5 +52,6 @@ private:
 	void calculateShadowDepth();
 	void renderMaze();
 	void renderSkybox();
+	void renderFountain();
 	void drawObjects(GLShader* shader, bool no_texture);
 };

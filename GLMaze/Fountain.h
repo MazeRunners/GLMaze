@@ -36,6 +36,8 @@ namespace Fountain {
 	const glm::vec3 center(0.0f);
 	const float radius = 0.01f;
 
+	
+
 	struct WaterParticle
 	{
 		float type;
@@ -51,6 +53,14 @@ namespace Fountain {
 		Fountain();
 		~Fountain();
 		void Render(float frametimeMills, glm::mat4& worldMatrix, glm::mat4 viewMatrix, glm::mat4& projectMatrix);
+
+		GLfloat deltaTime;
+		GLfloat lastFrame;
+		string str_fps;
+		char c[8];
+		int FrameRate;
+		int FrameCount;
+
 	private:
 		bool InitFountain();
 		void UpdateParticles(float frametimeMills);//更新粒子的位置等

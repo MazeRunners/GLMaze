@@ -4,6 +4,11 @@ namespace Fountain {
 
 	Fountain::Fountain()
 	{
+		deltaTime = 0.0f;
+		lastFrame = 0.0f;
+		FrameRate = 0;
+		FrameCount = 0;
+
 		mCurVBOIndex = 0;
 		mCurTransformFeedbackIndex = 1;
 		mFirst = true;
@@ -34,7 +39,8 @@ namespace Fountain {
 		//WaterParticle particles = new WaterParticle[MAX_PARTICLES];
 		memset(particles, 0, sizeof(particles));
 		GenInitLocation(particles, INIT_PARTICLES);
-		glGenTransformFeedbacks(2, mTransformFeedbacks);
+		GLuint * test = new GLuint[1024];
+		glGenTransformFeedbacks(2, test);
 		glGenBuffers(2, mParticleBuffers);
 		glGenVertexArrays(2, mParticleArrays);
 		for (int i = 0; i < 2; i++)
@@ -81,7 +87,7 @@ namespace Fountain {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_1D, mRandomTexture);
 
-		glEnable(GL_RASTERIZER_DISCARD);//我们渲染到TransformFeedback缓存中去，并不需要光栅化
+		glEnable(GL_RASTERIZER_DISCARD);//渲染到TransformFeedback缓存中去，并不需要光栅化
 		glBindVertexArray(mParticleArrays[mCurVBOIndex]);
 		glBindBuffer(GL_ARRAY_BUFFER, mParticleBuffers[mCurVBOIndex]);
 		glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedbacks[mCurTransformFeedbackIndex]);
@@ -119,6 +125,7 @@ namespace Fountain {
 		glm::mat4& viewMatrix, glm::mat4& projectMatrix)
 	{
 		//glEnable(GL_POINT_SPRITE);   强行注释掉
+		glEnable(GL_POINT_SPRITE_COORD_ORIGIN);
 		glEnable(GL_PROGRAM_POINT_SIZE);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE);

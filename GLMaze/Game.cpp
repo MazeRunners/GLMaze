@@ -147,3 +147,17 @@ void Game::renderSkybox() {
 
 	skybox->draw(skyShader);
 }
+
+void Game::renderFountain()
+{
+	glm::mat4 projection(1.0f);
+	glm::mat4 model(1.0f);
+	glm::mat4 view = camera->getViewTransformation();
+	projection = glm::perspective(glm::radians(45.0f), float(1280 / 720), 0.1f, 2000.f);
+	floor.render(model, view, projection);
+	fountain.Render(fountain.deltaTime, model, view, projection);
+
+	GLfloat currentFrame = glfwGetTime();
+	fountain.deltaTime = currentFrame - fountain.lastFrame;
+	fountain.lastFrame = currentFrame;
+}
