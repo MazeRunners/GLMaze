@@ -8,12 +8,12 @@ Particle::Particle() {
 
 }
 
-Particle::Particle(glm::mat4 proj, glm::mat4 view, glm::vec3 cameraPos) {
-	projectionMatrix = proj;
-	viewMatrix = view;
-	cameraPos = cameraPos;
+Particle::Particle(glm::vec3 right, glm::vec3 up, glm::vec3 cameraPosition, glm::mat4 viewMatrix) {
+	cameraRight = right;
+	cameraUp = up;
+	projectionMatrix = viewMatrix;
+	cameraPos = cameraPosition;
 	init();
-    Texture = loadDDS("particle.DDS");
 }
 
 Particle::~Particle() {
@@ -23,7 +23,7 @@ Particle::~Particle() {
 
 	void Particle::generateParticles() {
 		double currentTime = glfwGetTime();
-		double delta = currentTime - lastTime;
+		delta = currentTime - lastTime;
 		lastTime = currentTime;
 
 		// what the hell
@@ -73,10 +73,11 @@ Particle::~Particle() {
 
 			ParticlesContainer[particleIndex].size = (rand() % 1000) / 2000.0f + 0.1f;
 		}
+		simulate();
 	}
 
 void Particle::simulate() {
-	int ParticlesCount = 0;
+	ParticlesCount = 0;
 		for(int i=0; i<MaxParticles; i++){
 
 			particle& p = ParticlesContainer[i]; // shortcut
@@ -116,19 +117,11 @@ void Particle::simulate() {
 		}
 
 		SortParticles();
+		draw();
 }
 
 void Particle::SortParticles() {
 	std::sort(&ParticlesContainer[0], &ParticlesContainer[MaxParticles]);
-}
-
-void Particle::generateVertices() {
-	vertices = new GLfloat[12]{
-		-0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f,
-		-0.5f,  0.5f, 0.0f,
-		0.5f,  0.5f, 0.0f,
-	};
 }
 
 void Particle::draw() {
@@ -145,7 +138,9 @@ void Particle::draw() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// Use our shader
-	glUseProgram(particleShader);
+	//glUseProgram(particleShader);
+	//particleShader.use();
+	//particleShader->use();
 
 	// Bind our texture in Texture Unit 0
 	glActiveTexture(GL_TEXTURE0);
@@ -154,10 +149,13 @@ void Particle::draw() {
 	glUniform1i(TextureID, 0);
 
 	// Same as the billboards tutorial
-	//glUniform3f(CameraRight_worldspace_ID, ViewMatrix[0][0], ViewMatrix[1][0], ViewMatrix[2][0]);
-	//glUniform3f(CameraUp_worldspace_ID, ViewMatrix[0][1], ViewMatrix[1][1], ViewMatrix[2][1]);
+	//particleShader.setVec3("CameraRight_worldspace", cameraRight);
+	//particleShader->setVec3("CameraUp_worldspace", cameraUp);
+	//particleShader->setMat4("VP", viewMatrix);
+	//glUniform3f(CameraRight_worldspace_ID, viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]);
+	//glUniform3f(CameraUp_worldspace_ID, viewMatrix[0][1], viewMatrix[1][1], viewMatrix[2][1]);
 
-	//glUniformMatrix4fv(ViewProjMatrixID, 1, GL_FALSE, &ViewProjectionMatrix[0][0]);
+	//glUniformMatrix4fv(ViewProjMatrixID, 1, GL_FALSE, &projectionMatrix[0][0]);
 
 	// 1rst attribute buffer : vertices
 	glEnableVertexAttribArray(0);
@@ -239,46 +237,56 @@ void Particle::init()
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
-	particleShader = LoadShaders("particle.vs", "particle.fs");
+	//particleShader = LoadShaders("particle.vs", "particle.fs");
+	//particleShader = GLShader("particle.vs", "particle.fs");
 
-	// Vertex shader
-	GLuint CameraRight_worldspace_ID = glGetUniformLocation(particleShader, "CameraRight_worldspace");
-	GLuint CameraUp_worldspace_ID = glGetUniformLocation(particleShader, "CameraUp_worldspace");
-	GLuint ViewProjMatrixID = glGetUniformLocation(particleShader, "VP");
+	
+		// Vertex shader
+		/*CameraRight_worldspace_ID = glGetUniformLocation(particleShader, "CameraRight_worldspace");
+		CameraUp_worldspace_ID = glGetUniformLocation(particleShader, "CameraUp_worldspace");
+		ViewProjMatrixID = glGetUniformLocation(particleShader, "VP");
 
-	// fragment shader
-	TextureID = glGetUniformLocation(particleShader, "myTextureSampler");
+		// fragment shader
+		TextureID = glGetUniformLocation(particleShader, "myTextureSampler");*/
 
 
-	static GLfloat* g_particule_position_size_data = new GLfloat[MaxParticles * 4];
-	static GLubyte* g_particule_color_data = new GLubyte[MaxParticles * 4];
+		//static GLfloat* g_particule_position_size_data = new GLfloat[MaxParticles * 4];
+		//static GLubyte* g_particule_color_data = new GLubyte[MaxParticles * 4];
 
-	for (int i = 0; i < MaxParticles; i++) {
+	 for (int i = 0; i < MaxParticles; i++) {
 		ParticlesContainer[i].life = -1.0f;
 		ParticlesContainer[i].cameradistance = -1.0f;
 
+		Texture = loadDDS("particle.DDS");
+		vertices= new GLfloat[12] {
+			-0.5f, -0.5f, 0.0f,
+			0.5f, -0.5f, 0.0f,
+			-0.5f,  0.5f, 0.0f,
+			0.5f,  0.5f, 0.0f,
+		};
 
-		generateVertices();
-
-		GLuint billboard_vertex_buffer;
-		glGenBuffers(1, &billboard_vertex_buffer);
-		glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);
-		glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), vertices, GL_STATIC_DRAW);
+		glGenBuffers(1, &billVBO);
+		glBindBuffer(GL_ARRAY_BUFFER, billVBO);
+		glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
 
 		// The VBO containing the positions and sizes of the particles
-		GLuint posVBO;
+		//GLuint posVBO;
 		glGenBuffers(1, &posVBO);
 		glBindBuffer(GL_ARRAY_BUFFER, posVBO);
 		// Initialize with empty (NULL) buffer : it will be updated later, each frame.
-		glBufferData(GL_ARRAY_BUFFER, MaxParticles * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, MaxParticles * 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW);
 
 		// The VBO containing the colors of the particles
-		GLuint colVBO;
+		//GLuint colVBO;
 		glGenBuffers(1, &colVBO);
 		glBindBuffer(GL_ARRAY_BUFFER, colVBO);
 		// Initialize with empty (NULL) buffer : it will be updated later, each frame.
 		glBufferData(GL_ARRAY_BUFFER, MaxParticles * 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW);
 	}
+	lastTime = glfwGetTime();
+	//generateParticles();
+	//simulate();
+
 }
 
 

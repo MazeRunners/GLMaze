@@ -21,6 +21,10 @@ Game::Game() {
 		"./resource/skybox/miramar_lf.png"
 	};
 	skybox = new Skybox(path);
+
+	// particles
+	glm::mat4 viewTransformation = camera->getViewTransformation();
+	particles = new Particle(camera->getParameter().front, camera->getParameter().up, camera->getParameter().position, viewTransformation);
 }
 
 Game::~Game() {
@@ -30,6 +34,7 @@ Game::~Game() {
 	delete camera;
 	delete model;
 	delete skybox;
+	delete particles;
 }
 
 void Game::start() {
@@ -100,6 +105,7 @@ void Game::renderScene() {
 	calculateShadowDepth();
 	renderSkybox();
 	renderMaze();
+	renderParticles();
 }
 
 void Game::drawObjects(GLShader* shader, bool no_texture) {
@@ -143,6 +149,12 @@ void Game::renderSkybox() {
 void Game::renderParticles()
 {
 	glm::mat4 viewTransformation = camera->getViewTransformation();
-	Particle particle(viewTransformation, viewTransformation, camera->getParameter().position);
-	particle.draw();
+	particleShader->setVec3("CameraRight_worldspace", camera->getParameter().front);
+	particleShader->setVec3("CameraUp_worldspace", camera->getParameter().up);
+	particleShader->setMat4("VP", viewTransformation);
+
+	particles->generateParticles();
+	particles->simulate();
+	particles->draw();
+	
 }

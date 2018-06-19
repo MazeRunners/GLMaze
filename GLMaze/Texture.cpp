@@ -1,4 +1,5 @@
-#include <GL/glew.h>
+#include <glad\glad.h>
+//#include <GL/glew.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -164,6 +165,7 @@ GLuint loadDDS(const char * imagepath){
 
 	unsigned int components  = (fourCC == FOURCC_DXT1) ? 3 : 4; 
 	unsigned int format;
+	format = GL_COMPRESSED_RED_RGTC1;
 	switch(fourCC) 
 	{ 
 	case FOURCC_DXT1: 
@@ -189,6 +191,7 @@ GLuint loadDDS(const char * imagepath){
 	glPixelStorei(GL_UNPACK_ALIGNMENT,1);	
 	
 	unsigned int blockSize = (format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT) ? 8 : 16; 
+	//unsigned int blockSize = 8;
 	unsigned int offset = 0;
 
 	/* load the mipmaps */ 

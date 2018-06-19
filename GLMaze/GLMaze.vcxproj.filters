@@ -166,11 +166,16 @@
     <None Include="shader\skyshader.frag">
       <Filter>Source Files\shader</Filter>
     </None>
-    <None Include="particle.fs">
+    <None Include="particle.frag">
       <Filter>Source Files\shader</Filter>
     </None>
-    <None Include="particle.vs">
+    <None Include="particle.vert">
       <Filter>Source Files\shader</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="particle.DDS">
+      <Filter>Header Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

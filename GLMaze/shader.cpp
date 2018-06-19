@@ -1,6 +1,6 @@
 
 #include <glad/glad.h>
-#include <GL/glew.h>
+//#include <GL/glew.h>
 #include <stdlib.h>
 #include <string.h>
 

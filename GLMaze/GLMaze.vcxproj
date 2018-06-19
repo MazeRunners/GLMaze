@@ -175,14 +175,17 @@
     <ClInclude Include="texture.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="particle.fs" />
-    <None Include="particle.vs" />
+    <None Include="particle.frag" />
+    <None Include="particle.vert" />
     <None Include="shader\shader.frag" />
     <None Include="shader\shader.vert" />
     <None Include="shader\shadow.frag" />
     <None Include="shader\shadow.vert" />
     <None Include="shader\skyshader.frag" />
     <None Include="shader\skyshader.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="particle.DDS" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

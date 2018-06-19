@@ -1,6 +1,6 @@
 #pragma once
 
-#include <GL/glew.h>
+#include <glad/glad.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -18,6 +18,7 @@ using namespace glm;
 #include "shader.hpp"
 #include "texture.hpp"
 #include "Camera.h"
+#include "GLShader.h"
 
 struct particle{
 	glm::vec3 pos, speed;
@@ -35,39 +36,43 @@ struct particle{
 class Particle {
 public:
 	Particle();
-	Particle(glm::mat4 proj, glm::mat4 view, glm::vec3 cameraPos);
+	Particle(glm::vec3 cameraFront, glm::vec3 cameraUp, glm::vec3 cameraPosition, glm::mat4 viewMatrix);
 	~Particle();
 	void draw();
-
-
-private:
-	const int MaxParticles = 100000;
-	particle ParticlesContainer[100000];
-	int LastUsedParticle = 0;
-	double lastTime = glfwGetTime();
-	double delta;
-
 	void init();
 	void generateVertices();
 	void generateParticles();
 	void simulate();
 	void SortParticles();
 	int FindUnusedParticle();
+
+
+private:
+	const int MaxParticles = 1;
+	particle ParticlesContainer[1];
+	int LastUsedParticle = 0;
+	double lastTime;
+	double delta;
 	int ParticlesCount;
+
 	GLfloat* vertices;
 	GLuint VAO;
 	GLuint TextureID;
-	GLuint particleShader;
+	//GLuint particleShader;
+	//GLShader particleShader;
+	//GLShader particleShader = GLShader("./shader/particle.vs", "./shader/particle.fs");
 	GLuint billVBO;
 	GLuint posVBO;
 	GLuint colVBO;
 	GLuint Texture;
-	GLfloat* g_particule_position_size_data = new GLfloat[100000 * 4];
-	GLubyte* g_particule_color_data = new GLubyte[100000 * 4];
+	GLfloat* g_particule_position_size_data = new GLfloat[1 * 4];
+	GLubyte* g_particule_color_data = new GLubyte[1 * 4];
 	GLuint CameraRight_worldspace_ID;
 	GLuint CameraUp_worldspace_ID;
 	GLuint ViewProjMatrixID;
 	glm::mat4 projectionMatrix;
 	glm::mat4 viewMatrix;
 	glm::vec3 cameraPos;
+	glm::vec3 cameraRight;
+	glm::vec3 cameraUp;
 };
