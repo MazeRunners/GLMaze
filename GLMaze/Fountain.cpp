@@ -1,13 +1,11 @@
 #include "Fountain.h"
 
 namespace Fountain {
-
-	Fountain::Fountain()
-	{
+	Fountain::Fountain() {
 		deltaTime = 0.0f;
 		lastFrame = 0.0f;
-		FrameRate = 0;
-		FrameCount = 0;
+		frameRate = 0;
+		frameCount = 0;
 
 		mCurVBOIndex = 0;
 		mCurTransformFeedbackIndex = 1;
@@ -15,30 +13,30 @@ namespace Fountain {
 		mTimer = 0;
 		const GLchar* varyings[5] = { "Type1","Position1",
 			"Velocity1","Age1","Size1"
-		};//设置TransformFeedback要捕获的输出变量
+		};
 		mUpdateShader = new GLShader("../res/Shaders/Update.vs", "../res/Shaders/Update.fs",
 			"../res/Shaders/Update.gs", varyings, 5);
-		//设置TransformFeedback缓存能够记录的顶点的数据类型
+
 
 		mRenderShader = new GLShader("../res/Shaders/Render.vs", "../res/Shaders/Render.fs");
-		//设置随机纹理
-		InitRandomTexture(512);
+
+		initRandomTexture(512);
 		mSparkTexture.loadTexture("../res/Textures/water.bmp");
 		mRenderShader->use();
 		mRenderShader->setInt("water", 0);
-		InitFountain();
+		initFountain();
 	}
 
 	Fountain::~Fountain()
 	{
 	}
 
-	bool Fountain::InitFountain()
+	bool Fountain::initFountain()
 	{
-		WaterParticle particles[MAX_PARTICLES];
+		WaterParticle particles[max_particles];
 		//WaterParticle particles = new WaterParticle[MAX_PARTICLES];
 		memset(particles, 0, sizeof(particles));
-		GenInitLocation(particles, INIT_PARTICLES);
+		genInitLocation(particles, init_particles);
 		GLuint * test = new GLuint[1024];
 		glGenTransformFeedbacks(2, test);
 		glGenBuffers(2, mParticleBuffers);
@@ -53,7 +51,7 @@ namespace Fountain {
 		}
 		glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
 		glBindVertexArray(0);
-		//绑定纹理
+
 		mUpdateShader->use();
 		glBindTexture(GL_TEXTURE_1D, mRandomTexture);
 		mUpdateShader->setInt("gRandomTexture", 0);
@@ -61,42 +59,42 @@ namespace Fountain {
 		return true;
 	}
 
-	void Fountain::Render(float frametimeMills, glm::mat4& worldMatrix,
+	void Fountain::render(float frametimeMills, glm::mat4& worldMatrix,
 		glm::mat4 viewMatrix, glm::mat4& projectMatrix)
 	{
-		mTimer += frametimeMills*1000.0f;
-		UpdateParticles(frametimeMills*1000.0f);
-		RenderParticles(worldMatrix, viewMatrix, projectMatrix);
+		mTimer += frametimeMills * 1000.0f;
+		updateParticles(frametimeMills*1000.0f);
+		renderParticles(worldMatrix, viewMatrix, projectMatrix);
 		mCurVBOIndex = mCurTransformFeedbackIndex;
 		mCurTransformFeedbackIndex = (mCurTransformFeedbackIndex + 1) & 0x1;
 	}
 
-	void Fountain::UpdateParticles(float frametimeMills)
+	void Fountain::updateParticles(float frametimeMills)
 	{
 		mUpdateShader->use();
 		mUpdateShader->setFloat("gDeltaTimeMillis", frametimeMills);
 		mUpdateShader->setFloat("gTime", mTimer);
-		mUpdateShader->setFloat("MAX_SIZE", MAX_SIZE);
-		mUpdateShader->setFloat("MIN_SIZE", MIN_SIZE);
-		mUpdateShader->setFloat("MAX_LAUNCH", MAX_LAUNCH);
-		mUpdateShader->setFloat("MIN_LAUNCH", MIN_LAUNCH);
-		mUpdateShader->setFloat("angle", ANGLE);
+		mUpdateShader->setFloat("MAX_SIZE", max_size);
+		mUpdateShader->setFloat("MIN_SIZE", min_size);
+		mUpdateShader->setFloat("MAX_LAUNCH", max_launch);
+		mUpdateShader->setFloat("MIN_LAUNCH", min_launch);
+		mUpdateShader->setFloat("angle", angle);
 		mUpdateShader->setFloat("R", radius);
 		mUpdateShader->setVec3("NORMAL", glm::vec3(0, 1, 0));
-		//绑定纹理
+
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_1D, mRandomTexture);
 
-		glEnable(GL_RASTERIZER_DISCARD);//渲染到TransformFeedback缓存中去，并不需要光栅化
+		glEnable(GL_RASTERIZER_DISCARD);
 		glBindVertexArray(mParticleArrays[mCurVBOIndex]);
 		glBindBuffer(GL_ARRAY_BUFFER, mParticleBuffers[mCurVBOIndex]);
 		glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedbacks[mCurTransformFeedbackIndex]);
 
-		glEnableVertexAttribArray(0);//type
-		glEnableVertexAttribArray(1);//position
-		glEnableVertexAttribArray(2);//velocity
-		glEnableVertexAttribArray(3);//lifetime
-		glEnableVertexAttribArray(4);//size
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
+		glEnableVertexAttribArray(3);
+		glEnableVertexAttribArray(4);
 		glVertexAttribPointer(0, 1, GL_FLOAT, GL_FALSE, sizeof(WaterParticle), (void*)offsetof(WaterParticle, type));
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(WaterParticle), (void*)offsetof(WaterParticle, position));
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(WaterParticle), (void*)offsetof(WaterParticle, velocity));
@@ -105,7 +103,7 @@ namespace Fountain {
 		glBeginTransformFeedback(GL_POINTS);
 		if (mFirst)
 		{
-			glDrawArrays(GL_POINTS, 0, INIT_PARTICLES);
+			glDrawArrays(GL_POINTS, 0, init_particles);
 			mFirst = false;
 		}
 		else {
@@ -121,7 +119,7 @@ namespace Fountain {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void Fountain::RenderParticles(glm::mat4& worldMatrix,
+	void Fountain::renderParticles(glm::mat4& worldMatrix,
 		glm::mat4& viewMatrix, glm::mat4& projectMatrix)
 	{
 		//glEnable(GL_POINT_SPRITE);   强行注释掉
@@ -153,7 +151,7 @@ namespace Fountain {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void Fountain::InitRandomTexture(unsigned int size)
+	void Fountain::initRandomTexture(unsigned int size)
 	{
 		srand(time(NULL));
 		glm::vec3* pRandomData = new glm::vec3[size];
@@ -173,22 +171,22 @@ namespace Fountain {
 		pRandomData = nullptr;
 	}
 
-	void Fountain::GenInitLocation(WaterParticle particles[], int nums) {
+	void Fountain::genInitLocation(WaterParticle particles[], int nums) {
 		srand(time(NULL));
 		for (int x = 0; x < nums; x++) {
 			glm::vec3 record(0.0f);
 			record.x = (2.0f*float(rand()) / float(RAND_MAX) - 1.0f)*radius;
 			record.z = (2.0f*float(rand()) / float(RAND_MAX) - 1.0f)*radius;
-			while (sqrt(record.x*record.x + record.z*record.z)>radius) {
+			while (sqrt(record.x*record.x + record.z*record.z) > radius) {
 				record.x = (2.0f*float(rand()) / float(RAND_MAX) - 1.0f)*radius;
 				record.z = (2.0f*float(rand()) / float(RAND_MAX) - 1.0f)*radius;
 			}
 			record.y = 0.0f;
-			particles[x].type = PARTICLE_TYPE_LAUNCHER;
+			particles[x].type = particle_type_launcher;
 			particles[x].position = record;
 			particles[x].velocity = glm::vec3(0.0f);
-			particles[x].size = INIT_SIZE;//发射器粒子大小
-			particles[x].lifetimeMills = (MAX_LAUNCH - MIN_LAUNCH)*(float(rand()) / float(RAND_MAX)) + MIN_LAUNCH;
+			particles[x].size = init_size;
+			particles[x].lifetimeMills = (max_launch - min_launch)*(float(rand()) / float(RAND_MAX)) + min_launch;
 		}
 	}
 }

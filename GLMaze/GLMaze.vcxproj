@@ -156,7 +156,6 @@
     <ClCompile Include="GLMesh.cpp" />
     <ClCompile Include="GLModel.cpp" />
     <ClCompile Include="particles.cpp" />
-    <ClCompile Include="shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\library\imgui\imgui.h" />
@@ -172,9 +171,7 @@
     <ClInclude Include="GUI.h" />
     <ClInclude Include="GLMesh.h" />
     <ClInclude Include="GLModel.h" />
-    <ClInclude Include="shader.hpp" />
     <ClInclude Include="Skybox.h" />
-    <ClInclude Include="texture.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\shader.frag" />
