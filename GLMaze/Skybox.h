@@ -2,7 +2,6 @@
 
 #include <string>
 
-#include <glad/glad.h>
 #include <glm/glm.hpp>
 
 #include "GLShader.h"
@@ -12,16 +11,15 @@ public:
 	Skybox();
 	Skybox(const char* path[6]);
 	~Skybox();
-	void draw(GLShader* shader);
+	void draw();
+
 private:
 	void generateVertices();
 	void init();
-	void loadTexture(const char* path[6]);
+	unsigned int loadCubemap(const char * faces[]);
 
 	float* vertices;
 	unsigned int* indices;
-	unsigned int VAO, VBO, EBO;
-	unsigned int texture[6];
-
-
+	unsigned int VAO, VBO;
+	unsigned int texture;
 };

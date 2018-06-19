@@ -1,5 +1,6 @@
 #include "Game.h"
 
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -14,14 +15,18 @@ Game::Game() {
 	//modelIronman = new GLModel("./resource/Iron.blend");
 	model = new GLModel("./resource/maze.blend");
 	const char* path[] = {
-		"./resource/skybox/miramar_up.png",
-		"./resource/skybox/miramar_dn.png",
 		"./resource/skybox/miramar_ft.png",
 		"./resource/skybox/miramar_bk.png",
-		"./resource/skybox/miramar_lf.png",
-		"./resource/skybox/miramar_rt.png"
+		"./resource/skybox/miramar_up.png",
+		"./resource/skybox/miramar_dn.png",
+		"./resource/skybox/miramar_rt.png",
+		"./resource/skybox/miramar_lf.png"
 	};
 	skybox = new Skybox(path);
+
+	// particles
+	glm::mat4 viewTransformation = camera->getViewTransformation();
+	particles = new Particle(camera->getParameter().front, camera->getParameter().up, camera->getParameter().position, viewTransformation);
 }
 
 Game::~Game() {
@@ -32,6 +37,7 @@ Game::~Game() {
 	delete model;
 	delete modelIronman;
 	delete skybox;
+	delete particles;
 }
 
 void Game::start() {
@@ -64,6 +70,7 @@ void Game::initShader() {
 	shadowShader = new GLShader("./shader/shadow.vert", "./shader/shadow.frag");
 	viewShader = new GLShader("./shader/shader.vert", "./shader/shader.frag");
 	skyShader = new GLShader("./shader/skyshader.vert", "./shader/skyshader.frag");
+	particleShader = new GLShader("./shader/particle.vs", "./shader/particle.fs");
 	viewShader->use();
 	viewShader->setInt("shadowMap", 0);
 }
@@ -99,8 +106,9 @@ void Game::renderScene() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	calculateShadowDepth();
-	renderMaze();
 	renderSkybox();
+	renderMaze();
+	renderParticles();
 }
 
 void Game::drawObjects(GLShader* shader, bool no_texture) {
@@ -130,10 +138,6 @@ void Game::renderMaze() {
 	viewShader->setMat4("viewTransformation", viewTransformation);
 	viewShader->setMat4("lightSpaceTransformation", lightSpace.transformation);
 
-
-//	glViewport(0, 0, 1280, 720);
-//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, platfrom.getContext().shadowDepthMap);
 
@@ -144,8 +148,20 @@ void Game::renderSkybox() {
 	skyShader->use();
 	glm::mat4 viewTransformation = camera->getViewTransformation();
 	skyShader->setMat4("viewTransformation", viewTransformation);
+	skybox->draw();
+}
 
-	skybox->draw(skyShader);
+void Game::renderParticles()
+{
+	glm::mat4 viewTransformation = camera->getViewTransformation();
+	particleShader->setVec3("CameraRight_worldspace", camera->getParameter().front);
+	particleShader->setVec3("CameraUp_worldspace", camera->getParameter().up);
+	particleShader->setMat4("VP", viewTransformation);
+
+	particles->generateParticles();
+	particles->simulate();
+	particles->draw();
+	
 }
 
 void Game::renderFountain()
