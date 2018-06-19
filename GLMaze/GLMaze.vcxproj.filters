@@ -87,6 +87,9 @@
     <ClCompile Include="GLModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Skybox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -122,6 +125,9 @@
     <ClInclude Include="GLModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Skybox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\shader.frag">
@@ -134,6 +140,18 @@
       <Filter>Source Files\shader</Filter>
     </None>
     <None Include="shader\shadow.vert">
+      <Filter>Source Files\shader</Filter>
+    </None>
+    <None Include="shader\skyshader.vert">
+      <Filter>Source Files\shader</Filter>
+    </None>
+    <None Include="shader\skyshader.frag">
+      <Filter>Source Files\shader</Filter>
+    </None>
+    <None Include="shader\particle.vert">
+      <Filter>Source Files\shader</Filter>
+    </None>
+    <None Include="shader\particle.frag">
       <Filter>Source Files\shader</Filter>
     </None>
   </ItemGroup>
