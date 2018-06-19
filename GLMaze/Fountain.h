@@ -1,6 +1,4 @@
 #pragma once
-//#include <GL/glew.h>
-#include <glad/glad.h>
 
 #include <iostream>
 #include <ctime>
@@ -36,7 +34,7 @@ namespace Fountain {
 	const glm::vec3 center(0.0f);
 	const float radius = 0.01f;
 
-	
+
 
 	struct WaterParticle
 	{
