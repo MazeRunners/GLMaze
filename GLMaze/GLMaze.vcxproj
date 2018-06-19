@@ -146,12 +146,14 @@
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameConfig.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GLPlatform.cpp" />
     <ClCompile Include="GLShader.cpp" />
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GLMesh.cpp" />
     <ClCompile Include="GLModel.cpp" />
+    <ClCompile Include="Skybox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\library\imgui\imgui.h" />
@@ -160,11 +162,13 @@
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameConfig.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="GLPlatform.h" />
     <ClInclude Include="GLShader.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="GLMesh.h" />
     <ClInclude Include="GLModel.h" />
+    <ClInclude Include="Skybox.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\shader.frag" />

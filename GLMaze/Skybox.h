@@ -2,7 +2,6 @@
 
 #include <string>
 
-#include <glad/glad.h>
 #include <glm/glm.hpp>
 
 #include "GLShader.h"
@@ -13,6 +12,7 @@ public:
 	Skybox(const char* path[6]);
 	~Skybox();
 	void draw();
+
 private:
 	void generateVertices();
 	void init();
