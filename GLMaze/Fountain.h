@@ -1,11 +1,13 @@
 #pragma once
-#include <GL/glew.h>
+//#include <GL/glew.h>
+#include <glad/glad.h>
+
 #include <iostream>
 #include <ctime>
 #include <math.h>
 #include <glm/glm.hpp>
 #include "Camera.h"
-#include "texture.h"
+#include "Texture.h"
 #include "GLShader.h"
 
 namespace Fountain {

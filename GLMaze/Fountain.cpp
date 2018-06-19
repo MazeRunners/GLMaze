@@ -118,7 +118,7 @@ namespace Fountain {
 	void Fountain::RenderParticles(glm::mat4& worldMatrix,
 		glm::mat4& viewMatrix, glm::mat4& projectMatrix)
 	{
-		glEnable(GL_POINT_SPRITE);
+		//glEnable(GL_POINT_SPRITE);   Ç¿ÐÐ×¢ÊÍµô
 		glEnable(GL_PROGRAM_POINT_SIZE);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE);

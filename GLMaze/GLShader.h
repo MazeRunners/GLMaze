@@ -1,6 +1,8 @@
 #pragma once
 
-#include <GL\glew.h>
+//#include <GL\glew.h>
+#include <glad/glad.h>
+
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -9,7 +11,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <string>
 
-#include <glad/glad.h>
 
 class GLShader {
 public:

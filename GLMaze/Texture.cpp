@@ -1,31 +1,40 @@
-#include <iostream>
-
 #include "Texture.h"
 
 
-Texture2D::Texture2D()
-    : Width(0), Height(0), Internal_Format(GL_RGB), Image_Format(GL_RGB), Wrap_S(GL_REPEAT), Wrap_T(GL_REPEAT), Filter_Min(GL_LINEAR), Filter_Max(GL_LINEAR)
-{
-    glGenTextures(1, &this->ID);
+CTexture::CTexture() {
 }
 
-void Texture2D::Generate(GLuint width, GLuint height, unsigned char* data)
-{
-    this->Width = width;
-    this->Height = height;
-    // Create Texture
-    glBindTexture(GL_TEXTURE_2D, this->ID);
-    glTexImage2D(GL_TEXTURE_2D, 0, this->Internal_Format, width, height, 0, this->Image_Format, GL_UNSIGNED_BYTE, data);
-    // Set Texture wrap and filter modes
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->Wrap_S);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->Wrap_T);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->Filter_Min);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->Filter_Max);
-    // Unbind texture
-    glBindTexture(GL_TEXTURE_2D, 0);
+CTexture::~CTexture() {
+	glDeleteTextures(1, &textureID);
 }
 
-void Texture2D::Bind() const
-{
-    glBindTexture(GL_TEXTURE_2D, this->ID);
+void CTexture::loadTexture(string path, bool constrain) {
+	glGenTextures(1, &textureID);
+	int width, height, nrComponents;
+	unsigned char *data = stbi_load(path.c_str(), &width, &height, &nrComponents, 0);
+	if (data) {
+		GLenum format;
+		switch (nrComponents) {
+		case 1:format = GL_RED; break;
+		case 3:format = GL_RGB; break;
+		case 4:format = GL_RGBA; break;
+		}
+		glBindTexture(GL_TEXTURE_2D, textureID);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		if (!constrain) {
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		}
+		else {
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		}
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	}
+	else {
+		std::cout << "Texture failed to load at path: " << path << std::endl;
+	}
+	stbi_image_free(data);
 }
