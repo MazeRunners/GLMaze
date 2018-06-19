@@ -12,7 +12,8 @@ Game::Game() {
 	GUIManager = new GUI(platfrom.getContext().window, configuration);
 	initCamera(configuration);
 
-	model = new GLModel("./resource/maze.obj");
+	//modelIronman = new GLModel("./resource/Iron.blend");
+	model = new GLModel("./resource/maze.blend");
 	const char* path[] = {
 		"./resource/skybox/miramar_ft.png",
 		"./resource/skybox/miramar_bk.png",
@@ -34,6 +35,7 @@ Game::~Game() {
 	delete GUIManager;
 	delete camera;
 	delete model;
+	delete modelIronman;
 	delete skybox;
 	delete particles;
 }
@@ -110,7 +112,9 @@ void Game::renderScene() {
 }
 
 void Game::drawObjects(GLShader* shader, bool no_texture) {
+	//modelIronman->draw(shader, no_texture);
 	model->draw(shader, no_texture);
+	
 }
 
 void Game::calculateShadowDepth() {
@@ -158,4 +162,18 @@ void Game::renderParticles()
 	particles->simulate();
 	particles->draw();
 	
+}
+
+void Game::renderFountain()
+{
+	glm::mat4 projection(1.0f);
+	glm::mat4 model(1.0f);
+	glm::mat4 view = camera->getViewTransformation();
+	projection = glm::perspective(glm::radians(45.0f), float(1280 / 720), 0.1f, 2000.f);
+	floor.render(model, view, projection);
+	fountain.Render(fountain.deltaTime, model, view, projection);
+
+	GLfloat currentFrame = glfwGetTime();
+	fountain.deltaTime = currentFrame - fountain.lastFrame;
+	fountain.lastFrame = currentFrame;
 }
