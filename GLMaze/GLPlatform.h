@@ -1,5 +1,4 @@
 #pragma once
-#include <glad/glad.h>
 
 struct GLFWwindow;
 
@@ -8,8 +7,8 @@ public:
 	struct Context {
 		GLFWwindow * window;
 
-		GLuint shadowDepthFBO;
-		GLuint shadowDepthMap;
+		unsigned int shadowDepthFBO;
+		unsigned int shadowDepthMap;
 	};
 
 	GLPlatform();
