@@ -14,14 +14,16 @@ GLFWwindow* window;
 #include <glm/gtx/norm.hpp>
 using namespace glm;
 
+
+#include "shader.hpp"
 #include "texture.hpp"
 #include "Camera.h"
 //#include <common/controls.hpp>
 
 // CPU representation of a particle
-struct Particle {
+struct Particle{
 	glm::vec3 pos, speed;
-	unsigned char r, g, b, a; // Color
+	unsigned char r,g,b,a; // Color
 	float size, angle, weight;
 	float life; // Remaining life of the particle. if <0 : dead and unused.
 	float cameradistance; // *Squared* distance to the camera. if dead : -1.0f
@@ -38,17 +40,17 @@ int LastUsedParticle = 0;
 
 // Finds a Particle in ParticlesContainer which isn't used yet.
 // (i.e. life < 0);
-int FindUnusedParticle() {
+int FindUnusedParticle(){
 
-	for (int i = LastUsedParticle; i < MaxParticles; i++) {
-		if (ParticlesContainer[i].life < 0) {
+	for(int i=LastUsedParticle; i<MaxParticles; i++){
+		if (ParticlesContainer[i].life < 0){
 			LastUsedParticle = i;
 			return i;
 		}
 	}
 
-	for (int i = 0; i < LastUsedParticle; i++) {
-		if (ParticlesContainer[i].life < 0) {
+	for(int i=0; i<LastUsedParticle; i++){
+		if (ParticlesContainer[i].life < 0){
 			LastUsedParticle = i;
 			return i;
 		}
@@ -57,11 +59,11 @@ int FindUnusedParticle() {
 	return 0; // All particles are taken, override the first one
 }
 
-void SortParticles() {
+void SortParticles(){
 	std::sort(&ParticlesContainer[0], &ParticlesContainer[MaxParticles]);
 }
 
-int main(void)
+int main( void )
 {
 	// Initialise GLFW
 /*	if( !glfwInit() )
@@ -99,12 +101,12 @@ int main(void)
 
 	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-	// Hide the mouse and enable unlimited mouvement
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-	// Set the mouse at the center of the screen
-	glfwPollEvents();
-	glfwSetCursorPos(window, 1024/2, 768/2);
+    // Hide the mouse and enable unlimited mouvement
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    
+    // Set the mouse at the center of the screen
+    glfwPollEvents();
+    glfwSetCursorPos(window, 1024/2, 768/2);
 
 	// Dark blue background
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
@@ -120,21 +122,21 @@ int main(void)
 
 
 	// Create and compile our GLSL program from the shaders
-	GLuint programID = LoadShaders("particle.vs", "particle.fs");
+	GLuint programID = LoadShaders( "particle.vs", "particle.fs" );
 
 	// Vertex shader
-	GLuint CameraRight_worldspace_ID = glGetUniformLocation(programID, "CameraRight_worldspace");
-	GLuint CameraUp_worldspace_ID = glGetUniformLocation(programID, "CameraUp_worldspace");
+	GLuint CameraRight_worldspace_ID  = glGetUniformLocation(programID, "CameraRight_worldspace");
+	GLuint CameraUp_worldspace_ID  = glGetUniformLocation(programID, "CameraUp_worldspace");
 	GLuint ViewProjMatrixID = glGetUniformLocation(programID, "VP");
 
 	// fragment shader
-	GLuint TextureID = glGetUniformLocation(programID, "myTextureSampler");
+	GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
 
-
+	
 	static GLfloat* g_particule_position_size_data = new GLfloat[MaxParticles * 4];
-	static GLubyte* g_particule_color_data = new GLubyte[MaxParticles * 4];
+	static GLubyte* g_particule_color_data         = new GLubyte[MaxParticles * 4];
 
-	for (int i = 0; i < MaxParticles; i++) {
+	for(int i=0; i<MaxParticles; i++){
 		ParticlesContainer[i].life = -1.0f;
 		ParticlesContainer[i].cameradistance = -1.0f;
 	}
@@ -145,7 +147,7 @@ int main(void)
 
 	// The VBO containing the 4 vertices of the particles.
 	// Thanks to instancing, they will be shared by all particles.
-	static const GLfloat g_vertex_buffer_data[] = {
+	static const GLfloat g_vertex_buffer_data[] = { 
 		 -0.5f, -0.5f, 0.0f,
 		  0.5f, -0.5f, 0.0f,
 		 -0.5f,  0.5f, 0.0f,
@@ -171,7 +173,7 @@ int main(void)
 	glBufferData(GL_ARRAY_BUFFER, MaxParticles * 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW);
 
 
-
+	
 	double lastTime = glfwGetTime();
 	do
 	{
@@ -202,11 +204,11 @@ int main(void)
 		int newparticles = (int)(delta*10000.0);
 		if (newparticles > (int)(0.016f*10000.0))
 			newparticles = (int)(0.016f*10000.0);
-
-		for (int i = 0; i < newparticles; i++) {
+		
+		for(int i=0; i<newparticles; i++){
 			int particleIndex = FindUnusedParticle();
 			ParticlesContainer[particleIndex].life = 5.0f; // This particle will live 5 seconds.
-			ParticlesContainer[particleIndex].pos = glm::vec3(0, 0, -20.0f);
+			ParticlesContainer[particleIndex].pos = glm::vec3(0,0,-20.0f);
 
 			float spread = 1.5f;
 			glm::vec3 maindir = glm::vec3(0.0f, 10.0f, 0.0f);
@@ -214,12 +216,12 @@ int main(void)
 			// See for instance http://stackoverflow.com/questions/5408276/python-uniform-spherical-distribution instead,
 			// combined with some user-controlled parameters (main direction, spread, etc)
 			glm::vec3 randomdir = glm::vec3(
-				(rand() % 2000 - 1000.0f) / 1000.0f,
-				(rand() % 2000 - 1000.0f) / 1000.0f,
-				(rand() % 2000 - 1000.0f) / 1000.0f
+				(rand()%2000 - 1000.0f)/1000.0f,
+				(rand()%2000 - 1000.0f)/1000.0f,
+				(rand()%2000 - 1000.0f)/1000.0f
 			);
-
-			ParticlesContainer[particleIndex].speed = maindir + randomdir * spread;
+			
+			ParticlesContainer[particleIndex].speed = maindir + randomdir*spread;
 
 
 			// Very bad way to generate a random color
@@ -228,44 +230,43 @@ int main(void)
 			ParticlesContainer[particleIndex].b = rand() % 256;
 			ParticlesContainer[particleIndex].a = (rand() % 256) / 3;
 
-			ParticlesContainer[particleIndex].size = (rand() % 1000) / 2000.0f + 0.1f;
-
+			ParticlesContainer[particleIndex].size = (rand()%1000)/2000.0f + 0.1f;
+			
 		}
 
 
 
 		// Simulate all particles
 		int ParticlesCount = 0;
-		for (int i = 0; i < MaxParticles; i++) {
+		for(int i=0; i<MaxParticles; i++){
 
 			Particle& p = ParticlesContainer[i]; // shortcut
 
-			if (p.life > 0.0f) {
+			if(p.life > 0.0f){
 
 				// Decrease life
 				p.life -= delta;
-				if (p.life > 0.0f) {
+				if (p.life > 0.0f){
 
 					// Simulate simple physics : gravity only, no collisions
-					p.speed += glm::vec3(0.0f, -9.81f, 0.0f) * (float)delta * 0.5f;
+					p.speed += glm::vec3(0.0f,-9.81f, 0.0f) * (float)delta * 0.5f;
 					p.pos += p.speed * (float)delta;
-					p.cameradistance = glm::length2(p.pos - CameraPosition);
+					p.cameradistance = glm::length2( p.pos - CameraPosition );
 					//ParticlesContainer[i].pos += glm::vec3(0.0f,10.0f, 0.0f) * (float)delta;
 
 					// Fill the GPU buffer
-					g_particule_position_size_data[4 * ParticlesCount + 0] = p.pos.x;
-					g_particule_position_size_data[4 * ParticlesCount + 1] = p.pos.y;
-					g_particule_position_size_data[4 * ParticlesCount + 2] = p.pos.z;
+					g_particule_position_size_data[4*ParticlesCount+0] = p.pos.x;
+					g_particule_position_size_data[4*ParticlesCount+1] = p.pos.y;
+					g_particule_position_size_data[4*ParticlesCount+2] = p.pos.z;
+												   
+					g_particule_position_size_data[4*ParticlesCount+3] = p.size;
+												   
+					g_particule_color_data[4*ParticlesCount+0] = p.r;
+					g_particule_color_data[4*ParticlesCount+1] = p.g;
+					g_particule_color_data[4*ParticlesCount+2] = p.b;
+					g_particule_color_data[4*ParticlesCount+3] = p.a;
 
-					g_particule_position_size_data[4 * ParticlesCount + 3] = p.size;
-
-					g_particule_color_data[4 * ParticlesCount + 0] = p.r;
-					g_particule_color_data[4 * ParticlesCount + 1] = p.g;
-					g_particule_color_data[4 * ParticlesCount + 2] = p.b;
-					g_particule_color_data[4 * ParticlesCount + 3] = p.a;
-
-				}
-				else {
+				}else{
 					// Particles that just died will be put at the end of the buffer in SortParticles();
 					p.cameradistance = -1.0f;
 				}
@@ -310,7 +311,7 @@ int main(void)
 
 		// Same as the billboards tutorial
 		glUniform3f(CameraRight_worldspace_ID, ViewMatrix[0][0], ViewMatrix[1][0], ViewMatrix[2][0]);
-		glUniform3f(CameraUp_worldspace_ID, ViewMatrix[0][1], ViewMatrix[1][1], ViewMatrix[2][1]);
+		glUniform3f(CameraUp_worldspace_ID   , ViewMatrix[0][1], ViewMatrix[1][1], ViewMatrix[2][1]);
 
 		glUniformMatrix4fv(ViewProjMatrixID, 1, GL_FALSE, &ViewProjectionMatrix[0][0]);
 
@@ -325,7 +326,7 @@ int main(void)
 			0,                  // stride
 			(void*)0            // array buffer offset
 		);
-
+		
 		// 2nd attribute buffer : positions of particles' centers
 		glEnableVertexAttribArray(1);
 		glBindBuffer(GL_ARRAY_BUFFER, particles_position_buffer);
@@ -387,7 +388,7 @@ int main(void)
 	glDeleteProgram(programID);
 	glDeleteTextures(1, &Texture);
 	glDeleteVertexArrays(1, &VertexArrayID);
-
+	
 
 	// Close OpenGL window and terminate GLFW
 	glfwTerminate();
