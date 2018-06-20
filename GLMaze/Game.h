@@ -1,4 +1,6 @@
 #pragma once
+#include <glad\glad.h>
+#include <GLFW/glfw3.h>
 
 #include "GLPlatform.h"
 #include "GLShader.h"
@@ -9,6 +11,7 @@
 #include "Skybox.h"
 #include "GameConfig.h"
 #include "Particle.h"
+#include "Texture.h"
 
 class Game {
 public:

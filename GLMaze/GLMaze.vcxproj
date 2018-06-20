@@ -153,9 +153,8 @@
     <ClCompile Include="GLMesh.cpp" />
     <ClCompile Include="GLModel.cpp" />
     <ClCompile Include="Particle.cpp" />
-    <ClCompile Include="shader.cpp" />
     <ClCompile Include="Skybox.cpp" />
-    <ClCompile Include="texture.cpp" />
+    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\library\imgui\imgui.h" />
@@ -170,9 +169,8 @@
     <ClInclude Include="GLMesh.h" />
     <ClInclude Include="GLModel.h" />
     <ClInclude Include="Particle.h" />
-    <ClInclude Include="shader.hpp" />
     <ClInclude Include="Skybox.h" />
-    <ClInclude Include="texture.hpp" />
+    <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\particle.frag" />
@@ -183,9 +181,6 @@
     <None Include="shader\shadow.vert" />
     <None Include="shader\skyshader.frag" />
     <None Include="shader\skyshader.vert" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="particle.DDS" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/norm.hpp>
 
 Game::Game() {
 	initShader();
@@ -24,8 +25,7 @@ Game::Game() {
 	skybox = new Skybox(path);
 
 	// particles
-	glm::mat4 viewTransformation = camera->getViewTransformation();
-	particles = new Particle(camera->getParameter().front, camera->getParameter().up, camera->getParameter().position, viewTransformation);
+	particles = new Particle(); // ÓÐ³õÊ¼»¯init
 }
 
 Game::~Game() {
@@ -56,9 +56,9 @@ void Game::start() {
 		}
 
 		renderScene();
+		
 		GUIManager->draw();
 		GUIManager->render();
-
 		glfwSwapBuffers(context.window);
 	}
 
@@ -104,8 +104,9 @@ void Game::renderScene() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	calculateShadowDepth();
+
 	renderSkybox();
-	renderMaze();
+	//renderMaze(); 
 	renderParticles();
 }
 
@@ -149,16 +150,6 @@ void Game::renderSkybox() {
 
 void Game::renderParticles()
 {
-	particleShader->use();
-	glm::mat4 viewTransformation = camera->getViewTransformation();
-	glm::vec3 cameraRight = glm::normalize(glm::cross(camera->getParameter().up, camera->getParameter().front));
-	particleShader->setInt("myTextureSampler", 0);
-	particleShader->setVec3("CameraRight_worldspace", cameraRight);
-	particleShader->setVec3("CameraUp_worldspace", camera->getParameter().up);
-	particleShader->setMat4("VP", viewTransformation);
-	
-	particles->generateParticles();
-	//particles->simulate();
-	//particles->draw();
-	
+	particles->simulateParticles(camera);
 }
+
