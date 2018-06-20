@@ -1,5 +1,4 @@
 #pragma once
-
 #include "GLPlatform.h"
 #include "GLShader.h"
 #include "GUI.h"
@@ -8,6 +7,8 @@
 #include "Collision.h"
 #include "Skybox.h"
 #include "GameConfig.h"
+#include "Particle.h"
+#include "Texture.h"
 
 class Game {
 public:
@@ -20,12 +21,15 @@ private:
 	GLShader* shadowShader;
 	GLShader* viewShader;
 	GLShader* skyShader;
+	GLShader* particleShader;
+
 	GUI* GUIManager;
 	Camera* camera;
 	GLModel * model;
 	Skybox* skybox;
 	GameConfig config;
 	Collision collision;
+	Particle* particles;
 
 	void initShader();
 	void initCamera(GameConfig::Parameters config);
@@ -43,5 +47,6 @@ private:
 	void calculateShadowDepth();
 	void renderMaze();
 	void renderSkybox();
+	void renderParticles();
 	void drawObjects(GLShader* shader, bool no_texture);
 };

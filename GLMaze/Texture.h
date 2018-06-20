@@ -1,20 +1,10 @@
-#pragma once
+#ifndef TEXTURE_H
+#define TEXTURE_H
 
-//#include <GL\glew.h>
-#include <glad/glad.h>
-#include <iostream>
-#include <string>
-#include "stb_image.h"
+// Load a .BMP file using our custom loader
+unsigned int loadBMP_custom(const char * imagepath);
 
-using namespace std;
+// Load a .DDS file using GLFW's own loader
+unsigned int loadDDS(const char * imagepath);
 
-class CTexture {
-public:
-	GLuint textureID;
-
-	CTexture();
-
-	~CTexture();
-
-	void loadTexture(string path, bool constrain = false);
-};
+#endif

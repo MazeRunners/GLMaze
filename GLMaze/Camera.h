@@ -30,5 +30,6 @@ public:
 private:
 	Parameters parameters;
 	glm::mat4 viewTransformation;
+
 };
 

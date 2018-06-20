@@ -3,7 +3,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/norm.hpp>
 
 Game::Game() {
 	initShader();
@@ -12,9 +14,9 @@ Game::Game() {
 	GUIManager = new GUI(platfrom.getContext().window, configuration);
 	initCamera(configuration);
 
-	//modelIronman = new GLModel("./resource/Iron.blend");
-	model = new GLModel("./resource/maze.blend");
-	const char* path[] = {
+	model = new GLModel("./resource/maze.obj");
+
+	const char* skybox_res[] = {
 		"./resource/skybox/miramar_ft.png",
 		"./resource/skybox/miramar_bk.png",
 		"./resource/skybox/miramar_up.png",
@@ -22,11 +24,9 @@ Game::Game() {
 		"./resource/skybox/miramar_rt.png",
 		"./resource/skybox/miramar_lf.png"
 	};
-	skybox = new Skybox(path);
+	skybox = new Skybox(skybox_res);
 
-	// particles
-	glm::mat4 viewTransformation = camera->getViewTransformation();
-	particles = new Particle(camera->getParameter().front, camera->getParameter().up, camera->getParameter().position, viewTransformation);
+	particles = new Particle(); // ³õÊ¼»¯init
 }
 
 Game::~Game() {
@@ -35,7 +35,6 @@ Game::~Game() {
 	delete GUIManager;
 	delete camera;
 	delete model;
-	delete modelIronman;
 	delete skybox;
 	delete particles;
 }
@@ -58,9 +57,9 @@ void Game::start() {
 		}
 
 		renderScene();
+
 		GUIManager->draw();
 		GUIManager->render();
-
 		glfwSwapBuffers(context.window);
 	}
 
@@ -70,7 +69,8 @@ void Game::initShader() {
 	shadowShader = new GLShader("./shader/shadow.vert", "./shader/shadow.frag");
 	viewShader = new GLShader("./shader/shader.vert", "./shader/shader.frag");
 	skyShader = new GLShader("./shader/skyshader.vert", "./shader/skyshader.frag");
-	particleShader = new GLShader("./shader/particle.vs", "./shader/particle.fs");
+	particleShader = new GLShader("./shader/particle.vert", "./shader/particle.frag");
+
 	viewShader->use();
 	viewShader->setInt("shadowMap", 0);
 }
@@ -106,15 +106,14 @@ void Game::renderScene() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	calculateShadowDepth();
+
 	renderSkybox();
-	renderMaze();
+	//renderMaze(); 
 	renderParticles();
 }
 
 void Game::drawObjects(GLShader* shader, bool no_texture) {
-	//modelIronman->draw(shader, no_texture);
 	model->draw(shader, no_texture);
-	
 }
 
 void Game::calculateShadowDepth() {
@@ -153,27 +152,6 @@ void Game::renderSkybox() {
 
 void Game::renderParticles()
 {
-	glm::mat4 viewTransformation = camera->getViewTransformation();
-	particleShader->setVec3("CameraRight_worldspace", camera->getParameter().front);
-	particleShader->setVec3("CameraUp_worldspace", camera->getParameter().up);
-	particleShader->setMat4("VP", viewTransformation);
-
-	particles->generateParticles();
-	particles->simulate();
-	particles->draw();
-	
+	particles->simulateParticles(camera);
 }
 
-void Game::renderFountain()
-{
-	glm::mat4 projection(1.0f);
-	glm::mat4 model(1.0f);
-	glm::mat4 view = camera->getViewTransformation();
-	projection = glm::perspective(glm::radians(45.0f), float(1280 / 720), 0.1f, 2000.f);
-	floor.render(model, view, projection);
-	fountain.Render(fountain.deltaTime, model, view, projection);
-
-	GLfloat currentFrame = glfwGetTime();
-	fountain.deltaTime = currentFrame - fountain.lastFrame;
-	fountain.lastFrame = currentFrame;
-}

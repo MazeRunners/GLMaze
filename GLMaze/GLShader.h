@@ -1,8 +1,7 @@
 #pragma once
+#include <glm/glm.hpp>
 
 #include <string>
-
-#include <glm/glm.hpp>
 
 class GLShader {
 public:
@@ -28,3 +27,4 @@ private:
 
 	int locateUniformVar(const char* varName);
 };
+
