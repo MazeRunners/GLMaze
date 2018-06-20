@@ -1,22 +1,12 @@
 #pragma once
-
-#include <glad/glad.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-#include <vector>
-#include <algorithm>
-
-
-#include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/norm.hpp>
 using namespace glm;
 
 
-#include "shader.hpp"
-#include "texture.hpp"
+//#include "shader.hpp"
+
 #include "Camera.h"
 #include "GLShader.h"
 
@@ -48,28 +38,28 @@ public:
 
 
 private:
-	const int MaxParticles = 1;
-	particle ParticlesContainer[1];
+	static const int MaxParticles = 1000;
+	particle ParticlesContainer[MaxParticles];
 	int LastUsedParticle = 0;
 	double lastTime;
 	double delta;
 	int ParticlesCount;
 
-	GLfloat* vertices;
-	GLuint VAO;
-	GLuint TextureID;
+	float* vertices;
+	unsigned int VAO;
+	unsigned int TextureID;
 	//GLuint particleShader;
 	//GLShader particleShader;
 	//GLShader particleShader = GLShader("./shader/particle.vs", "./shader/particle.fs");
-	GLuint billVBO;
-	GLuint posVBO;
-	GLuint colVBO;
-	GLuint Texture;
-	GLfloat* g_particule_position_size_data = new GLfloat[1 * 4];
-	GLubyte* g_particule_color_data = new GLubyte[1 * 4];
-	GLuint CameraRight_worldspace_ID;
-	GLuint CameraUp_worldspace_ID;
-	GLuint ViewProjMatrixID;
+	unsigned int billVBO;
+	unsigned int posVBO;
+	unsigned int colVBO;
+	unsigned int Texture;
+	float* g_particule_position_size_data = new float[MaxParticles * 4];
+	unsigned int* g_particule_color_data = new unsigned int[MaxParticles * 4];
+	unsigned int CameraRight_worldspace_ID;
+	unsigned int CameraUp_worldspace_ID;
+	unsigned int ViewProjMatrixID;
 	glm::mat4 projectionMatrix;
 	glm::mat4 viewMatrix;
 	glm::vec3 cameraPos;

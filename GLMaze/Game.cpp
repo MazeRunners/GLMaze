@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
+#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 Game::Game() {
@@ -68,7 +68,7 @@ void Game::initShader() {
 	shadowShader = new GLShader("./shader/shadow.vert", "./shader/shadow.frag");
 	viewShader = new GLShader("./shader/shader.vert", "./shader/shader.frag");
 	skyShader = new GLShader("./shader/skyshader.vert", "./shader/skyshader.frag");
-	particleShader = new GLShader("./shader/particle.vs", "./shader/particle.fs");
+	particleShader = new GLShader("./shader/particle.vert", "./shader/particle.frag");
 	viewShader->use();
 	viewShader->setInt("shadowMap", 0);
 }
@@ -149,13 +149,16 @@ void Game::renderSkybox() {
 
 void Game::renderParticles()
 {
+	particleShader->use();
 	glm::mat4 viewTransformation = camera->getViewTransformation();
-	particleShader->setVec3("CameraRight_worldspace", camera->getParameter().front);
+	glm::vec3 cameraRight = glm::normalize(glm::cross(camera->getParameter().up, camera->getParameter().front));
+	particleShader->setInt("myTextureSampler", 0);
+	particleShader->setVec3("CameraRight_worldspace", cameraRight);
 	particleShader->setVec3("CameraUp_worldspace", camera->getParameter().up);
 	particleShader->setMat4("VP", viewTransformation);
-
+	
 	particles->generateParticles();
-	particles->simulate();
-	particles->draw();
+	//particles->simulate();
+	//particles->draw();
 	
 }
