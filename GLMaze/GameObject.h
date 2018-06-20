@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
@@ -31,7 +30,7 @@ public:
 };
 
 #endif
-=======
+
 #pragma once
 
 #include <GLFW/glfw3.h>
@@ -61,4 +60,4 @@ public:
 	// Draw sprite
 	//virtual void Draw(SpriteRenderer &renderer);
 };
->>>>>>> 125b0e618ad5028643248fe1a91482687189ead6
+
