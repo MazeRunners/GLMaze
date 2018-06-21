@@ -2,7 +2,6 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/norm.hpp>
@@ -15,8 +14,7 @@ Game::Game() {
 	initCamera(configuration);
 
 	model = new GLModel("./resource/maze.obj");
-
-	const char* skybox_res[] = {
+	const char* path[] = {
 		"./resource/skybox/miramar_ft.png",
 		"./resource/skybox/miramar_bk.png",
 		"./resource/skybox/miramar_up.png",
@@ -24,14 +22,10 @@ Game::Game() {
 		"./resource/skybox/miramar_rt.png",
 		"./resource/skybox/miramar_lf.png"
 	};
-	skybox = new Skybox(skybox_res);
+	skybox = new Skybox(path);
 
-<<<<<<< HEAD
 	// particles
 	particles = new Particle(); // 无初始化init
-=======
-	p = new ParticleSystem(); // 初始化init
->>>>>>> be19c0cd009e7e82cf37ff6e7ba327a6cce3a19b
 }
 
 Game::~Game() {
@@ -41,7 +35,7 @@ Game::~Game() {
 	delete camera;
 	delete model;
 	delete skybox;
-	delete p;
+	delete particles;
 }
 
 void Game::start() {
@@ -75,7 +69,6 @@ void Game::initShader() {
 	viewShader = new GLShader("./shader/shader.vert", "./shader/shader.frag");
 	skyShader = new GLShader("./shader/skyshader.vert", "./shader/skyshader.frag");
 	particleShader = new GLShader("./shader/particle.vert", "./shader/particle.frag");
-
 	viewShader->use();
 	viewShader->setInt("shadowMap", 0);
 }
@@ -157,12 +150,7 @@ void Game::renderSkybox() {
 
 void Game::renderParticles()
 {
-<<<<<<< HEAD
 	particles->simulate(camera);
 	particles->draw(camera);
-=======
-	p->calc(camera);
-	p->draw(camera);
->>>>>>> be19c0cd009e7e82cf37ff6e7ba327a6cce3a19b
 }
 

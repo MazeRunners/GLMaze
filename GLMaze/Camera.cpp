@@ -43,19 +43,16 @@ Camera::Parameters Camera::calcNextParameter(GUI::UserInput userInput) {
 
 void Camera::moveTo(Camera::Parameters next) {
 	parameters = next;
-	glm::mat4 transformation(1.0f);
+	glm::mat4 transformation(1.0f); 
 
-	view = glm::lookAt(parameters.position, parameters.position + parameters.front, parameters.up) * transformation;
-	projection = glm::perspective(glm::radians(parameters.fovy), parameters.aspect, parameters.z_near, parameters.z_far);
-	viewTransformation = projection * view;
-}
+	// view matrix
+	transformation = glm::lookAt(parameters.position, parameters.position + parameters.front, parameters.up) * transformation;
 
-glm::mat4 Camera::getView() {
-	return view;
-}
+	// projection * view
+	transformation = glm::perspective(glm::radians(parameters.fovy), parameters.aspect,
+		parameters.z_near, parameters.z_far) * transformation;
 
-glm::mat4 Camera::getProjection() {
-	return projection;
+	viewTransformation = transformation;
 }
 
 glm::mat4 Camera::getViewTransformation() {
