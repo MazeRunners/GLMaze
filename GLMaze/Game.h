@@ -7,12 +7,8 @@
 #include "Collision.h"
 #include "Skybox.h"
 #include "GameConfig.h"
-<<<<<<< HEAD
-#include "Particle.h"
-#include "Texture.h"
-=======
 #include "ParticleSystem.h"
->>>>>>> feature/wlm2
+
 
 class Game {
 public:
