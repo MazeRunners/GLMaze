@@ -25,7 +25,7 @@ Game::Game() {
 	skybox = new Skybox(path);
 
 	// particles
-	particles = new Particle(); // 有初始化init
+	particles = new Particle(); // 无初始化init
 }
 
 Game::~Game() {
@@ -56,7 +56,7 @@ void Game::start() {
 		}
 
 		renderScene();
-		
+
 		GUIManager->draw();
 		GUIManager->render();
 		glfwSwapBuffers(context.window);
@@ -106,7 +106,7 @@ void Game::renderScene() {
 	calculateShadowDepth();
 
 	renderSkybox();
-	//renderMaze(); 
+	renderMaze(); 
 	renderParticles();
 }
 
@@ -150,6 +150,7 @@ void Game::renderSkybox() {
 
 void Game::renderParticles()
 {
-	particles->simulateParticles(camera);
+	particles->simulate(camera);
+	particles->draw(camera);
 }
 

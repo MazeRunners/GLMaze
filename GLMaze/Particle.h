@@ -30,13 +30,11 @@ public:
 	~Particle();
 
 	void init();
-	void simulateParticles(Camera* myCamera);
+	void simulate(Camera* camera);
+	void draw(Camera* camera);
 
 private:
-	void SortParticles();
-	int FindUnusedParticle();
-
-	static const int MaxParticles = 1000;
+	static const int MaxParticles = 100000;
 	particle ParticlesContainer[MaxParticles];
 	int LastUsedParticle = 0;
 
@@ -44,16 +42,26 @@ private:
 	double delta;
 	int ParticlesCount;
 
+	const float vertices[12] = {
+		-0.5f, -0.5f, 0.0f,
+		0.5f, -0.5f, 0.0f,
+		-0.5f,  0.5f, 0.0f,
+		0.5f,  0.5f, 0.0f,
+	};
+
 	unsigned int VAO;
 	unsigned int billVBO;
 	unsigned int posVBO;
 	unsigned int colVBO;
-	unsigned int TextureID;
 	unsigned int Texture;
 
 	GLShader* myShader;
-	float* vertices;
-	float* positionData = new float[MaxParticles * 4];
-	unsigned int* colorData = new unsigned int[MaxParticles * 4];
+	//float positionData[MaxParticles * 4];
+	//unsigned char colorData[MaxParticles * 4];
+	float* positionData;
+	unsigned char* colorData;
 
+	unsigned int loadDDS(const char * imagepath);
+	void SortParticles();
+	int FindUnusedParticle();
 };
