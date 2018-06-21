@@ -26,11 +26,7 @@ Game::Game() {
 	};
 	skybox = new Skybox(skybox_res);
 
-<<<<<<< HEAD
-	particles = new Particle(); // ³õÊ¼»¯init
-=======
-	p = new ParticleSystem(); // ³õÊ¼»¯init
->>>>>>> feature/wlm2
+	p = new ParticleSystem(); // Â³ÃµÃŠÂ¼Â»Â¯init
 }
 
 Game::~Game() {
@@ -112,11 +108,7 @@ void Game::renderScene() {
 	calculateShadowDepth();
 
 	renderSkybox();
-<<<<<<< HEAD
-	//renderMaze(); 
-=======
 	renderMaze(); 
->>>>>>> feature/wlm2
 	renderParticles();
 }
 
@@ -160,11 +152,7 @@ void Game::renderSkybox() {
 
 void Game::renderParticles()
 {
-<<<<<<< HEAD
-	particles->simulateParticles(camera);
-=======
 	p->calc(camera);
 	p->draw(camera);
->>>>>>> feature/wlm2
 }
 
