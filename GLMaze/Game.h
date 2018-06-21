@@ -1,4 +1,7 @@
 #pragma once
+#include <glad\glad.h>
+#include <GLFW/glfw3.h>
+
 #include "GLPlatform.h"
 #include "GLShader.h"
 #include "GUI.h"
@@ -7,8 +10,12 @@
 #include "Collision.h"
 #include "Skybox.h"
 #include "GameConfig.h"
+<<<<<<< HEAD
 #include "ParticleSystem.h"
 
+=======
+#include "Particle.h"
+>>>>>>> master
 
 class Game {
 public:
