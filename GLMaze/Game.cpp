@@ -26,7 +26,12 @@ Game::Game() {
 	};
 	skybox = new Skybox(skybox_res);
 
-	particles = new Particle(); // 初始化init
+<<<<<<< HEAD
+	// particles
+	particles = new Particle(); // 无初始化init
+=======
+	p = new ParticleSystem(); // 初始化init
+>>>>>>> be19c0cd009e7e82cf37ff6e7ba327a6cce3a19b
 }
 
 Game::~Game() {
@@ -36,7 +41,7 @@ Game::~Game() {
 	delete camera;
 	delete model;
 	delete skybox;
-	delete particles;
+	delete p;
 }
 
 void Game::start() {
@@ -108,7 +113,7 @@ void Game::renderScene() {
 	calculateShadowDepth();
 
 	renderSkybox();
-	//renderMaze(); 
+	renderMaze(); 
 	renderParticles();
 }
 
@@ -152,6 +157,12 @@ void Game::renderSkybox() {
 
 void Game::renderParticles()
 {
-	particles->simulateParticles(camera);
+<<<<<<< HEAD
+	particles->simulate(camera);
+	particles->draw(camera);
+=======
+	p->calc(camera);
+	p->draw(camera);
+>>>>>>> be19c0cd009e7e82cf37ff6e7ba327a6cce3a19b
 }
 

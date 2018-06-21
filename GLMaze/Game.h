@@ -7,8 +7,11 @@
 #include "Collision.h"
 #include "Skybox.h"
 #include "GameConfig.h"
+<<<<<<< HEAD
 #include "Particle.h"
-#include "Texture.h"
+=======
+#include "ParticleSystem.h"
+>>>>>>> be19c0cd009e7e82cf37ff6e7ba327a6cce3a19b
 
 class Game {
 public:
@@ -20,16 +23,17 @@ private:
 	GLPlatform platfrom;
 	GLShader* shadowShader;
 	GLShader* viewShader;
+
 	GLShader* skyShader;
 	GLShader* particleShader;
 
 	GUI* GUIManager;
 	Camera* camera;
 	GLModel * model;
-	Skybox* skybox;
 	GameConfig config;
 	Collision collision;
-	Particle* particles;
+	ParticleSystem* p;
+	Skybox* skybox;
 
 	void initShader();
 	void initCamera(GameConfig::Parameters config);
@@ -46,7 +50,9 @@ private:
 	void renderScene();
 	void calculateShadowDepth();
 	void renderMaze();
+
 	void renderSkybox();
 	void renderParticles();
+
 	void drawObjects(GLShader* shader, bool no_texture);
 };
