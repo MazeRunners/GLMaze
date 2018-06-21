@@ -35,6 +35,7 @@ private:
 	Collision collision;
 	Particle* particles;
 	Skybox* skybox;
+	GLModel * ironman;
 
 	void initShader();
 	void initCamera(GameConfig::Parameters config);
@@ -51,6 +52,7 @@ private:
 	void renderScene();
 	void calculateShadowDepth();
 	void renderMaze();
+	void renderIronman();
 
 	void renderSkybox();
 	void renderParticles();

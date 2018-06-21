@@ -14,6 +14,7 @@ Game::Game() {
 	initCamera(configuration);
 
 	model = new GLModel("./resource/maze.obj");
+	//ironman = new GLModel("./resource/IronMan/Iron_Man.blend");
 	const char* path[] = {
 		"./resource/skybox/miramar_ft.png",
 		"./resource/skybox/miramar_bk.png",
@@ -24,9 +25,7 @@ Game::Game() {
 	};
 	skybox = new Skybox(path);
 
-	// particles
 	particles = new Particle();
-
 }
 
 Game::~Game() {
@@ -35,6 +34,7 @@ Game::~Game() {
 	delete GUIManager;
 	delete camera;
 	delete model;
+	delete ironman;
 	delete skybox;
 	delete particles;
 }
@@ -113,6 +113,7 @@ void Game::renderScene() {
 
 void Game::drawObjects(GLShader* shader, bool no_texture) {
 	model->draw(shader, no_texture);
+	//ironman->draw(shader, no_texture);
 }
 
 void Game::calculateShadowDepth() {
@@ -140,6 +141,10 @@ void Game::renderMaze() {
 	glBindTexture(GL_TEXTURE_2D, platfrom.getContext().shadowDepthMap);
 
 	drawObjects(viewShader, true);
+}
+
+void Game::renderIronman()
+{
 }
 
 void Game::renderSkybox() {
