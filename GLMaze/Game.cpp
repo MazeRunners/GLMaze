@@ -24,12 +24,9 @@ Game::Game() {
 	};
 	skybox = new Skybox(path);
 
-<<<<<<< HEAD
-	p = new ParticleSystem(); // ³õÊ¼»¯init
-=======
 	// particles
-	particles = new Particle(); // �޳�ʼ��init
->>>>>>> master
+	particles = new Particle();
+
 }
 
 Game::~Game() {
@@ -39,7 +36,7 @@ Game::~Game() {
 	delete camera;
 	delete model;
 	delete skybox;
-	delete p;
+	delete particles;
 }
 
 void Game::start() {
@@ -154,12 +151,7 @@ void Game::renderSkybox() {
 
 void Game::renderParticles()
 {
-<<<<<<< HEAD
-	p->calc(camera);
-	p->draw(camera);
-=======
 	particles->simulate(camera);
 	particles->draw(camera);
->>>>>>> master
 }
 

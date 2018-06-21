@@ -41,7 +41,8 @@ void Particle::init()
 		ParticlesContainer[i].cameradistance = -1.0f;
 	}
 
-	Texture = loadDDS("./resource/particle.DDS");
+	//Texture = loadDDS("./resource/particle.DDS");
+	Texture = loadDDS("./resource/smallsnow.DDS");
 
 	glGenBuffers(1, &billVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, billVBO);
@@ -74,26 +75,25 @@ void Particle::simulate(Camera* myCamera)
 	glm::vec3 CameraPosition = myCamera->getParameter().position;
 
 	// generate 10 new particles/ms,
-	int newparticles = (int)(delta*10000.0);
+	int newparticles = (int)(delta*5000.0);
 	if (newparticles > (int)(0.016f*10000.0))
 		newparticles = (int)(0.016f*10000.0);
 
 	for (int i = 0; i<newparticles; i++) {
 		int particleIndex = FindUnusedParticle();
-		ParticlesContainer[particleIndex].life = 5.0f; // particle lives 5s
+		ParticlesContainer[particleIndex].life = 10.0f; // particle lives 5s
 		ParticlesContainer[particleIndex].pos = glm::vec3(8.1f, 5.1878f, -3.208f); // position
-		float spread = 5.5f;
-		glm::vec3 maindir = glm::vec3(0.0f, 10.0f, 0.0f);
+		float spread = 0.05f;
+		glm::vec3 maindir = glm::vec3(-3.0f, 10.0f, 0.0f);
 
 		// generate a random direction; 
 		glm::vec3 randomdir = glm::vec3(
-			(rand() % 2000 - 1000.0f) / 1000.0f,
-			(rand() % 2000 - 1000.0f) / 1000.0f,
-			(rand() % 2000 - 1000.0f) / 1000.0f
+			(rand() % 20000 - 10000.0f) / 100.0f,
+			(rand() % 20000 - 10000.0f) / 100.0f,
+			(rand() % 20000 - 10000.0f) / 100.0f
 		);
 
 		ParticlesContainer[particleIndex].speed = maindir + randomdir*spread;
-		//ParticlesContainer[particleIndex].speed = glm::vec3(0.0f, 0.0f, 0.0f);
 
 		// generate a random color
 		/*ParticlesContainer[particleIndex].r = rand() % 256;
@@ -106,7 +106,7 @@ void Particle::simulate(Camera* myCamera)
 		ParticlesContainer[particleIndex].b = 240;
 		ParticlesContainer[particleIndex].a = (rand() % 256) / 3;
 
-		ParticlesContainer[particleIndex].size = (rand() % 1000) / 10000.0f + 0.1f;
+		ParticlesContainer[particleIndex].size = (rand() % 1000) / 10000.0f + 0.02f;
 
 	}
 

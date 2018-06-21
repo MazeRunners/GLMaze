@@ -10,12 +10,9 @@
 #include "Collision.h"
 #include "Skybox.h"
 #include "GameConfig.h"
-<<<<<<< HEAD
-#include "ParticleSystem.h"
 
-=======
 #include "Particle.h"
->>>>>>> master
+
 
 class Game {
 public:
@@ -36,7 +33,7 @@ private:
 	GLModel * model;
 	GameConfig config;
 	Collision collision;
-	ParticleSystem* p;
+	Particle* particles;
 	Skybox* skybox;
 
 	void initShader();
