@@ -11,7 +11,6 @@
 #include "Skybox.h"
 #include "GameConfig.h"
 #include "Particle.h"
-#include "Texture.h"
 
 class Game {
 public:

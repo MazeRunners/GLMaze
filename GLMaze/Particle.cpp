@@ -1,3 +1,5 @@
+#include "Particle.h"
+
 #include<glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stdio.h>
@@ -5,9 +7,6 @@
 #include <iostream>
 #include <fstream>
 
-#include "Particle.h"
-
-using namespace std;
 Particle::Particle() {
 	init();
 }

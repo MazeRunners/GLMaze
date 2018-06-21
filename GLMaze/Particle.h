@@ -3,14 +3,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/norm.hpp>
-using namespace glm;
-
-
-//#include "shader.hpp"
 
 #include "Camera.h"
 #include "GLShader.h"
-#include "Texture.h"
 
 struct particle{
 	glm::vec3 pos, speed;
