@@ -24,11 +24,17 @@ public:
 
 	Parameters calcNextParameter(GUI::UserInput userInput);
 	void moveTo(Parameters parameter);
+
+	glm::mat4 getView();
+	glm::mat4 getProjection();
 	glm::mat4 getViewTransformation();
 	Parameters getParameter();
 
 private:
 	Parameters parameters;
+
+	glm::mat4 view;
+	glm::mat4 projection;
 	glm::mat4 viewTransformation;
 
 };
