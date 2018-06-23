@@ -11,6 +11,7 @@
 #include "Skybox.h"
 #include "Cloth.h"
 #include "Particle.h"
+#include "Fraction.h"
 
 class Game {
 public:
@@ -36,6 +37,7 @@ private:
 	Skybox* skybox;
 	Cloth* cloth;
 	GLModel * ironman;
+	Fraction* fraction;
 
 	void initShader();
 	void initCamera(GameConfig::Parameters config);

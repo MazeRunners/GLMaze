@@ -28,6 +28,7 @@ Game::Game() {
 	cloth = new Cloth(0.2, 20, 20);
 
 	particles = new Particle();
+	fraction = new Fraction();
 }
 
 Game::~Game() {
@@ -39,6 +40,7 @@ Game::~Game() {
 	delete ironman;
 	delete skybox;
 	delete particles;
+	delete fraction;
 }
 
 void Game::start() {
