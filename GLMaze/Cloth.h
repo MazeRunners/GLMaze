@@ -1,11 +1,12 @@
 #pragma once
-
-#include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+
 #include <vector>
 
+struct GLFWwindow;
+
 struct ClothVertex {
-	glm::vec3 vPos;    
+	glm::vec3 vPos;
 	glm::vec3 vNor;
 	glm::vec3 vVel;
 	float mass;
@@ -14,25 +15,25 @@ struct ClothVertex {
 	glm::vec3 Fdamping;
 	glm::vec3 Fviscous;
 	glm::vec3 Ffuse;  // force fusion 
-	
-	ClothVertex(): vPos(0,0,0), vNor(0,0,1), vVel(0,0,0), mass(1.0f) {}
+
+	ClothVertex() : vPos(0, 0, 0), vNor(0, 0, 1), vVel(0, 0, 0), mass(1.0f) {}
 };
 
-class Cloth { 
-public:    
+class Cloth {
+public:
 	Cloth(float gridWidth_, int width_, int height_);  // initialization    
 	~Cloth();  // free the space for safety    
 	void draw();  // ClothSimulation main entrance    
-	void ProcessInput(GLFWwindow* window); 
+	void ProcessInput(GLFWwindow* window);
 
-private:    
+private:
 	float gridWidth;  // width of a grid  
 	std::vector<ClothVertex> cVers;  // vertices set pointer    
 	std::vector<unsigned int> indices;
 
 	int width;
 	int height;
-						  
+
 	// some global params    
 	float restLen[3];   // structural, shear, and flexion    
 	float stiff[3];     // structural, shear, and flexion    
@@ -45,14 +46,14 @@ private:
 private:
 	unsigned int VAO, VBO, EBO;
 
-private:    
+private:
 	void CreateClothVertex();     // create all vertex around center (0, 0)
 	void InitClothVertex(int i, int j);
 	void InitBuffers();
 	void UpdateVertexPosition();  // first part of ClothSimulating()    
 	void RenderClothPlane();      // second part of ClothSimulating()    
 	glm::vec3 CalNormal(int i, int j);        // Calculate normal of a vertex
-	
+
 	// forces
 	glm::vec3 CalSpringForceBetween(glm::vec3 p, glm::vec3 q, float k, float l);  // Calculate SpringForce between 2 vertices  
 	glm::vec3 CalSpringForce(int i, int j);   // Calculate SpringForce of a vertex  

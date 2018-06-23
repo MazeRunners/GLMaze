@@ -1,19 +1,16 @@
 #pragma once
-#include <glad\glad.h>
-#include <GLFW/glfw3.h>
-
 #include "GLPlatform.h"
 #include "GLShader.h"
+
 #include "GUI.h"
-#include "Camera.h"
+#include "GameConfig.h"
+
 #include "GLModel.h"
+#include "Camera.h"
 #include "Collision.h"
 #include "Skybox.h"
 #include "Cloth.h"
-#include "GameConfig.h"
-
 #include "Particle.h"
-
 
 class Game {
 public:

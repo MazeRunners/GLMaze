@@ -25,7 +25,7 @@ Collision::~Collision() {
 	delete settings;
 }
 
-void Collision::update(float x, float y, float z) {
+void Collision::updateCameraBody(float x, float y, float z) {
 	rp3d::Vector3 position(x, y, z);
 	rp3d::Quaternion orientation = rp3d::Quaternion::identity();
 	rp3d::Transform newTransform(position, orientation);

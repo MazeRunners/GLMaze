@@ -2,6 +2,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/norm.hpp>
@@ -52,7 +53,7 @@ void Game::start() {
 		GUIManager->recordUserInput();
 
 		Camera::Parameters camera_args = camera->calcNextParameter(GUIManager->getUserInput());
-		collision.update(camera_args.position.x, camera_args.position.y, camera_args.position.z);
+		collision.updateCameraBody(camera_args.position.x, camera_args.position.y, camera_args.position.z);
 		if (!collision.testCollision()) {
 			camera->moveTo(camera_args);
 		}
@@ -109,7 +110,7 @@ void Game::renderScene() {
 	calculateShadowDepth();
 
 	renderSkybox();
-	renderMaze(); 
+	renderMaze();
 	renderParticles();
 	renderCloth();
 }

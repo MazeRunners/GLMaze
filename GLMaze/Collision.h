@@ -6,7 +6,7 @@ class Collision {
 public:
 	Collision();
 	~Collision();
-	void update(float x, float y, float z);
+	void updateCameraBody(float x, float y, float z);
 	bool testCollision();
 
 private:
