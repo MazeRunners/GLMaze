@@ -1,17 +1,16 @@
-#version 450 core
-layout (location = 0) in vec4 vertex; // <vec2 position, vec2 texCoords>
+#version 330 core
 
-out vec2 TexCoords;
-out vec4 ParticleColor;
+// Interpolated values from the vertex shaders
+in vec2 UV;
+in vec4 particlecolor;
 
-uniform mat4 projection;
-uniform vec2 offset;
-uniform vec4 color;
+// Ouput data
+out vec4 color;
 
-void main()
-{
-    float scale = 10.0f;
-    TexCoords = vertex.zw;
-    ParticleColor = color;
-    gl_Position = projection * vec4((vertex.xy * scale) + offset, 0.0, 1.0);
+uniform sampler2D myTextureSampler;
+
+void main(){
+	// Output color = color of the texture at the specified UV
+	color = texture( myTextureSampler, UV ) * particlecolor;
+
 }

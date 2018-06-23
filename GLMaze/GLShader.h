@@ -1,9 +1,7 @@
 #pragma once
+#include <glm/glm.hpp>
 
 #include <string>
-
-#include <glad/glad.h>
-#include <glm/glm.hpp>
 
 class GLShader {
 public:
@@ -21,12 +19,12 @@ private:
 	const char* vertShaderSrc;
 	const char* fragShaderSrc;
 
-	GLuint program;
+	unsigned int program;
 
 	std::string readShaderSourceCode(const char* file);
 	int compileShader(const char* shaderSrc, int shaderType);
 	int buildShaderProgram();
 
-	GLint locateUniformVar(const char* varName);
+	int locateUniformVar(const char* varName);
 };
 

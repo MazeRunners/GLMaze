@@ -1,6 +1,5 @@
 #pragma once
 #include "reactphysics3d.h"
-
 #include "ConcaveMesh.h"
 
 class Collision {

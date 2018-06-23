@@ -1,51 +1,62 @@
-#ifndef PARTICLE_H
-#define PARTICLE_H
-#include <vector>
+#pragma once
 
-#include <GL/glew.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/norm.hpp>
 
-#include "shader.h"
-#include "texture.h"
-#include "game_object.h"
+#include "Camera.h"
+#include "GLShader.h"
 
+struct particle{
+	glm::vec3 pos, speed;
+	unsigned char r,g,b,a; // Color
+	float size, angle, weight;
+	float life; 
+	float cameradistance; 
 
-// Represents a single particle and its state
-struct Particle {
-    glm::vec2 Position, Velocity;
-    glm::vec4 Color;
-    GLfloat Life;
-
-    Particle() : Position(0.0f), Velocity(0.0f), Color(1.0f), Life(0.0f) { }
+	bool operator<(const particle& that) const {
+		return this->cameradistance > that.cameradistance;
+	}
 };
 
-
-// ParticleGenerator acts as a container for rendering a large number of 
-// particles by repeatedly spawning and updating particles and killing 
-// them after a given amount of time.
-class ParticleGenerator
-{
+class Particle {
 public:
-    // Constructor
-    ParticleGenerator(Shader shader, Texture2D texture, GLuint amount);
-    // Update all particles
-    void Update(GLfloat dt, GameObject &object, GLuint newParticles, glm::vec2 offset = glm::vec2(0.0f, 0.0f));
-    // Render all particles
-    void Draw();
-private:
-    // State
-    std::vector<Particle> particles;
-    GLuint amount;
-    // Render state
-    Shader shader;
-    Texture2D texture;
-    GLuint VAO;
-    // Initializes buffer and vertex attributes
-    void init();
-    // Returns the first Particle index that's currently unused e.g. Life <= 0.0f or 0 if no particle is currently inactive
-    GLuint firstUnusedParticle();
-    // Respawns particle
-    void respawnParticle(Particle &particle, GameObject &object, glm::vec2 offset = glm::vec2(0.0f, 0.0f));
-};
+	Particle();
+	~Particle();
 
-#endif
+	void init();
+	void simulate(Camera* camera);
+	void draw(Camera* camera);
+
+private:
+	static const int MaxParticles = 100000;
+	particle ParticlesContainer[MaxParticles];
+	int LastUsedParticle = 0;
+
+	double lastTime;
+	double delta;
+	int ParticlesCount;
+
+	const float vertices[12] = {
+		-0.5f, -0.5f, 0.0f,
+		0.5f, -0.5f, 0.0f,
+		-0.5f,  0.5f, 0.0f,
+		0.5f,  0.5f, 0.0f,
+	};
+
+	unsigned int VAO;
+	unsigned int billVBO;
+	unsigned int posVBO;
+	unsigned int colVBO;
+	unsigned int Texture;
+
+	GLShader* myShader;
+	//float positionData[MaxParticles * 4];
+	//unsigned char colorData[MaxParticles * 4];
+	float* positionData;
+	unsigned char* colorData;
+
+	unsigned int loadDDS(const char * imagepath);
+	void SortParticles();
+	int FindUnusedParticle();
+};

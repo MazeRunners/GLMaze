@@ -1,5 +1,9 @@
 #include "Skybox.h"
+
+#include <glad/glad.h>
+
 #include <stb_image.h>
+
 #include <iostream>
 #include <fstream>
 
@@ -7,7 +11,7 @@ Skybox::Skybox()
 {
 }
 
-Skybox::Skybox(const char * path[6]) 
+Skybox::Skybox(const char * path[6])
 {
 	init();
 	texture = loadCubemap(path);
@@ -72,7 +76,7 @@ void Skybox::generateVertices()
 		7.0f, -7.0f,  7.0f
 		/*
 		vertices = new float[108]{
-		// positions          
+		// positions
 		-7.0f,  14.0f, -7.0f,
 		-7.0f,  0.0f, -7.0f,
 		7.0f,   0.0f, -7.0f,

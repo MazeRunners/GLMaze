@@ -262,7 +262,5 @@ paket-files/
 __pycache__/
 *.pyc
 
-
-GLMaze/GLMaze.vcxproj
-/GLMaze/resource/maze.blend1
-/GLMaze/resource/maze.blend
+*.vcxproj
+*.filters

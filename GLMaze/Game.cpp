@@ -1,8 +1,10 @@
 #include "Game.h"
 
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
+#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/norm.hpp>
 
 Game::Game() {
 	initShader();
@@ -12,6 +14,7 @@ Game::Game() {
 	initCamera(configuration);
 
 	model = new GLModel("./resource/maze.obj");
+	//ironman = new GLModel("./resource/IronMan/Iron_Man.blend");
 	const char* path[] = {
 		"./resource/skybox/miramar_ft.png",
 		"./resource/skybox/miramar_bk.png",
@@ -21,6 +24,8 @@ Game::Game() {
 		"./resource/skybox/miramar_lf.png"
 	};
 	skybox = new Skybox(path);
+
+	particles = new Particle();
 }
 
 Game::~Game() {
@@ -29,7 +34,9 @@ Game::~Game() {
 	delete GUIManager;
 	delete camera;
 	delete model;
+	delete ironman;
 	delete skybox;
+	delete particles;
 }
 
 void Game::start() {
@@ -50,9 +57,9 @@ void Game::start() {
 		}
 
 		renderScene();
+
 		GUIManager->draw();
 		GUIManager->render();
-
 		glfwSwapBuffers(context.window);
 	}
 
@@ -62,6 +69,7 @@ void Game::initShader() {
 	shadowShader = new GLShader("./shader/shadow.vert", "./shader/shadow.frag");
 	viewShader = new GLShader("./shader/shader.vert", "./shader/shader.frag");
 	skyShader = new GLShader("./shader/skyshader.vert", "./shader/skyshader.frag");
+	particleShader = new GLShader("./shader/particle.vert", "./shader/particle.frag");
 	viewShader->use();
 	viewShader->setInt("shadowMap", 0);
 }
@@ -97,12 +105,15 @@ void Game::renderScene() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	calculateShadowDepth();
+
 	renderSkybox();
-	renderMaze();
+	renderMaze(); 
+	renderParticles();
 }
 
 void Game::drawObjects(GLShader* shader, bool no_texture) {
 	model->draw(shader, no_texture);
+	//ironman->draw(shader, no_texture);
 }
 
 void Game::calculateShadowDepth() {
@@ -132,9 +143,20 @@ void Game::renderMaze() {
 	drawObjects(viewShader, true);
 }
 
+void Game::renderIronman()
+{
+}
+
 void Game::renderSkybox() {
 	skyShader->use();
 	glm::mat4 viewTransformation = camera->getViewTransformation();
 	skyShader->setMat4("viewTransformation", viewTransformation);
 	skybox->draw();
 }
+
+void Game::renderParticles()
+{
+	particles->simulate(camera);
+	particles->draw(camera);
+}
+
