@@ -143,6 +143,7 @@
     <ClCompile Include="..\library\reactphysics3d-master\testbed\opengl-framework\src\MeshReaderWriter.cpp" />
     <ClCompile Include="..\library\reactphysics3d-master\testbed\opengl-framework\src\Object3D.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Cloth.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameConfig.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="..\library\imgui\imgui.h" />
     <ClInclude Include="..\library\imgui\imgui_impl_glfw_gl3.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Cloth.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameConfig.h" />
