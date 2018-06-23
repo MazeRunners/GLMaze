@@ -9,6 +9,7 @@
 #include "GLModel.h"
 #include "Collision.h"
 #include "Skybox.h"
+#include "Cloth.h"
 #include "GameConfig.h"
 
 #include "Particle.h"
@@ -26,6 +27,7 @@ private:
 	GLShader* viewShader;
 
 	GLShader* skyShader;
+	GLShader* clothShader;
 	GLShader* particleShader;
 
 	GUI* GUIManager;
@@ -35,6 +37,7 @@ private:
 	Collision collision;
 	Particle* particles;
 	Skybox* skybox;
+	Cloth* cloth;
 	GLModel * ironman;
 
 	void initShader();
@@ -56,6 +59,7 @@ private:
 
 	void renderSkybox();
 	void renderParticles();
+	void renderCloth();
 
 	void drawObjects(GLShader* shader, bool no_texture);
 };
