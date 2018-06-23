@@ -14,9 +14,9 @@ Cloth::Cloth(float gridWidth_, int width_, int height_)
 	restLen[0] = gridWidth;               // structural
 	restLen[1] = gridWidth * pow(2, 0.5); // shear
 	restLen[2] = gridWidth * 2;           // flexion  
-	stiff[0] = 4800.0f; // structural
-	stiff[1] = 3400.0f; // shear
-	stiff[2] = 3200.0f; // flexion  
+	stiff[0] = 240.0f; // structural
+	stiff[1] = 340.0f; // shear
+	stiff[2] = 320.0f; // flexion  
 	Cg = 9.8f;
 	Cd = 2.0f;
 	Cv = 10.0f;
@@ -35,7 +35,7 @@ Cloth::~Cloth()
 void Cloth::draw()
 {
 	UpdateVertexPosition();
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	RenderClothPlane();
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
@@ -101,6 +101,9 @@ void Cloth::InitBuffers()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ClothVertex), (void*)0);
 	glEnableVertexAttribArray(0);
 
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ClothVertex), (void*)offsetof(ClothVertex, vNor));
+	glEnableVertexAttribArray(1);
+
 	glBindVertexArray(0);
 }
 
@@ -123,6 +126,7 @@ void Cloth::UpdateVertexPosition()
 void Cloth::RenderClothPlane()
 {
 	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(ClothVertex) * cVers.size(), &cVers[0], GL_DYNAMIC_DRAW);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 }
@@ -136,11 +140,11 @@ glm::vec3 Cloth::CalNormal(int i, int j)
 		j++;
 	}
 	int index = i * (width + 1) + j;
-	glm::vec3 norm = glm::normalize(glm::cross(
+	cVers[index].vNor = glm::normalize(glm::cross(
 		cVers[index].vPos - cVers[index - 1].vPos,
 		cVers[index].vPos - cVers[index - width - 1].vPos
 	));
-	return norm;
+	return cVers[index].vNor;
 }
 
 glm::vec3 Cloth::CalSpringForceBetween(glm::vec3 p, glm::vec3 q, float k, float l)
@@ -176,8 +180,8 @@ glm::vec3 Cloth::CalDampingForce(int i, int j)
 glm::vec3 Cloth::CalViscousForce(int i, int j)
 {
 	int index = i * (width + 1) + j;
-	glm::vec3 norm = CalNormal(i, j);
-	cVers[index].Fviscous = Cv * (norm * (Ufluid - cVers[index].vVel)) * norm;
+	CalNormal(i, j);
+	cVers[index].Fviscous = Cv * (cVers[index].vNor * (Ufluid - cVers[index].vVel)) * cVers[index].vNor;
 	return cVers[index].Fviscous;
 }
 

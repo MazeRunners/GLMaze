@@ -166,8 +166,11 @@ void Game::renderParticles()
 void Game::renderCloth()
 {
 	clothShader->use();
+	clothShader->setVec3("viewPos", camera->getParameter().position);
+	clothShader->setVec3("lightPos", lightSpace.position);
 	glm::mat4 viewTransformation = camera->getViewTransformation();
 	clothShader->setMat4("viewTransformation", viewTransformation);
+	clothShader->setMat4("lightSpaceTransformation", lightSpace.transformation);
 	clothShader->setVec3("clothColor", glm::vec3(1.0f, 0, 0));
 	cloth->draw();
 }
