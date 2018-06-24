@@ -2,6 +2,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/norm.hpp>
@@ -27,6 +28,7 @@ Game::Game() {
 	cloth = new Cloth(0.01, 20, 20, "./resource/Trailer.mp4_000330.841 _3.jpg");
 
 	particles = new Particle();
+	fraction = new Fraction();
 }
 
 Game::~Game() {
@@ -38,6 +40,7 @@ Game::~Game() {
 	delete ironman;
 	delete skybox;
 	delete particles;
+	delete fraction;
 }
 
 void Game::start() {
@@ -52,7 +55,7 @@ void Game::start() {
 		GUIManager->recordUserInput();
 
 		Camera::Parameters camera_args = camera->calcNextParameter(GUIManager->getUserInput());
-		collision.update(camera_args.position.x, camera_args.position.y, camera_args.position.z);
+		collision.updateCameraBody(camera_args.position.x, camera_args.position.y, camera_args.position.z);
 		if (!collision.testCollision()) {
 			camera->moveTo(camera_args);
 		}

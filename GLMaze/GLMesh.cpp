@@ -1,13 +1,12 @@
-#include <string>
-
-#include <fstream>
-#include <sstream>
-#include <iostream>
-
 #include "GLMesh.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <iostream>
 
 GLMesh::GLMesh(std::vector<Vertex> vertices,
 	std::vector<unsigned int> indices,

@@ -2,6 +2,7 @@
 
 #include<glad/glad.h>
 #include <GLFW/glfw3.h>
+
 #include <stdio.h>
 #include <algorithm>
 #include <iostream>
@@ -20,7 +21,7 @@ Particle::~Particle() {
 	glDeleteBuffers(1, &billVBO);
 	glDeleteBuffers(1, &Texture);
 	glDeleteVertexArrays(1, &VAO);
-	
+
 	delete myShader;
 }
 
@@ -79,7 +80,7 @@ void Particle::simulate(Camera* myCamera)
 	if (newparticles > (int)(0.016f*10000.0))
 		newparticles = (int)(0.016f*10000.0);
 
-	for (int i = 0; i<newparticles; i++) {
+	for (int i = 0; i < newparticles; i++) {
 		int particleIndex = FindUnusedParticle();
 		ParticlesContainer[particleIndex].life = 10.0f; // particle lives 5s
 		ParticlesContainer[particleIndex].pos = glm::vec3(8.1f, 5.1878f, -3.208f); // position
@@ -93,7 +94,7 @@ void Particle::simulate(Camera* myCamera)
 			(rand() % 20000 - 10000.0f) / 100.0f
 		);
 
-		ParticlesContainer[particleIndex].speed = maindir + randomdir*spread;
+		ParticlesContainer[particleIndex].speed = maindir + randomdir * spread;
 
 		// generate a random color
 		/*ParticlesContainer[particleIndex].r = rand() % 256;
@@ -112,7 +113,7 @@ void Particle::simulate(Camera* myCamera)
 
 	// Simulate all particles
 	ParticlesCount = 0;
-	for (int i = 0; i<MaxParticles; i++) {
+	for (int i = 0; i < MaxParticles; i++) {
 		particle& p = ParticlesContainer[i];
 
 		if (p.life > 0.0f) {
@@ -154,7 +155,7 @@ void Particle::simulate(Camera* myCamera)
 void Particle::draw(Camera* camera) {
 	glBindVertexArray(VAO);
 
-    // Update the buffer
+	// Update the buffer
 	glBindBuffer(GL_ARRAY_BUFFER, posVBO);
 	glBufferData(GL_ARRAY_BUFFER, MaxParticles * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, ParticlesCount * sizeof(float) * 4, positionData);
@@ -196,7 +197,7 @@ void Particle::draw(Camera* camera) {
 	glVertexAttribDivisor(1, 1); // positions
 	glVertexAttribDivisor(2, 1); // color
 
-    // Draw particles
+	// Draw particles
 	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, ParticlesCount);
 
 	glDisableVertexAttribArray(0);
@@ -298,7 +299,7 @@ unsigned int Particle::loadDDS(const char * imagepath) {
 	free(buffer);
 
 	return textureID;
-}	
+}
 
 void Particle::SortParticles() {
 	std::sort(&ParticlesContainer[0], &ParticlesContainer[MaxParticles]);
@@ -306,14 +307,14 @@ void Particle::SortParticles() {
 
 int Particle::FindUnusedParticle() {
 
-	for (int i = LastUsedParticle; i<MaxParticles; i++) {
+	for (int i = LastUsedParticle; i < MaxParticles; i++) {
 		if (ParticlesContainer[i].life < 0) {
 			LastUsedParticle = i;
 			return i;
 		}
 	}
 
-	for (int i = 0; i<LastUsedParticle; i++) {
+	for (int i = 0; i < LastUsedParticle; i++) {
 		if (ParticlesContainer[i].life < 0) {
 			LastUsedParticle = i;
 			return i;
