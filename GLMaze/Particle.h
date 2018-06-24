@@ -1,5 +1,4 @@
 #pragma once
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/norm.hpp>
@@ -7,12 +6,12 @@
 #include "Camera.h"
 #include "GLShader.h"
 
-struct particle{
+struct particle {
 	glm::vec3 pos, speed;
-	unsigned char r,g,b,a; // Color
+	unsigned char r, g, b, a; // Color
 	float size, angle, weight;
-	float life; 
-	float cameradistance; 
+	float life;
+	float cameradistance;
 
 	bool operator<(const particle& that) const {
 		return this->cameradistance > that.cameradistance;

@@ -2,10 +2,10 @@
 
 #include <glad/glad.h>
 
+#include <glm/gtc/type_ptr.hpp>
+
 #include <iostream>
 #include <fstream>
-
-#include <glm/gtc/type_ptr.hpp>
 
 GLShader::GLShader(const char* vertShaderSrc, const char* fragShaderSrc) {
 	this->vertShaderSrc = vertShaderSrc;
