@@ -25,7 +25,7 @@ Game::Game() {
 		"./resource/skybox/miramar_lf.png"
 	};
 	skybox = new Skybox(path);
-	cloth = new Cloth(0.2, 20, 20);
+	cloth = new Cloth(0.01, 20, 20, "./resource/Trailer.mp4_000330.841 _3.jpg");
 
 	particles = new Particle();
 	fraction = new Fraction();
@@ -112,7 +112,7 @@ void Game::renderScene() {
 	calculateShadowDepth();
 
 	renderSkybox();
-	renderMaze();
+	//renderMaze(); 
 	renderParticles();
 	renderCloth();
 }
@@ -169,9 +169,12 @@ void Game::renderParticles()
 void Game::renderCloth()
 {
 	clothShader->use();
+	clothShader->setVec3("viewPos", camera->getParameter().position);
+	clothShader->setVec3("lightPos", lightSpace.position);
 	glm::mat4 viewTransformation = camera->getViewTransformation();
 	clothShader->setMat4("viewTransformation", viewTransformation);
-	clothShader->setVec3("clothColor", glm::vec3(1.0f, 0, 0));
+	clothShader->setMat4("lightSpaceTransformation", lightSpace.transformation);
+	// clothShader->setVec3("clothColor", glm::vec3(1.0f, 0, 0));
 	cloth->draw();
 }
 

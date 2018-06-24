@@ -8,6 +8,7 @@ struct GLFWwindow;
 struct ClothVertex {
 	glm::vec3 vPos;
 	glm::vec3 vNor;
+	glm::vec2 vTex;
 	glm::vec3 vVel;
 	float mass;
 	glm::vec3 Fspring;
@@ -15,13 +16,12 @@ struct ClothVertex {
 	glm::vec3 Fdamping;
 	glm::vec3 Fviscous;
 	glm::vec3 Ffuse;  // force fusion 
-
-	ClothVertex() : vPos(0, 0, 0), vNor(0, 0, 1), vVel(0, 0, 0), mass(1.0f) {}
+	ClothVertex(): vPos(0,0,0), vNor(0,0,1), vTex(0,0), vVel(0,0,0), mass(1.0f) {}
 };
 
-class Cloth {
-public:
-	Cloth(float gridWidth_, int width_, int height_);  // initialization    
+class Cloth { 
+public:    
+	Cloth(float gridWidth_, int width_, int height_, char* texturePath);  // initialization    
 	~Cloth();  // free the space for safety    
 	void draw();  // ClothSimulation main entrance    
 	void ProcessInput(GLFWwindow* window);
@@ -45,8 +45,10 @@ private:
 
 private:
 	unsigned int VAO, VBO, EBO;
+	unsigned int texture;
 
 private:
+	void loadTexture(char* path);
 	void CreateClothVertex();     // create all vertex around center (0, 0)
 	void InitClothVertex(int i, int j);
 	void InitBuffers();
