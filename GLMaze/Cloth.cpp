@@ -1,8 +1,4 @@
-#include "Cloth.h"
-
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <stb_image.h>
@@ -21,14 +17,14 @@ Cloth::Cloth(float gridWidth_, int width_, int height_, char* texturePath)
 	restLen[0] = gridWidth;               // structural
 	restLen[1] = gridWidth * pow(2, 0.5); // shear
 	restLen[2] = gridWidth * 2;           // flexion  
-	stiff[0] = 250.0f; // structural
-	stiff[1] = 200.0f; // shear
-	stiff[2] = 170.0f; // flexion  
+	stiff[0] = 400.0f; // structural
+	stiff[1] = 250.0f; // shear
+	stiff[2] = 250.0f; // flexion  
 	Cg = 4.8f;
 	Cd = 0.8f;
 	Cv = 8.0f;
 
-	Ufluid = glm::vec3(4.0f, 1.0f, -2.0f);
+	Ufluid = glm::vec3(1.0f, 0.0f, 0.1f);
 
 	lastCalcTime = (float)glfwGetTime();
 
@@ -113,7 +109,7 @@ void Cloth::CreateClothVertex()
 void Cloth::InitClothVertex(int i, int j)
 {
 	int index = (width + 1) * i + j;
-	cVers[index].Fspring = glm::vec3(0, 0, 0);
+	cVers[index].Fspring = glm::vec3(0,0,0);
 	cVers[index].Fgravity = CalGravityForce(i, j);
 	cVers[index].Fdamping = glm::vec3(0, 0, 0);
 	cVers[index].Fviscous = glm::vec3(0, 0, 0);
@@ -124,11 +120,11 @@ void Cloth::InitBuffers()
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
-
+	
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(ClothVertex) * cVers.size(), &cVers[0], GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(ClothVertex) * cVers.size() , &cVers[0], GL_DYNAMIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), &indices[0], GL_STATIC_DRAW);
@@ -153,8 +149,8 @@ void Cloth::UpdateVertexPosition()
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width + 1; j++) {
 			index = (width + 1) * i + j;
-			newVel = cVers[index].vVel + (t - lastCalcTime)* 2.5f * CalAccelaration(i, j);
-			cVers[index].vPos += (newVel + cVers[index].vVel) * (t - lastCalcTime) * 2.5f * 0.5f * 0.005f;
+			newVel = cVers[index].vVel + 0.05f * 2.5f * CalAccelaration(i, j);
+			cVers[index].vPos += (newVel + cVers[index].vVel) * 0.05f * 2.5f * 0.5f * 0.005f;
 			cVers[index].vVel = newVel;
 		}
 	}
@@ -217,7 +213,7 @@ glm::vec3 Cloth::CalGravityForce(int i, int j)
 glm::vec3 Cloth::CalDampingForce(int i, int j)
 {
 	int index = i * (width + 1) + j;
-	cVers[index].Fdamping = -Cd * cVers[index].vVel;
+	cVers[index].Fdamping = - Cd * cVers[index].vVel;
 	return cVers[index].Fdamping;
 }
 
@@ -225,7 +221,8 @@ glm::vec3 Cloth::CalViscousForce(int i, int j)
 {
 	int index = i * (width + 1) + j;
 	CalNormal(i, j);
-	cVers[index].Fviscous = Cv * (cVers[index].vNor * (Ufluid - cVers[index].vVel)) * cVers[index].vNor;
+	cVers[index].Fviscous = - glm::vec3((0.5f - rand() / float(RAND_MAX)) * 4.0f, 0, (0.5f - rand() / float(RAND_MAX)) * 16.0f)
+		+ Cv * (cVers[index].vNor * (Ufluid - cVers[index].vVel)) * cVers[index].vNor;
 	return cVers[index].Fviscous;
 }
 
@@ -299,7 +296,7 @@ glm::vec3 Cloth::CalSpringForceFlexion(int i, int j)
 {
 	int index = i * (width + 1) + j;
 	glm::vec3 Fflexion = glm::vec3(0, 0, 0);
-	if (j < width - 1) {
+	if (j < width-1) {
 		Fflexion += CalSpringForceBetween(cVers[index].vPos,
 			cVers[index + 2].vPos,
 			stiff[2],
@@ -311,15 +308,15 @@ glm::vec3 Cloth::CalSpringForceFlexion(int i, int j)
 			stiff[2],
 			restLen[2]);
 	}
-	if (i < height - 1) {
+	if (i < height-1) {
 		Fflexion += CalSpringForceBetween(cVers[index].vPos,
-			cVers[index + width * 2 + 2].vPos,
+			cVers[index + width*2 + 2].vPos,
 			stiff[2],
 			restLen[2]);
 	}
 	if (i > 1) {
 		Fflexion += CalSpringForceBetween(cVers[index].vPos,
-			cVers[index - width * 2 - 2].vPos,
+			cVers[index - width*2 - 2].vPos,
 			stiff[2],
 			restLen[2]);
 	}
