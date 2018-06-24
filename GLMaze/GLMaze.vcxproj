@@ -22,13 +22,13 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{14E4E525-6850-492D-AE00-53D7BADBDFBB}</ProjectGuid>
     <RootNamespace>GLMaze</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -145,6 +145,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Cloth.cpp" />
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="Fraction.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameConfig.cpp" />
     <ClCompile Include="GLPlatform.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Cloth.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="Fraction.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameConfig.h" />
     <ClInclude Include="GLPlatform.h" />

@@ -26,8 +26,6 @@ Cloth::Cloth(float gridWidth_, int width_, int height_, char* texturePath)
 
 	Ufluid = glm::vec3(1.0f, 0.0f, 0.1f);
 
-	lastCalcTime = (float)glfwGetTime();
-
 	CreateClothVertex();
 	InitBuffers();
 	loadTexture(texturePath);
@@ -143,7 +141,6 @@ void Cloth::InitBuffers()
 
 void Cloth::UpdateVertexPosition()
 {
-	float t = (float)glfwGetTime();
 	int index;
 	glm::vec3 newVel;
 	for (int i = 0; i < height; i++) {
@@ -154,7 +151,6 @@ void Cloth::UpdateVertexPosition()
 			cVers[index].vVel = newVel;
 		}
 	}
-	lastCalcTime = t;
 }
 
 void Cloth::RenderClothPlane()
