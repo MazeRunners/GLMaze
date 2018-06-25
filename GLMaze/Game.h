@@ -28,6 +28,7 @@ private:
 	GLShader* skyShader;
 	GLShader* clothShader;
 	GLShader* particleShader;
+	GLShader* textShader;
 
 	GUI* GUIManager;
 	Camera* camera;
