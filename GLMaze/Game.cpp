@@ -14,7 +14,7 @@ Game::Game() {
 	GUIManager = new GUI(platfrom.getContext().window, configuration);
 	initCamera(configuration);
 
-	model = new GLModel("./resource/maze/maze.obj");
+	model = new GLModel("./resource/maze.blend");
 	const char* path[] = {
 		"./resource/skybox/miramar_ft.png",
 		"./resource/skybox/miramar_bk.png",
@@ -24,7 +24,7 @@ Game::Game() {
 		"./resource/skybox/miramar_lf.png"
 	};
 	skybox = new Skybox(path);
-	cloth = new Cloth(0.1, 20, 20, "./resource/Trailer.mp4_000330.841 _3.jpg");
+	cloth = new Cloth(0.1, 20, 20, "./resource/cloth.jpg");
 
 	particles = new Particle();
 	fraction = new Fraction();

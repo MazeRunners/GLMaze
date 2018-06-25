@@ -99,6 +99,9 @@
     <ClCompile Include="Fraction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -143,7 +146,7 @@
     <ClInclude Include="Cloth.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Fraction.h">
+    <ClInclude Include="Text.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -170,6 +173,12 @@
       <Filter>Source Files\shader</Filter>
     </None>
     <None Include="shader\particle.vert">
+      <Filter>Source Files\shader</Filter>
+    </None>
+    <None Include="shader\textshader.frag">
+      <Filter>Source Files\shader</Filter>
+    </None>
+    <None Include="shader\textshader.vert">
       <Filter>Source Files\shader</Filter>
     </None>
   </ItemGroup>
