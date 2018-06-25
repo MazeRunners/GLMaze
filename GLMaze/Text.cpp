@@ -27,7 +27,7 @@ void Text::init() {
 		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
 
 	
-	if (FT_New_Face(ft, "./font/SF.ttf", 0, &face))
+	if (FT_New_Face(ft, "./font/Carolingia.ttf", 0, &face))
 		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 
 	FT_Set_Pixel_Sizes(face, 0, 48);  //定义字体大小，这表示着我们要从字体面中生成多大的字形

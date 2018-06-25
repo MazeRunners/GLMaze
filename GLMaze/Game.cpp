@@ -168,6 +168,6 @@ void Game::renderText() {
 	glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
 	textShader->use();
 	textShader->setMat4("projection", projection);
-	text->RenderText(*textShader, "This is sample text", -5.0f, 1.0f, 1.0f, glm::vec3(0.9f, 0.2f, 0.8f));
+	text->RenderText(*textShader, "Maze Runner", 15.0f, 555.0f, 0.9f, glm::vec3(0.9f, 0.9f, 0.9f));
 	//text->RenderText(*textShader, "(C) LearnOpenGL.com", 540.0f, 570.0f, 0.5f, glm::vec3(0.4f, 0.2f, 0.8f));
 }
