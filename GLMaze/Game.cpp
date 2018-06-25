@@ -14,8 +14,7 @@ Game::Game() {
 	GUIManager = new GUI(platfrom.getContext().window, configuration);
 	initCamera(configuration);
 
-	model = new GLModel("./resource/maze.obj");
-	//ironman = new GLModel("./resource/IronMan/Iron_Man.blend");
+	model = new GLModel("./resource/maze/maze.obj");
 	const char* path[] = {
 		"./resource/skybox/miramar_ft.png",
 		"./resource/skybox/miramar_bk.png",
@@ -25,7 +24,7 @@ Game::Game() {
 		"./resource/skybox/miramar_lf.png"
 	};
 	skybox = new Skybox(path);
-	cloth = new Cloth(0.01, 20, 20, "./resource/Trailer.mp4_000330.841 _3.jpg");
+	cloth = new Cloth(0.01, 20, 20, "./resource/cloth.jpg");
 
 	particles = new Particle();
 	fraction = new Fraction();
@@ -38,7 +37,6 @@ Game::~Game() {
 	delete GUIManager;
 	delete camera;
 	delete model;
-	delete ironman;
 	delete skybox;
 	delete particles;
 	delete fraction;
@@ -113,14 +111,13 @@ void Game::renderScene() {
 	calculateShadowDepth();
 
 	renderSkybox();
-	//renderMaze(); 
-	//renderParticles();
-	renderCloth();
+	renderMaze();
+	renderParticles();
+	//renderCloth();
 }
 
 void Game::drawObjects(GLShader* shader, bool no_texture) {
 	model->draw(shader, no_texture);
-	//ironman->draw(shader, no_texture);
 }
 
 void Game::calculateShadowDepth() {

@@ -36,7 +36,6 @@ private:
 	Particle* particles;
 	Skybox* skybox;
 	Cloth* cloth;
-	GLModel * ironman;
 	Fraction* fraction;
 
 	void initShader();
