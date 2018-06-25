@@ -28,6 +28,8 @@ Game::Game() {
 
 	particles = new Particle();
 	fraction = new Fraction();
+
+	text = new Text();
 }
 
 Game::~Game() {
@@ -40,6 +42,7 @@ Game::~Game() {
 	delete skybox;
 	delete particles;
 	delete fraction;
+	delete text;
 }
 
 void Game::start() {
@@ -74,6 +77,7 @@ void Game::initShader() {
 	skyShader = new GLShader("./shader/skyshader.vert", "./shader/skyshader.frag");
 	clothShader = new GLShader("./shader/clothShader.vert", "./shader/clothShader.frag");
 	particleShader = new GLShader("./shader/particle.vert", "./shader/particle.frag");
+	textShader = new GLShader("./shader/textshader.vert", "./shader/textshader.frag");
 	viewShader->use();
 	viewShader->setInt("shadowMap", 0);
 }
@@ -114,6 +118,7 @@ void Game::renderScene() {
 	renderMaze();
 	renderParticles();
 	//renderCloth();
+	renderText();
 }
 
 void Game::drawObjects(GLShader* shader, bool no_texture) {
@@ -177,3 +182,11 @@ void Game::renderCloth()
 	cloth->draw();
 }
 
+void Game::renderText() {
+	glm::vec3 color = glm::vec3(0.4f, 0.2f, 0.8f);
+	glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
+	textShader->use();
+	textShader->setMat4("projection", projection);
+	text->RenderText(*textShader, "Maze Runner", 15.0f, 555.0f, 0.9f, glm::vec3(0.9f, 0.9f, 0.9f));
+	//text->RenderText(*textShader, "(C) LearnOpenGL.com", 540.0f, 570.0f, 0.5f, glm::vec3(0.4f, 0.2f, 0.8f));
+}

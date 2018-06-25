@@ -60,8 +60,6 @@ void main()
 
 	vec3 color = vec3(0.0, 0.0, 0.0);
 	color += texture(texture_diffuse1, texCoord).rgb;
-	color += texture(texture_diffuse2, texCoord).rgb;
-	color += texture(texture_diffuse3, texCoord).rgb;
 
     vec3 result = phongLighting(c_ambient, c_diffuse, c_specular, shininess, color);
     fragColor = vec4(result, 1.0);

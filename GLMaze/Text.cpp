@@ -2,18 +2,21 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/norm.hpp>
+
 #include <stdio.h>
 #include <algorithm>
 #include <iostream>
 #include <fstream>
-#include <ft2build.h>
-#include FT_FREETYPE_H 
+
+#include "Camera.h"
 
 Text::Text() {
 	init();
 }
 Text::~Text() {
-	
 	glDeleteBuffers(1, &VBO);
 	glDeleteVertexArrays(1, &VAO);
 }
@@ -26,7 +29,7 @@ void Text::init() {
 	if (FT_Init_FreeType(&ft))
 		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
 
-	
+
 	if (FT_New_Face(ft, "./font/Carolingia.ttf", 0, &face))
 		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 
@@ -79,8 +82,8 @@ void Text::init() {
 
 
 	glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
-	
-	
+
+
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glBindVertexArray(VAO);
@@ -93,7 +96,7 @@ void Text::init() {
 
 }
 
-void Text::RenderText(GLShader &s, std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)
+void Text::RenderText(GLShader &s, std::string text, float x, float y, float scale, glm::vec3 color)
 {
 	// 激活对应的渲染状态
 	s.use();
