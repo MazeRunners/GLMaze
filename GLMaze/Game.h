@@ -12,6 +12,7 @@
 #include "Cloth.h"
 #include "Particle.h"
 #include "Fraction.h"
+#include "Text.h"
 
 class Game {
 public:
@@ -38,6 +39,7 @@ private:
 	Cloth* cloth;
 	GLModel * ironman;
 	Fraction* fraction;
+	Text* text;
 
 	void initShader();
 	void initCamera(GameConfig::Parameters config);
@@ -59,6 +61,6 @@ private:
 	void renderSkybox();
 	void renderParticles();
 	void renderCloth();
-
+	void renderText();
 	void drawObjects(GLShader* shader, bool no_texture);
 };
