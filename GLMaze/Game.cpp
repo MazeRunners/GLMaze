@@ -113,7 +113,7 @@ void Game::renderScene() {
 
 	renderSkybox();
 	//renderMaze(); 
-	renderParticles();
+	//renderParticles();
 	renderCloth();
 }
 
@@ -173,7 +173,8 @@ void Game::renderCloth()
 	clothShader->setVec3("lightPos", lightSpace.position);
 	glm::mat4 viewTransformation = camera->getViewTransformation();
 	clothShader->setMat4("viewTransformation", viewTransformation);
-	clothShader->setMat4("lightSpaceTransformation", lightSpace.transformation);
+	//clothShader->setMat4("lightSpaceTransformation", lightSpace.transformation);
+	clothShader->setInt("clothTexture", 0);
 	// clothShader->setVec3("clothColor", glm::vec3(1.0f, 0, 0));
 	cloth->draw();
 }

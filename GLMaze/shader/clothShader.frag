@@ -2,7 +2,7 @@
 
 uniform vec3 viewPos; 
 uniform vec3 lightPos;
-uniform sampler2D texture;
+uniform sampler2D clothTexture;
 
 in vec4 fragLightSpacePos;
 in vec3 fragPos;
@@ -36,7 +36,7 @@ void main() {
     float c_specular = 0.3;
     float shininess = 1.0;
 
-    vec3 color = texture(texture, texCoord).rgb;
+    vec3 color = texture(clothTexture, texCoord).rgb;
     vec3 result = phongLighting(c_ambient, c_diffuse, c_specular, shininess, color);
 	FragColor = vec4(result, 1.0);
 }

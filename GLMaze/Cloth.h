@@ -21,7 +21,7 @@ struct ClothVertex {
 
 class Cloth { 
 public:    
-	Cloth(float gridWidth_, int width_, int height_, char* texturePath);  // initialization    
+	Cloth(float gridWidth_, int width_, int height_, const char* texturePath);  // initialization    
 	~Cloth();  // free the space for safety    
 	void draw();  // ClothSimulation main entrance    
 	void ProcessInput(GLFWwindow* window);
@@ -48,7 +48,7 @@ private:
 	unsigned int texture;
 
 private:
-	void loadTexture(char* path);
+	void loadTexture(const char* path);
 	void CreateClothVertex();     // create all vertex around center (0, 0)
 	void InitClothVertex(int i, int j);
 	void InitBuffers();
