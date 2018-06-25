@@ -14,7 +14,7 @@ Collision::Collision() {
 	rp3d::Transform transform = rp3d::Transform::identity();
 	cameraProxy = cameraBody->addCollisionShape(camearShape, transform);
 
-	maze = new ConcaveMesh(world, "./resource/maze.obj");
+	maze = new ConcaveMesh(world, "./resource/maze/maze.obj");
 
 }
 

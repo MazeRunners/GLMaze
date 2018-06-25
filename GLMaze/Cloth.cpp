@@ -1,10 +1,16 @@
+#include "Cloth.h"
+
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
 #include <stb_image.h>
+
 #include <iostream>
 
-#include "Cloth.h"
+
 
 using std::vector;
 
@@ -24,7 +30,11 @@ Cloth::Cloth(float gridWidth_, int width_, int height_, const char* texturePath)
 	Cd = 0.2f;
 	Cv = 8.0f;
 
+<<<<<<< HEAD
 	Ufluid = glm::vec3(0.1f, 3.0f, 0.4f);
+=======
+	Ufluid = glm::vec3(1.0f, 0.0f, -0.5f);
+>>>>>>> c5b0fb4d5e3073690600d36a46ab604cdf4939aa
 
 	CreateClothVertex();
 	InitBuffers();
@@ -37,8 +47,13 @@ Cloth::~Cloth()
 
 void Cloth::draw()
 {
+<<<<<<< HEAD
 	for (int i = 0; i < height + 1; i++) {
 		for (int j = 1; j < width + 1; j++) {
+=======
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width + 1; j++) {
+>>>>>>> c5b0fb4d5e3073690600d36a46ab604cdf4939aa
 			UpdateForceFusion(i, j);
 		}
 	}
@@ -80,13 +95,17 @@ void Cloth::loadTexture(const char * path)
 void Cloth::CreateClothVertex()
 {
 	// vertices
-	cVers = vector<ClothVertex> ((width + 1) * (height + 1));
+	cVers = vector<ClothVertex>((width + 1) * (height + 1));
 	float x = 0.0f - (float)width * gridWidth * 0.5;
 	float y = 0.0f - (float)height * gridWidth * 0.5;
 	for (int i = 0; i < height + 1; i++) {
 		x = 0.0f - (float)width * gridWidth * 0.5;
 		for (int j = 0; j < width + 1; j++) {
+<<<<<<< HEAD
 			cVers[i * (width + 1) + j].vPos = glm::vec3(0, y + 7.0f, x);
+=======
+			cVers[i * (width + 1) + j].vPos = glm::vec3(x, y, 0);
+>>>>>>> c5b0fb4d5e3073690600d36a46ab604cdf4939aa
 			cVers[i * (width + 1) + j].vTex = glm::vec2((float)i / (float)height, (float)j / (float)width);
 			x += gridWidth;
 			InitClothVertex(i, j);
@@ -112,7 +131,7 @@ void Cloth::CreateClothVertex()
 void Cloth::InitClothVertex(int i, int j)
 {
 	int index = (width + 1) * i + j;
-	cVers[index].Fspring = glm::vec3(0,0,0);
+	cVers[index].Fspring = glm::vec3(0, 0, 0);
 	cVers[index].Fgravity = CalGravityForce(i, j);
 	cVers[index].Fdamping = glm::vec3(0, 0, 0);
 	cVers[index].Fviscous = glm::vec3(0, 0, 0);
@@ -123,11 +142,11 @@ void Cloth::InitBuffers()
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
-	
+
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(ClothVertex) * cVers.size() , &cVers[0], GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(ClothVertex) * cVers.size(), &cVers[0], GL_DYNAMIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), &indices[0], GL_STATIC_DRAW);
@@ -148,12 +167,43 @@ void Cloth::UpdateVertexPosition()
 {
 	int index;
 	glm::vec3 newVel;
+<<<<<<< HEAD
 	for (int i = 0; i < height + 1; i++) {
 		for (int j = 1; j < width + 1; j++) {
 			index = (width + 1) * i + j;
 			newVel = cVers[index].vVel + 0.2f * CalAccelaration(i, j);
 			cVers[index].vPos += (newVel + cVers[index].vVel) * 0.2f * 0.0005f;
+=======
+
+	bool debug = false;
+
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width + 1; j++) {
+			index = (width + 1) * i + j;
+			newVel = cVers[index].vVel + 0.05f * 2.5f * CalAccelaration(i, j);
+
+			if (debug) {
+				printf("\nbefore\n");
+
+				printf("%d %d position %f %f %f\n", i, j,
+					cVers[index].vPos.x, cVers[index].vPos.y, cVers[index].vPos.z);
+
+				printf("%d %d position %f %f %f\n", i, j,
+					cVers[index].vVel.x, cVers[index].vVel.y, cVers[index].vVel.z);
+			}
+
+			cVers[index].vPos += (newVel + cVers[index].vVel) * 0.05f * 2.5f * 0.5f * 0.005f;
+>>>>>>> c5b0fb4d5e3073690600d36a46ab604cdf4939aa
 			cVers[index].vVel = newVel;
+
+			if (debug) {
+				printf("\nafter\n");
+				printf("%d %d position %f %f %f\n", i, j,
+					cVers[index].vPos.x, cVers[index].vPos.y, cVers[index].vPos.z);
+
+				printf("%d %d position %f %f %f\n", i, j,
+					cVers[index].vVel.x, cVers[index].vVel.y, cVers[index].vVel.z);
+			}
 		}
 	}
 }
@@ -165,6 +215,7 @@ void Cloth::RenderClothPlane()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(ClothVertex) * cVers.size(), &cVers[0], GL_DYNAMIC_DRAW);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 }
 
 glm::vec3 Cloth::CalNormal(int i, int j)
@@ -218,7 +269,7 @@ glm::vec3 Cloth::CalGravityForce(int i, int j)
 glm::vec3 Cloth::CalDampingForce(int i, int j)
 {
 	int index = i * (width + 1) + j;
-	cVers[index].Fdamping = - Cd * cVers[index].vVel;
+	cVers[index].Fdamping = -Cd * cVers[index].vVel;
 	return cVers[index].Fdamping;
 }
 
@@ -226,7 +277,11 @@ glm::vec3 Cloth::CalViscousForce(int i, int j)
 {
 	int index = i * (width + 1) + j;
 	CalNormal(i, j);
+<<<<<<< HEAD
 	cVers[index].Fviscous = - glm::vec3((0.5f - rand() / float(RAND_MAX)) * 4.0f, 0, (0.5f - rand() / float(RAND_MAX)) * 4.0f)
+=======
+	cVers[index].Fviscous = -glm::vec3((0.5f - rand() / float(RAND_MAX)) * 4.0f, 0, (0.5f - rand() / float(RAND_MAX)) * 4.0f)
+>>>>>>> c5b0fb4d5e3073690600d36a46ab604cdf4939aa
 		+ Cv * (cVers[index].vNor * (Ufluid - cVers[index].vVel)) * cVers[index].vNor;
 	return cVers[index].Fviscous;
 }
@@ -301,7 +356,7 @@ glm::vec3 Cloth::CalSpringForceFlexion(int i, int j)
 {
 	int index = i * (width + 1) + j;
 	glm::vec3 Fflexion = glm::vec3(0, 0, 0);
-	if (j < width-1) {
+	if (j < width - 1) {
 		Fflexion += CalSpringForceBetween(cVers[index].vPos,
 			cVers[index + 2].vPos,
 			stiff[2],
@@ -313,15 +368,15 @@ glm::vec3 Cloth::CalSpringForceFlexion(int i, int j)
 			stiff[2],
 			restLen[2]);
 	}
-	if (i < height-1) {
+	if (i < height - 1) {
 		Fflexion += CalSpringForceBetween(cVers[index].vPos,
-			cVers[index + width*2 + 2].vPos,
+			cVers[index + width * 2 + 2].vPos,
 			stiff[2],
 			restLen[2]);
 	}
 	if (i > 1) {
 		Fflexion += CalSpringForceBetween(cVers[index].vPos,
-			cVers[index - width*2 - 2].vPos,
+			cVers[index - width * 2 - 2].vPos,
 			stiff[2],
 			restLen[2]);
 	}
@@ -334,9 +389,9 @@ void Cloth::AddManualForce()
 
 glm::vec3 Cloth::UpdateForceFusion(int i, int j)
 {
-	CalSpringForce(i, j);
-	CalDampingForce(i, j);
-	CalViscousForce(i, j);
+	//CalSpringForce(i, j);
+	//CalDampingForce(i, j);
+	//CalViscousForce(i, j);
 	int index = (width + 1) * i + j;
 	cVers[index].Ffuse = cVers[index].Fdamping
 		+ cVers[index].Fgravity

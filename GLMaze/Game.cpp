@@ -14,8 +14,7 @@ Game::Game() {
 	GUIManager = new GUI(platfrom.getContext().window, configuration);
 	initCamera(configuration);
 
-	model = new GLModel("./resource/maze.obj");
-	//ironman = new GLModel("./resource/IronMan/Iron_Man.blend");
+	model = new GLModel("./resource/maze/maze.obj");
 	const char* path[] = {
 		"./resource/skybox/miramar_ft.png",
 		"./resource/skybox/miramar_bk.png",
@@ -29,18 +28,21 @@ Game::Game() {
 
 	particles = new Particle();
 	fraction = new Fraction();
+
+	text = new Text();
 }
 
 Game::~Game() {
 	delete shadowShader;
 	delete viewShader;
+	delete clothShader;
 	delete GUIManager;
 	delete camera;
 	delete model;
-	delete ironman;
 	delete skybox;
 	delete particles;
 	delete fraction;
+	delete text;
 }
 
 void Game::start() {
@@ -56,7 +58,7 @@ void Game::start() {
 
 		Camera::Parameters camera_args = camera->calcNextParameter(GUIManager->getUserInput());
 		collision.updateCameraBody(camera_args.position.x, camera_args.position.y, camera_args.position.z);
-		if (!collision.testCollision()) {
+		if (!collision.testCollision() || true) {
 			camera->moveTo(camera_args);
 		}
 
@@ -75,6 +77,7 @@ void Game::initShader() {
 	skyShader = new GLShader("./shader/skyshader.vert", "./shader/skyshader.frag");
 	clothShader = new GLShader("./shader/clothShader.vert", "./shader/clothShader.frag");
 	particleShader = new GLShader("./shader/particle.vert", "./shader/particle.frag");
+	textShader = new GLShader("./shader/textshader.vert", "./shader/textshader.frag");
 	viewShader->use();
 	viewShader->setInt("shadowMap", 0);
 }
@@ -112,14 +115,14 @@ void Game::renderScene() {
 	calculateShadowDepth();
 
 	renderSkybox();
-	renderMaze(); 
-	//renderParticles();
+	renderMaze();
+	renderParticles();
 	renderCloth();
+	renderText();
 }
 
 void Game::drawObjects(GLShader* shader, bool no_texture) {
 	model->draw(shader, no_texture);
-	//ironman->draw(shader, no_texture);
 }
 
 void Game::calculateShadowDepth() {
@@ -173,8 +176,17 @@ void Game::renderCloth()
 	clothShader->setVec3("lightPos", lightSpace.position);
 	glm::mat4 viewTransformation = camera->getViewTransformation();
 	clothShader->setMat4("viewTransformation", viewTransformation);
-	clothShader->setMat4("lightSpaceTransformation", lightSpace.transformation);
+	//clothShader->setMat4("lightSpaceTransformation", lightSpace.transformation);
+	clothShader->setInt("clothTexture", 0);
 	// clothShader->setVec3("clothColor", glm::vec3(1.0f, 0, 0));
 	cloth->draw();
 }
 
+void Game::renderText() {
+	glm::vec3 color = glm::vec3(0.4f, 0.2f, 0.8f);
+	glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
+	textShader->use();
+	textShader->setMat4("projection", projection);
+	text->RenderText(*textShader, "Maze Runner", 15.0f, 555.0f, 0.9f, glm::vec3(0.9f, 0.9f, 0.9f));
+	//text->RenderText(*textShader, "(C) LearnOpenGL.com", 540.0f, 570.0f, 0.5f, glm::vec3(0.4f, 0.2f, 0.8f));
+}

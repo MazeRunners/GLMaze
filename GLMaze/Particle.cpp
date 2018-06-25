@@ -43,7 +43,7 @@ void Particle::init()
 	}
 
 	//Texture = loadDDS("./resource/particle.DDS");
-	Texture = loadDDS("./resource/smallsnow.DDS");
+	Texture = loadDDS("./resource/particle/smallsnow.DDS");
 
 	glGenBuffers(1, &billVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, billVBO);

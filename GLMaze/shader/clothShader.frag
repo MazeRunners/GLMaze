@@ -2,7 +2,11 @@
 
 uniform vec3 viewPos; 
 uniform vec3 lightPos;
+<<<<<<< HEAD
 uniform sampler2D myTexture;
+=======
+uniform sampler2D clothTexture;
+>>>>>>> c5b0fb4d5e3073690600d36a46ab604cdf4939aa
 
 in vec4 fragLightSpacePos;
 in vec3 fragPos;
@@ -36,7 +40,11 @@ void main() {
     float c_specular = 0.3;
     float shininess = 1.0;
 
+<<<<<<< HEAD
     vec3 color = texture(myTexture, texCoord).rgb;
+=======
+    vec3 color = texture(clothTexture, texCoord).rgb;
+>>>>>>> c5b0fb4d5e3073690600d36a46ab604cdf4939aa
     vec3 result = phongLighting(c_ambient, c_diffuse, c_specular, shininess, color);
 	FragColor = vec4(result, 1.0);
 }
