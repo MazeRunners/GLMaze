@@ -10,7 +10,7 @@
 #include "Collision.h"
 #include "Skybox.h"
 #include "GameConfig.h"
-
+#include "Text.h"
 #include "Particle.h"
 
 
@@ -27,6 +27,7 @@ private:
 
 	GLShader* skyShader;
 	GLShader* particleShader;
+	GLShader* textShader;
 
 	GUI* GUIManager;
 	Camera* camera;
@@ -36,6 +37,7 @@ private:
 	Particle* particles;
 	Skybox* skybox;
 	GLModel * ironman;
+	Text* text;
 
 	void initShader();
 	void initCamera(GameConfig::Parameters config);
@@ -56,6 +58,6 @@ private:
 
 	void renderSkybox();
 	void renderParticles();
-
+	void renderText();
 	void drawObjects(GLShader* shader, bool no_texture);
 };

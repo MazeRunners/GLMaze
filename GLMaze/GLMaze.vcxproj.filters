@@ -25,6 +25,9 @@
     <Filter Include="library\rp3d">
       <UniqueIdentifier>{fe2e0943-0102-43ac-afad-e69c4e28ed0e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\font">
+      <UniqueIdentifier>{02fa662f-e996-4448-826b-0d446ad9fd88}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp">
@@ -93,6 +96,9 @@
     <ClCompile Include="Particle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -134,6 +140,9 @@
     <ClInclude Include="Particle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\shader.frag">
@@ -160,5 +169,19 @@
     <None Include="shader\particle.vert">
       <Filter>Source Files\shader</Filter>
     </None>
+    <None Include="textshader.vert">
+      <Filter>Source Files\shader</Filter>
+    </None>
+    <None Include="textshader.frag">
+      <Filter>Source Files\shader</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="font\Arial.ttf">
+      <Filter>Source Files\font</Filter>
+    </Font>
+    <Font Include="font\SF.ttf">
+      <Filter>Source Files\font</Filter>
+    </Font>
   </ItemGroup>
 </Project>

@@ -13,8 +13,8 @@ Game::Game() {
 	GUIManager = new GUI(platfrom.getContext().window, configuration);
 	initCamera(configuration);
 
-	model = new GLModel("./resource/maze.obj");
-	//ironman = new GLModel("./resource/IronMan/Iron_Man.blend");
+	//model = new GLModel("./resource/maze_addrobot.blend");
+	ironman = new GLModel("./resource/maze.blend");
 	const char* path[] = {
 		"./resource/skybox/miramar_ft.png",
 		"./resource/skybox/miramar_bk.png",
@@ -24,8 +24,8 @@ Game::Game() {
 		"./resource/skybox/miramar_lf.png"
 	};
 	skybox = new Skybox(path);
-
 	particles = new Particle();
+	text = new Text();
 }
 
 Game::~Game() {
@@ -37,6 +37,7 @@ Game::~Game() {
 	delete ironman;
 	delete skybox;
 	delete particles;
+	delete text;
 }
 
 void Game::start() {
@@ -70,6 +71,7 @@ void Game::initShader() {
 	viewShader = new GLShader("./shader/shader.vert", "./shader/shader.frag");
 	skyShader = new GLShader("./shader/skyshader.vert", "./shader/skyshader.frag");
 	particleShader = new GLShader("./shader/particle.vert", "./shader/particle.frag");
+	textShader = new GLShader("./shader/textshader.vert", "./shader/textshader.frag");
 	viewShader->use();
 	viewShader->setInt("shadowMap", 0);
 }
@@ -109,11 +111,12 @@ void Game::renderScene() {
 	renderSkybox();
 	renderMaze(); 
 	renderParticles();
+	renderText();
 }
 
 void Game::drawObjects(GLShader* shader, bool no_texture) {
-	model->draw(shader, no_texture);
-	//ironman->draw(shader, no_texture);
+	//model->draw(shader, no_texture);
+	ironman->draw(shader, no_texture);
 }
 
 void Game::calculateShadowDepth() {
@@ -160,3 +163,11 @@ void Game::renderParticles()
 	particles->draw(camera);
 }
 
+void Game::renderText() {
+	glm::vec3 color = glm::vec3(0.4f, 0.2f, 0.8f);
+	glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
+	textShader->use();
+	textShader->setMat4("projection", projection);
+	text->RenderText(*textShader, "This is sample text", -5.0f, 1.0f, 1.0f, glm::vec3(0.9f, 0.2f, 0.8f));
+	//text->RenderText(*textShader, "(C) LearnOpenGL.com", 540.0f, 570.0f, 0.5f, glm::vec3(0.4f, 0.2f, 0.8f));
+}
