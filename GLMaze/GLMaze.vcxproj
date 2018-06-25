@@ -73,8 +73,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)..\library\reactphysics3d-master\testbed\common;$(ProjectDir)..\library\reactphysics3d-master\testbed\opengl-framework\src;$(ProjectDir)..\library\reactphysics3d-master\testbed\meshes;$(ProjectDir)..\library\reactphysics3d-master\src;$(ProjectDir)..\library\stb;$(ProjectDir)..\library\assimp-4.1.0\include;$(ProjectDir)..\library\imgui;$(ProjectDir)..\library\glm-0.9.8.5\glm;$(ProjectDir)..\library\glfw-3.2.1.bin.WIN32\include;$(ProjectDir)..\library\glad\include;$(ProjectDir)..\library\glew-2.1.0-win32\glew-2.1.0\include;$(ProjectDir)..\library\libconfig-1.7.2\lib;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)..\library\reactphysics3d-master\lib;$(ProjectDir)..\library\assimp-4.1.0\lib;$(ProjectDir)..\library\glfw-3.2.1.bin.WIN32\lib-vc2015;$(ProjectDir)..\library\libconfig-1.7.2\lib;$(ProjectDir)..\library\glew-2.1.0-win32\glew-2.1.0\lib\Release\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\Github\GLMaze\library\freetype\include\freetype\config;E:\Github\GLMaze\library\freetype\include\freetype;E:\Github\GLMaze\library\freetype\include;$(ProjectDir)..\library\reactphysics3d-master\testbed\common;$(ProjectDir)..\library\reactphysics3d-master\testbed\opengl-framework\src;$(ProjectDir)..\library\reactphysics3d-master\testbed\meshes;$(ProjectDir)..\library\reactphysics3d-master\src;$(ProjectDir)..\library\stb;$(ProjectDir)..\library\assimp-4.1.0\include;$(ProjectDir)..\library\imgui;$(ProjectDir)..\library\glm-0.9.8.5\glm;$(ProjectDir)..\library\glfw-3.2.1.bin.WIN32\include;$(ProjectDir)..\library\glad\include;$(ProjectDir)..\library\glew-2.1.0-win32\glew-2.1.0\include;$(ProjectDir)..\library\libconfig-1.7.2\lib;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\Github\GLMaze\library\freetype\lib;$(ProjectDir)..\library\reactphysics3d-master\lib;$(ProjectDir)..\library\assimp-4.1.0\lib;$(ProjectDir)..\library\glfw-3.2.1.bin.WIN32\lib-vc2015;$(ProjectDir)..\library\libconfig-1.7.2\lib;$(ProjectDir)..\library\glew-2.1.0-win32\glew-2.1.0\lib\Release\Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -88,7 +88,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc140-mt.lib;libconfig++.lib;reactphysics3d.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc140-mt.lib;libconfig++.lib;reactphysics3d.lib;glew32s.lib;freetype.lib%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -144,6 +144,7 @@
     <ClCompile Include="..\library\reactphysics3d-master\testbed\opengl-framework\src\Object3D.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Cloth.cpp" />
+    <ClCompile Include="Text.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameConfig.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="GLMesh.h" />
     <ClInclude Include="GLModel.h" />
     <ClInclude Include="Particle.h" />
+    <ClInclude Include="Text.h" />
     <ClInclude Include="Skybox.h" />
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +183,12 @@
     <None Include="shader\shadow.vert" />
     <None Include="shader\skyshader.frag" />
     <None Include="shader\skyshader.vert" />
+    <None Include="shader\textshader.frag" />
+    <None Include="shader\textshader.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="font\Arial.ttf" />
+    <Font Include="font\SF.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
