@@ -34,6 +34,7 @@ Game::Game() {
 Game::~Game() {
 	delete shadowShader;
 	delete viewShader;
+	delete clothShader;
 	delete GUIManager;
 	delete camera;
 	delete model;
@@ -56,7 +57,7 @@ void Game::start() {
 
 		Camera::Parameters camera_args = camera->calcNextParameter(GUIManager->getUserInput());
 		collision.updateCameraBody(camera_args.position.x, camera_args.position.y, camera_args.position.z);
-		if (!collision.testCollision()) {
+		if (!collision.testCollision() || true) {
 			camera->moveTo(camera_args);
 		}
 

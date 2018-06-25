@@ -5,10 +5,12 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
 #include <stb_image.h>
+
 #include <iostream>
 
-#include "Cloth.h"
+
 
 using std::vector;
 
@@ -19,18 +21,16 @@ Cloth::Cloth(float gridWidth_, int width_, int height_, const char* texturePath)
 	height = height_;
 
 	restLen[0] = gridWidth;               // structural
-	restLen[1] = gridWidth * sqrt(2); // shear
+	restLen[1] = gridWidth * pow(2, 0.5); // shear
 	restLen[2] = gridWidth * 2;           // flexion  
-	stiff[0] = 10.0f; // structural
-	stiff[1] = 10.0f; // shear
-	stiff[2] = 10.0f; // flexion  
-	Cg = 9.8f;
-	Cd = 1.0f;
-	Cv = 1.0f;
+	stiff[0] = 400.0f; // structural
+	stiff[1] = 250.0f; // shear
+	stiff[2] = 250.0f; // flexion  
+	Cg = 4.8f;
+	Cd = 0.8f;
+	Cv = 8.0f;
 
-	Ufluid = glm::vec3(4.0f, 1.0f, -2.0f);
-
-	lastCalcTime = (float)glfwGetTime();
+	Ufluid = glm::vec3(1.0f, 0.0f, -0.5f);
 
 	CreateClothVertex();
 	InitBuffers();
@@ -43,6 +43,11 @@ Cloth::~Cloth()
 
 void Cloth::draw()
 {
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width + 1; j++) {
+			UpdateForceFusion(i, j);
+		}
+	}
 	UpdateVertexPosition();
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	RenderClothPlane();
@@ -149,12 +154,35 @@ void Cloth::UpdateVertexPosition()
 {
 	int index;
 	glm::vec3 newVel;
+
+	bool debug = false;
+
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width + 1; j++) {
 			index = (width + 1) * i + j;
-			newVel = cVers[index].vVel + 2.5f * CalAccelaration(i, j);
-			cVers[index].vPos += (newVel + cVers[index].vVel) * 2.5f * 0.5f * 0.005f;
+			newVel = cVers[index].vVel + 0.05f * 2.5f * CalAccelaration(i, j);
+
+			if (debug) {
+				printf("\nbefore\n");
+
+				printf("%d %d position %f %f %f\n", i, j,
+					cVers[index].vPos.x, cVers[index].vPos.y, cVers[index].vPos.z);
+
+				printf("%d %d position %f %f %f\n", i, j,
+					cVers[index].vVel.x, cVers[index].vVel.y, cVers[index].vVel.z);
+			}
+
+			cVers[index].vPos += (newVel + cVers[index].vVel) * 0.05f * 2.5f * 0.5f * 0.005f;
 			cVers[index].vVel = newVel;
+
+			if (debug) {
+				printf("\nafter\n");
+				printf("%d %d position %f %f %f\n", i, j,
+					cVers[index].vPos.x, cVers[index].vPos.y, cVers[index].vPos.z);
+
+				printf("%d %d position %f %f %f\n", i, j,
+					cVers[index].vVel.x, cVers[index].vVel.y, cVers[index].vVel.z);
+			}
 		}
 	}
 }
@@ -164,7 +192,6 @@ void Cloth::RenderClothPlane()
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(ClothVertex) * cVers.size(), &cVers[0], GL_DYNAMIC_DRAW);
-	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
@@ -203,7 +230,6 @@ glm::vec3 Cloth::CalSpringForce(int i, int j)
 			+ CalSpringForceShear(i, j)
 			+ CalSpringForceFlexion(i, j);
 	}
-
 	return cVers[index].Fspring;
 }
 
@@ -226,7 +252,8 @@ glm::vec3 Cloth::CalViscousForce(int i, int j)
 {
 	int index = i * (width + 1) + j;
 	CalNormal(i, j);
-	cVers[index].Fviscous = Cv * (cVers[index].vNor * (Ufluid - cVers[index].vVel)) * cVers[index].vNor;
+	cVers[index].Fviscous = -glm::vec3((0.5f - rand() / float(RAND_MAX)) * 4.0f, 0, (0.5f - rand() / float(RAND_MAX)) * 4.0f)
+		+ Cv * (cVers[index].vNor * (Ufluid - cVers[index].vVel)) * cVers[index].vNor;
 	return cVers[index].Fviscous;
 }
 
@@ -333,9 +360,9 @@ void Cloth::AddManualForce()
 
 glm::vec3 Cloth::UpdateForceFusion(int i, int j)
 {
-	CalSpringForce(i, j);
-	CalDampingForce(i, j);
-	CalViscousForce(i, j);
+	//CalSpringForce(i, j);
+	//CalDampingForce(i, j);
+	//CalViscousForce(i, j);
 	int index = (width + 1) * i + j;
 	cVers[index].Ffuse = cVers[index].Fdamping
 		+ cVers[index].Fgravity
@@ -346,7 +373,6 @@ glm::vec3 Cloth::UpdateForceFusion(int i, int j)
 
 glm::vec3 Cloth::CalAccelaration(int i, int j)
 {
-	UpdateForceFusion(i, j);
 	int index = (width + 1) * i + j;
 	glm::vec3 acc = cVers[index].Ffuse / cVers[index].mass;
 	return acc;

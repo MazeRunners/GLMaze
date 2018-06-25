@@ -10,18 +10,17 @@ struct ClothVertex {
 	glm::vec3 vNor;
 	glm::vec2 vTex;
 	glm::vec3 vVel;
-	float mass;
+	float mass = 1.0f;
 	glm::vec3 Fspring;
 	glm::vec3 Fgravity;
 	glm::vec3 Fdamping;
 	glm::vec3 Fviscous;
 	glm::vec3 Ffuse;  // force fusion 
-	ClothVertex(): vPos(0,0,0), vNor(0,0,1), vTex(0,0), vVel(0,0,0), mass(1.0f) {}
 };
 
-class Cloth { 
-public:    
-	Cloth(float gridWidth_, int width_, int height_, const char* texturePath);  // initialization    
+class Cloth {
+public:
+	Cloth(float gridWidth, int width, int height, const char* texturePath);  // initialization    
 	~Cloth();  // free the space for safety    
 	void draw();  // ClothSimulation main entrance    
 	void ProcessInput(GLFWwindow* window);
@@ -43,11 +42,9 @@ private:
 	glm::vec3 Ufluid;   // viscous coefficient
 	float lastCalcTime;
 
-private:
 	unsigned int VAO, VBO, EBO;
 	unsigned int texture;
 
-private:
 	void loadTexture(const char* path);
 	void CreateClothVertex();     // create all vertex around center (0, 0)
 	void InitClothVertex(int i, int j);
