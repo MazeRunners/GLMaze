@@ -25,7 +25,7 @@ Game::Game() {
 		"./resource/skybox/miramar_lf.png"
 	};
 	skybox = new Skybox(path);
-	cloth = new Cloth(0.01, 20, 20, "./resource/Trailer.mp4_000330.841 _3.jpg");
+	cloth = new Cloth(0.1, 20, 20, "./resource/Trailer.mp4_000330.841 _3.jpg");
 
 	particles = new Particle();
 	fraction = new Fraction();
@@ -112,8 +112,8 @@ void Game::renderScene() {
 	calculateShadowDepth();
 
 	renderSkybox();
-	//renderMaze(); 
-	renderParticles();
+	renderMaze(); 
+	//renderParticles();
 	renderCloth();
 }
 
