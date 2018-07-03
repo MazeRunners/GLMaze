@@ -1,7 +1,4 @@
-#include "Cloth.h"
-
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -10,56 +7,70 @@
 
 #include <iostream>
 
-
+#include "Cloth.h"
+#include "Config.h"
 
 using std::vector;
 
-Cloth::Cloth(float gridWidth_, int width_, int height_, const char* texturePath)
-{
-	gridWidth = gridWidth_;
-	width = width_;
-	height = height_;
+Cloth::Cloth() {
+	readConfig();
 
 	restLen[0] = gridWidth;               // structural
 	restLen[1] = gridWidth * pow(2, 0.5); // shear
-	restLen[2] = gridWidth * 2;           // flexion  
-	stiff[0] = 400.0f; // structural
-	stiff[1] = 250.0f; // shear
-	stiff[2] = 250.0f; // flexion  
-	Cg = 4.8f;
-	Cd = 0.8f;
-	Cv = 8.0f;
+	restLen[2] = gridWidth * 2;           // flexion
 
-	Ufluid = glm::vec3(1.0f, 0.0f, -0.5f);
-
-	CreateClothVertex();
-	InitBuffers();
+	createClothVertex();
+	initBuffers();
 	loadTexture(texturePath);
 }
 
-Cloth::~Cloth()
-{
+Cloth::~Cloth() {
 }
 
-void Cloth::draw()
-{
-	for (int i = 0; i < height; i++) {
-		for (int j = 0; j < width + 1; j++) {
-			UpdateForceFusion(i, j);
+void Cloth::render(glm::vec3 cameraPos, glm::mat4 viewTransformation, Lighting* lighting) {
+	clothShader.use();
+	clothShader.setVec3("viewPos", cameraPos);
+	clothShader.setVec3("lightPos", lighting->getLightSpace().position);
+	clothShader.setMat4("viewTransformation", viewTransformation);
+	//clothShader.setMat4("lightSpaceTransformation", lighting->getLightSpace().transformation);
+	// clothShader->setVec3("clothColor", glm::vec3(1.0f, 0, 0));
+
+	for (int i = 0; i < height + 1; i++) {
+		for (int j = 1; j < width + 1; j++) {
+			updateForceFusion(i, j);
 		}
 	}
-	UpdateVertexPosition();
-	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	RenderClothPlane();
+
+	updateVertexPosition();
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	renderClothPlane();
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
-void Cloth::ProcessInput(GLFWwindow * window)
-{
+void Cloth::processInput(GLFWwindow * window) {
 }
 
-void Cloth::loadTexture(const char * path)
-{
+void Cloth::readConfig() {
+	Config config("./config/cloth.cfg");
+
+	gridWidth = config.getFloat("gridWidth");
+	width = config.getInt("width");
+	height = config.getInt("height");
+
+	glm::vec3 stiffVec3 = config.getVec3("stiff");
+
+	stiff[0] = stiffVec3[0]; // structural
+	stiff[1] = stiffVec3[1]; // shear
+	stiff[2] = stiffVec3[2]; // flexion  
+
+	coefG = config.getFloat("coefG");
+	coefD = config.getFloat("coefD");
+	coefV = config.getFloat("coefV");
+
+	coefFluid = config.getVec3("coefFluid");
+}
+
+void Cloth::loadTexture(const char * path) {
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
 										   // set the texture wrapping parameters
@@ -68,23 +79,21 @@ void Cloth::loadTexture(const char * path)
 	// set texture filtering parameters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 	// load image, create texture and generate mipmaps
 	int width, height, nrChannels;
 	unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0);
-	if (data)
-	{
+	if (data) {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
-	else
-	{
+	else {
 		std::cout << "Failed to load texture" << std::endl;
 	}
 	stbi_image_free(data);
 }
 
-void Cloth::CreateClothVertex()
-{
+void Cloth::createClothVertex() {
 	// vertices
 	cVers = vector<ClothVertex>((width + 1) * (height + 1));
 	float x = 0.0f - (float)width * gridWidth * 0.5;
@@ -92,13 +101,14 @@ void Cloth::CreateClothVertex()
 	for (int i = 0; i < height + 1; i++) {
 		x = 0.0f - (float)width * gridWidth * 0.5;
 		for (int j = 0; j < width + 1; j++) {
-			cVers[i * (width + 1) + j].vPos = glm::vec3(x, y, 0);
+			cVers[i * (width + 1) + j].vPos = glm::vec3(6.0, y + 4.0f, x - 3.0f);
 			cVers[i * (width + 1) + j].vTex = glm::vec2((float)i / (float)height, (float)j / (float)width);
 			x += gridWidth;
-			InitClothVertex(i, j);
+			initClothVertex(i, j);
 		}
 		y += gridWidth;
 	}
+
 	// indices for EBO
 	indices = vector<unsigned int>(width * height * 6);
 	int k = 0;
@@ -115,17 +125,15 @@ void Cloth::CreateClothVertex()
 	}
 }
 
-void Cloth::InitClothVertex(int i, int j)
-{
+void Cloth::initClothVertex(int i, int j) {
 	int index = (width + 1) * i + j;
-	cVers[index].Fspring = glm::vec3(0, 0, 0);
-	cVers[index].Fgravity = CalGravityForce(i, j);
-	cVers[index].Fdamping = glm::vec3(0, 0, 0);
-	cVers[index].Fviscous = glm::vec3(0, 0, 0);
+	cVers[index].fSpring = glm::vec3(0, 0, 0);
+	cVers[index].fGravity = calGravityForce(i, j);
+	cVers[index].fDamping = glm::vec3(0, 0, 0);
+	cVers[index].fViscous = glm::vec3(0, 0, 0);
 }
 
-void Cloth::InitBuffers()
-{
+void Cloth::initBuffers() {
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
@@ -150,61 +158,35 @@ void Cloth::InitBuffers()
 	glBindVertexArray(0);
 }
 
-void Cloth::UpdateVertexPosition()
-{
+void Cloth::updateVertexPosition() {
 	int index;
 	glm::vec3 newVel;
-
-	bool debug = false;
-
-	for (int i = 0; i < height; i++) {
-		for (int j = 0; j < width + 1; j++) {
+	for (int i = 0; i < height + 1; i++) {
+		for (int j = 1; j < width + 1; j++) {
 			index = (width + 1) * i + j;
-			newVel = cVers[index].vVel + 0.05f * 2.5f * CalAccelaration(i, j);
-
-			if (debug) {
-				printf("\nbefore\n");
-
-				printf("%d %d position %f %f %f\n", i, j,
-					cVers[index].vPos.x, cVers[index].vPos.y, cVers[index].vPos.z);
-
-				printf("%d %d position %f %f %f\n", i, j,
-					cVers[index].vVel.x, cVers[index].vVel.y, cVers[index].vVel.z);
-			}
-
-			cVers[index].vPos += (newVel + cVers[index].vVel) * 0.05f * 2.5f * 0.5f * 0.005f;
+			newVel = cVers[index].vVel + 0.2f * calAccelaration(i, j);
+			cVers[index].vPos += (newVel + cVers[index].vVel) * 0.2f * 0.0005f;
 			cVers[index].vVel = newVel;
-
-			if (debug) {
-				printf("\nafter\n");
-				printf("%d %d position %f %f %f\n", i, j,
-					cVers[index].vPos.x, cVers[index].vPos.y, cVers[index].vPos.z);
-
-				printf("%d %d position %f %f %f\n", i, j,
-					cVers[index].vVel.x, cVers[index].vVel.y, cVers[index].vVel.z);
-			}
 		}
 	}
 }
 
-void Cloth::RenderClothPlane()
-{
+void Cloth::renderClothPlane() {
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(ClothVertex) * cVers.size(), &cVers[0], GL_DYNAMIC_DRAW);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
 }
 
-glm::vec3 Cloth::CalNormal(int i, int j)
-{
+glm::vec3 Cloth::calNormal(int i, int j) {
 	if (i == height) {
 		i--;
 	}
 	if (j == 0) {
 		j++;
 	}
+
 	int index = i * (width + 1) + j;
 	cVers[index].vNor = glm::normalize(glm::cross(
 		cVers[index].vPos - cVers[index - 1].vPos,
@@ -213,74 +195,72 @@ glm::vec3 Cloth::CalNormal(int i, int j)
 	return cVers[index].vNor;
 }
 
-glm::vec3 Cloth::CalSpringForceBetween(glm::vec3 p, glm::vec3 q, float k, float l)
-{
+glm::vec3 Cloth::calSpringForceBetween(glm::vec3 p, glm::vec3 q, float k, float l) {
 	float distance = glm::distance(p, q);
-	return k * (l - distance) * (p - q) / distance;
+	if (0.0000001 - fabs(l - distance) > 0) distance = l;
+	glm::vec3 force = k * (l - distance) * (p - q) / distance;
+	return force;
+
 }
 
-glm::vec3 Cloth::CalSpringForce(int i, int j)
-{
+glm::vec3 Cloth::calSpringForce(int i, int j) {
 	int index = i * (width + 1) + j;
-	if (i == height) {
-		cVers[index].Fspring = glm::vec3(0, 0, 0);
+	// 不计算固定位置
+	if (j == 0) {
+		cVers[index].fSpring = glm::vec3(0, 0, 0);
 	}
 	else {
-		cVers[index].Fspring = CalSpringForceStruct(i, j)
-			+ CalSpringForceShear(i, j)
-			+ CalSpringForceFlexion(i, j);
+		cVers[index].fSpring = calSpringForceStruct(i, j)
+			+ calSpringForceShear(i, j)
+			+ calSpringForceFlexion(i, j);
 	}
-	return cVers[index].Fspring;
+	return cVers[index].fSpring;
 }
 
-glm::vec3 Cloth::CalGravityForce(int i, int j)
-{
+glm::vec3 Cloth::calGravityForce(int i, int j) {
 	int index = i * (width + 1) + j;
-	float Fy = -cVers[index].mass * Cg;
-	cVers[index].Fgravity = glm::vec3(0, Fy, 0);
-	return cVers[index].Fgravity;
+	float Fy = -cVers[index].mass * coefG;
+	cVers[index].fGravity = glm::vec3(0, Fy, 0);
+	return cVers[index].fGravity;
 }
 
-glm::vec3 Cloth::CalDampingForce(int i, int j)
-{
+glm::vec3 Cloth::calDampingForce(int i, int j) {
 	int index = i * (width + 1) + j;
-	cVers[index].Fdamping = -Cd * cVers[index].vVel;
-	return cVers[index].Fdamping;
+	cVers[index].fDamping = -coefD * cVers[index].vVel;
+	return cVers[index].fDamping;
 }
 
-glm::vec3 Cloth::CalViscousForce(int i, int j)
-{
+glm::vec3 Cloth::calViscousForce(int i, int j) {
 	int index = i * (width + 1) + j;
-	CalNormal(i, j);
-	cVers[index].Fviscous = -glm::vec3((0.5f - rand() / float(RAND_MAX)) * 4.0f, 0, (0.5f - rand() / float(RAND_MAX)) * 4.0f)
-		+ Cv * (cVers[index].vNor * (Ufluid - cVers[index].vVel)) * cVers[index].vNor;
-	return cVers[index].Fviscous;
+	calNormal(i, j);
+	cVers[index].fViscous = -glm::vec3((0.5f - rand() / float(RAND_MAX)) * 4.0f, 0, (0.5f - rand() / float(RAND_MAX)) * 4.0f)
+		+ coefV * (cVers[index].vNor * (coefFluid - cVers[index].vVel)) * cVers[index].vNor;
+	return cVers[index].fViscous;
 }
 
-glm::vec3 Cloth::CalSpringForceStruct(int i, int j)
-{
+glm::vec3 Cloth::calSpringForceStruct(int i, int j) {
 	int index = i * (width + 1) + j;
 	glm::vec3 Fstruct = glm::vec3(0, 0, 0);
 	if (j != width) {
-		Fstruct += CalSpringForceBetween(cVers[index].vPos,
+		Fstruct += calSpringForceBetween(cVers[index].vPos,
 			cVers[index + 1].vPos,
 			stiff[0],
 			restLen[0]);
 	}
 	if (i != height) {
-		Fstruct += CalSpringForceBetween(cVers[index].vPos,
+		Fstruct += calSpringForceBetween(cVers[index].vPos,
 			cVers[index + width + 1].vPos,
 			stiff[0],
 			restLen[0]);
 	}
 	if (i != 0) {
-		Fstruct += CalSpringForceBetween(cVers[index].vPos,
+		Fstruct += calSpringForceBetween(cVers[index].vPos,
 			cVers[index - width - 1].vPos,
 			stiff[0],
 			restLen[0]);
 	}
 	if (j != 0) {
-		Fstruct += CalSpringForceBetween(cVers[index].vPos,
+		Fstruct += calSpringForceBetween(cVers[index].vPos,
 			cVers[index - 1].vPos,
 			stiff[0],
 			restLen[0]);
@@ -288,19 +268,18 @@ glm::vec3 Cloth::CalSpringForceStruct(int i, int j)
 	return Fstruct;
 }
 
-glm::vec3 Cloth::CalSpringForceShear(int i, int j)
-{
+glm::vec3 Cloth::calSpringForceShear(int i, int j) {
 	int index = i * (width + 1) + j;
 	glm::vec3 Fshear = glm::vec3(0, 0, 0);
 	if (j != width) {
 		if (i != 0) {
-			Fshear += CalSpringForceBetween(cVers[index].vPos,
+			Fshear += calSpringForceBetween(cVers[index].vPos,
 				cVers[index - width].vPos,
 				stiff[1],
 				restLen[1]);
 		}
 		if (i != height) {
-			Fshear += CalSpringForceBetween(cVers[index].vPos,
+			Fshear += calSpringForceBetween(cVers[index].vPos,
 				cVers[index + width + 2].vPos,
 				stiff[1],
 				restLen[1]);
@@ -308,13 +287,13 @@ glm::vec3 Cloth::CalSpringForceShear(int i, int j)
 	}
 	if (j != 0) {
 		if (i != height) {
-			Fshear += CalSpringForceBetween(cVers[index].vPos,
+			Fshear += calSpringForceBetween(cVers[index].vPos,
 				cVers[index + width].vPos,
 				stiff[1],
 				restLen[1]);
 		}
 		if (i != 0) {
-			Fshear += CalSpringForceBetween(cVers[index].vPos,
+			Fshear += calSpringForceBetween(cVers[index].vPos,
 				cVers[index - width - 2].vPos,
 				stiff[1],
 				restLen[1]);
@@ -323,30 +302,29 @@ glm::vec3 Cloth::CalSpringForceShear(int i, int j)
 	return Fshear;
 }
 
-glm::vec3 Cloth::CalSpringForceFlexion(int i, int j)
-{
+glm::vec3 Cloth::calSpringForceFlexion(int i, int j) {
 	int index = i * (width + 1) + j;
 	glm::vec3 Fflexion = glm::vec3(0, 0, 0);
 	if (j < width - 1) {
-		Fflexion += CalSpringForceBetween(cVers[index].vPos,
+		Fflexion += calSpringForceBetween(cVers[index].vPos,
 			cVers[index + 2].vPos,
 			stiff[2],
 			restLen[2]);
 	}
 	if (j > 1) {
-		Fflexion += CalSpringForceBetween(cVers[index].vPos,
+		Fflexion += calSpringForceBetween(cVers[index].vPos,
 			cVers[index - 2].vPos,
 			stiff[2],
 			restLen[2]);
 	}
 	if (i < height - 1) {
-		Fflexion += CalSpringForceBetween(cVers[index].vPos,
+		Fflexion += calSpringForceBetween(cVers[index].vPos,
 			cVers[index + width * 2 + 2].vPos,
 			stiff[2],
 			restLen[2]);
 	}
 	if (i > 1) {
-		Fflexion += CalSpringForceBetween(cVers[index].vPos,
+		Fflexion += calSpringForceBetween(cVers[index].vPos,
 			cVers[index - width * 2 - 2].vPos,
 			stiff[2],
 			restLen[2]);
@@ -354,26 +332,23 @@ glm::vec3 Cloth::CalSpringForceFlexion(int i, int j)
 	return Fflexion;
 }
 
-void Cloth::AddManualForce()
-{
+void Cloth::addManualForce() {
 }
 
-glm::vec3 Cloth::UpdateForceFusion(int i, int j)
-{
-	//CalSpringForce(i, j);
-	//CalDampingForce(i, j);
-	//CalViscousForce(i, j);
+glm::vec3 Cloth::updateForceFusion(int i, int j) {
+	calSpringForce(i, j);
+	calDampingForce(i, j);
+	calViscousForce(i, j);
 	int index = (width + 1) * i + j;
-	cVers[index].Ffuse = cVers[index].Fdamping
-		+ cVers[index].Fgravity
-		+ cVers[index].Fviscous
-		+ cVers[index].Fspring;
-	return cVers[index].Ffuse;
+	cVers[index].fFuse = cVers[index].fDamping
+		+ cVers[index].fGravity
+		+ cVers[index].fViscous
+		+ cVers[index].fSpring;
+	return cVers[index].fFuse;
 }
 
-glm::vec3 Cloth::CalAccelaration(int i, int j)
-{
+glm::vec3 Cloth::calAccelaration(int i, int j) {
 	int index = (width + 1) * i + j;
-	glm::vec3 acc = cVers[index].Ffuse / cVers[index].mass;
+	glm::vec3 acc = cVers[index].fFuse / cVers[index].mass;
 	return acc;
 }

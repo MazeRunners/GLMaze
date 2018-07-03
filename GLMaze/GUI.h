@@ -1,8 +1,6 @@
 #pragma once
 #include "imgui.h"
 
-#include "GameConfig.h"
-
 struct GLFWwindow;
 
 class GUI {
@@ -15,15 +13,13 @@ public:
 
 		float currentMouseX = 0.0f;
 		float currentMouseY = 0.0f;
-
 		float lastMouseX = 0.0f;
 		float lastMouseY = 0.0f;
-
 		float mouseXMovement = 0.0f;
 		float mouseYMovement = 0.0f;
 	};
 
-	GUI(GLFWwindow * window, GameConfig::Parameters config);
+	GUI(GLFWwindow * window);
 	~GUI();
 
 	void draw();
@@ -34,13 +30,14 @@ public:
 
 private:
 	bool visible;
-
 	ImGuiIO* io;
-	float mouseSensitivity;
-	float keyboardSensitivity;
-
+	struct {
+		float mouseSensitivity;
+		float keyboardSensitivity;
+	}mConfig;
 	UserInput userInput;
 
+	void readConfig();
 	void recordKeyboardInput();
 	void recordMouseInput();
 };

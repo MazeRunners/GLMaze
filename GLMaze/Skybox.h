@@ -8,9 +8,8 @@
 class Skybox {
 public:
 	Skybox();
-	Skybox(const char* path[6]);
 	~Skybox();
-	void draw();
+	void render(glm::mat4 viewTransformation);
 
 private:
 	void generateVertices();
@@ -21,4 +20,6 @@ private:
 	unsigned int* indices;
 	unsigned int VAO, VBO;
 	unsigned int texture;
+
+	GLShader skyShader = GLShader("./shader/skyshader.vert", "./shader/skyshader.frag");
 };

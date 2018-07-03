@@ -3,29 +3,36 @@
 
 #include <vector>
 
-struct GLFWwindow;
+#include "GLShader.h"
+#include "Lighting.h"
 
-struct ClothVertex {
-	glm::vec3 vPos;
-	glm::vec3 vNor;
-	glm::vec2 vTex;
-	glm::vec3 vVel;
-	float mass = 1.0f;
-	glm::vec3 Fspring;
-	glm::vec3 Fgravity;
-	glm::vec3 Fdamping;
-	glm::vec3 Fviscous;
-	glm::vec3 Ffuse;  // force fusion 
-};
+struct GLFWwindow;
 
 class Cloth {
 public:
-	Cloth(float gridWidth, int width, int height, const char* texturePath);  // initialization    
-	~Cloth();  // free the space for safety    
-	void draw();  // ClothSimulation main entrance    
-	void ProcessInput(GLFWwindow* window);
+	Cloth();  // initialization    
+	~Cloth();  // free the space for safety   
+
+	void render(glm::vec3 cameraPos, glm::mat4 viewTransformation, Lighting* lighting);  // Cloth Simulation main entrance    
+	void processInput(GLFWwindow* window);
 
 private:
+	struct ClothVertex {
+		glm::vec3 vPos;
+		glm::vec3 vNor;
+		glm::vec2 vTex;
+		glm::vec3 vVel;
+
+		float mass;
+		glm::vec3 fSpring;
+		glm::vec3 fGravity;
+		glm::vec3 fDamping;
+		glm::vec3 fViscous;
+		glm::vec3 fFuse;  // force fusion 
+
+		ClothVertex() : vPos(0, 0, 0), vNor(0, 0, 1), vTex(0, 0), vVel(0, 0, 0), mass(1.0f) {}
+	};
+
 	float gridWidth;  // width of a grid  
 	std::vector<ClothVertex> cVers;  // vertices set pointer    
 	std::vector<unsigned int> indices;
@@ -36,34 +43,41 @@ private:
 	// some global params    
 	float restLen[3];   // structural, shear, and flexion    
 	float stiff[3];     // structural, shear, and flexion    
-	float Cg;           // gravity coefficient    
-	float Cd;           // damping coefficient    
-	float Cv;           // viscous coefficient    
-	glm::vec3 Ufluid;   // viscous coefficient
+	float coefG;           // gravity coefficient    
+	float coefD;           // damping coefficient    
+	float coefV;           // viscous coefficient    
+	glm::vec3 coefFluid;   // viscous coefficient
+
 	float lastCalcTime;
 
 	unsigned int VAO, VBO, EBO;
 	unsigned int texture;
+	const char* texturePath = "./resource/cloth.jpg";
+	GLShader clothShader = GLShader("./shader/clothShader.vert", "./shader/clothShader.frag");
+
+	void readConfig();
 
 	void loadTexture(const char* path);
-	void CreateClothVertex();     // create all vertex around center (0, 0)
-	void InitClothVertex(int i, int j);
-	void InitBuffers();
-	void UpdateVertexPosition();  // first part of ClothSimulating()    
-	void RenderClothPlane();      // second part of ClothSimulating()    
-	glm::vec3 CalNormal(int i, int j);        // Calculate normal of a vertex
+	void createClothVertex();     // create all vertex around center (0, 0)
+	void initClothVertex(int i, int j);
+	void initBuffers();
+	void updateVertexPosition();  // first part of ClothSimulating()    
+	void renderClothPlane();      // second part of ClothSimulating()    
+	glm::vec3 calNormal(int i, int j);        // Calculate normal of a vertex
 
-	// forces
-	glm::vec3 CalSpringForceBetween(glm::vec3 p, glm::vec3 q, float k, float l);  // Calculate SpringForce between 2 vertices  
-	glm::vec3 CalSpringForce(int i, int j);   // Calculate SpringForce of a vertex  
-	glm::vec3 CalGravityForce(int i, int j);  // Calculate GravityForce of a vertex    
-	glm::vec3 CalDampingForce(int i, int j);  // Calculate DampingForce of a vertex    
-	glm::vec3 CalViscousForce(int i, int j);  // Calculate ViscousForce of a vertex    
-	glm::vec3 CalSpringForceStruct(int i, int j);   // Structural Springs part of CalSpringForce()    
-	glm::vec3 CalSpringForceShear(int i, int j);    // Shear Springs part of CalSpringForce()    
-	glm::vec3 CalSpringForceFlexion(int i, int j);  // Flexion Springs part of CalSpringForce()    
-	void AddManualForce();  // Add manual force to the cloth 
+	// forces  
+	glm::vec3 calSpringForce(int i, int j);   // Calculate SpringForce of a vertex
+	glm::vec3 calSpringForceBetween(glm::vec3 p, glm::vec3 q, float k, float l);  // Calculate SpringForce between 2 vertices  
+	glm::vec3 calSpringForceStruct(int i, int j);   // Structural Springs part of CalSpringForce()    
+	glm::vec3 calSpringForceShear(int i, int j);    // Shear Springs part of CalSpringForce()    
+	glm::vec3 calSpringForceFlexion(int i, int j);  // Flexion Springs part of CalSpringForce()  
 
-	glm::vec3 UpdateForceFusion(int i, int j);
-	glm::vec3 CalAccelaration(int i, int j);
+	glm::vec3 calGravityForce(int i, int j);  // Calculate GravityForce of a vertex    
+	glm::vec3 calDampingForce(int i, int j);  // Calculate DampingForce of a vertex    
+	glm::vec3 calViscousForce(int i, int j);  // Calculate ViscousForce of a vertex    
+
+	void addManualForce();  // Add manual force to the cloth 
+
+	glm::vec3 updateForceFusion(int i, int j);
+	glm::vec3 calAccelaration(int i, int j);
 };

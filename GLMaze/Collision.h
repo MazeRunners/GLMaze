@@ -14,7 +14,7 @@ private:
 	rp3d::WorldSettings* settings;
 	rp3d::CollisionBody* cameraBody;
 	rp3d::ProxyShape* cameraProxy;
-	rp3d::SphereShape* camearShape;
+	rp3d::BoxShape* camearShape;
 	ConcaveMesh* maze;
 };
 

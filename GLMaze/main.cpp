@@ -1,7 +1,9 @@
+#include "GLPlatform.h"
 #include "Game.h"
 
 int main() {
-	Game game = Game();
+	GLPlatform platform;
+	Game game = Game(&platform);
 	game.start();
 	return 0;
 }

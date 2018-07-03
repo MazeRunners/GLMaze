@@ -1,66 +1,38 @@
 #pragma once
 #include "GLPlatform.h"
-#include "GLShader.h"
 
 #include "GUI.h"
-#include "GameConfig.h"
-
-#include "GLModel.h"
 #include "Camera.h"
+#include "Lighting.h"
+#include "Maze.h"
 #include "Collision.h"
 #include "Skybox.h"
 #include "Cloth.h"
-#include "Particle.h"
+#include "ParticleSystem.h"
 #include "Fraction.h"
 #include "Text.h"
 
+struct GLFWwindow;
+
 class Game {
 public:
-	Game();
+	Game(GLPlatform* platform);
 	~Game();
 	void start();
 
 private:
-	GLPlatform platfrom;
-	GLShader* shadowShader;
-	GLShader* viewShader;
-
-	GLShader* skyShader;
-	GLShader* clothShader;
-	GLShader* particleShader;
-	GLShader* textShader;
-
-	GUI* GUIManager;
-	Camera* camera;
-	GLModel * model;
-	GameConfig config;
+	GLFWwindow * window;
+	GUI GUIManager;
+	Camera camera;
+	Lighting lighting;
+	Maze maze;
 	Collision collision;
-	Particle* particles;
-	Skybox* skybox;
-	Cloth* cloth;
-	Fraction* fraction;
-	Text* text;
+	ParticleSystem particles;
+	Skybox skybox;
+	Cloth cloth;
+	Fraction fraction;
+	Text text;
 
-	void initShader();
-	void initCamera(GameConfig::Parameters config);
-
-	struct LightSpace {
-		glm::vec3 position;
-		glm::mat4 projection;
-		glm::mat4 view;
-		glm::mat4 transformation;
-	}lightSpace;
-
-	void calculateLightSpaceTransformation();
-
+	void moveCameraWithCollision();
 	void renderScene();
-	void calculateShadowDepth();
-	void renderMaze();
-	void renderIronman();
-
-	void renderSkybox();
-	void renderParticles();
-	void renderCloth();
-	void renderText();
-	void drawObjects(GLShader* shader, bool no_texture);
 };

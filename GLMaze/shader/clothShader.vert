@@ -18,5 +18,5 @@ void main()
   normal = normalAttr;
   texCoord = texCoordAttr;
   gl_Position = viewTransformation * vec4(posAttr, 1.0);
-  fragLightSpacePos = lightSpaceTransformation * vec4(posAttr, 1.0);
+  //fragLightSpacePos = lightSpaceTransformation * vec4(posAttr, 1.0);
 }

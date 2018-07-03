@@ -9,13 +9,11 @@ Collision::Collision() {
 	rp3d::Transform initTransform(initPosition, initOrientation);
 	cameraBody = world->createCollisionBody(initTransform);
 
-	rp3d::decimal radius = rp3d::decimal(0.03);
-	camearShape = new rp3d::SphereShape(radius);
+	camearShape = new rp3d::BoxShape(rp3d::Vector3(0.1, 0.1, 0.1));
 	rp3d::Transform transform = rp3d::Transform::identity();
 	cameraProxy = cameraBody->addCollisionShape(camearShape, transform);
 
 	maze = new ConcaveMesh(world, "./resource/maze/maze.obj");
-
 }
 
 Collision::~Collision() {

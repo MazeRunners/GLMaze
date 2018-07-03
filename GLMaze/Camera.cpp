@@ -2,8 +2,23 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-Camera::Camera(Parameters parameter) {
-	this->parameters = parameter;
+#include "Config.h"
+
+Camera::Camera() {
+	readConfig();
+}
+
+void Camera::readConfig() {
+	Config cameraConfig("./config/camera.cfg");
+
+	parameters.position = cameraConfig.getVec3("position");
+	parameters.up = cameraConfig.getVec3("up");
+	parameters.front = cameraConfig.getVec3("front");
+
+	parameters.fovy = cameraConfig.getFloat("fovy");
+	parameters.aspect = cameraConfig.getFloat("aspect");
+	parameters.z_near = cameraConfig.getFloat("z_near");
+	parameters.z_far = cameraConfig.getFloat("z_far");
 }
 
 Camera::~Camera() {
@@ -36,32 +51,24 @@ Camera::Parameters Camera::calcNextParameter(GUI::UserInput userInput) {
 
 	next.position = next.position + xMove * glm::normalize(glm::cross(next.front, next.up));
 	next.position = next.position + zMove * next.front;
-	next.position.y = 0.1;
+	next.position.y = 0.16;
 
 	return next;
 }
 
-void Camera::moveTo(Camera::Parameters next) {
+void Camera::setTo(Camera::Parameters next) {
 	parameters = next;
-	glm::mat4 transformation(1.0f); 
+	glm::mat4 transformation(1.0f);
 
-	view = glm::lookAt(parameters.position, parameters.position + parameters.front, parameters.up) * transformation;
-	projection = glm::perspective(glm::radians(parameters.fovy), parameters.aspect, parameters.z_near, parameters.z_far);
-	viewTransformation = projection * view;
-}
-
-glm::mat4 Camera::getView() {
-	return view;
-}
-
-glm::mat4 Camera::getProjection() {
-	return projection;
-}
-
-glm::mat4 Camera::getViewTransformation() {
-	return viewTransformation;
+	matrices.view = glm::lookAt(parameters.position, parameters.position + parameters.front, parameters.up) * transformation;
+	matrices.projection = glm::perspective(glm::radians(parameters.fovy), parameters.aspect, parameters.z_near, parameters.z_far);
+	matrices.transformation = matrices.projection * matrices.view;
 }
 
 Camera::Parameters Camera::getParameter() {
 	return parameters;
+}
+
+Camera::Matrices Camera::getMatrices() {
+	return matrices;
 }

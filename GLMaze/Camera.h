@@ -19,22 +19,25 @@ public:
 		float z_far;
 	};
 
-	Camera(Parameters parameter);
+	struct Matrices {
+		glm::mat4 view;
+		glm::mat4 projection;
+		glm::mat4 transformation;
+	};
+
+	Camera();
 	~Camera();
 
 	Parameters calcNextParameter(GUI::UserInput userInput);
-	void moveTo(Parameters parameter);
+	void setTo(Parameters parameter);
 
-	glm::mat4 getView();
-	glm::mat4 getProjection();
-	glm::mat4 getViewTransformation();
 	Parameters getParameter();
+	Matrices getMatrices();
 
 private:
 	Parameters parameters;
+	Matrices matrices;
 
-	glm::mat4 view;
-	glm::mat4 projection;
-	glm::mat4 viewTransformation;
+	void readConfig();
 };
 

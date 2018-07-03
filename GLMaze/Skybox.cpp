@@ -7,30 +7,34 @@
 #include <iostream>
 #include <fstream>
 
-Skybox::Skybox()
-{
-}
+Skybox::Skybox() {
+	const char* path[] = {
+		"./resource/skybox/miramar_ft.png",
+		"./resource/skybox/miramar_bk.png",
+		"./resource/skybox/miramar_up.png",
+		"./resource/skybox/miramar_dn.png",
+		"./resource/skybox/miramar_rt.png",
+		"./resource/skybox/miramar_lf.png"
+	};
 
-Skybox::Skybox(const char * path[6])
-{
 	init();
 	texture = loadCubemap(path);
 }
 
-Skybox::~Skybox()
-{
+Skybox::~Skybox() {
 	delete[] vertices;
 }
 
-void Skybox::draw()
-{
+void Skybox::render(glm::mat4 viewTransformation) {
+	skyShader.use();
+	skyShader.setMat4("viewTransformation", viewTransformation);
+
 	glBindVertexArray(VAO);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
-void Skybox::generateVertices()
-{
+void Skybox::generateVertices() {
 	vertices = new float[108]{
 		// positions          
 		-16.0f,  16.0f, -16.0f,
@@ -74,56 +78,10 @@ void Skybox::generateVertices()
 		16.0f, -16.0f, -16.0f,
 		-16.0f, -16.0f,  16.0f,
 		16.0f, -16.0f,  16.0f
-		/*
-		vertices = new float[108]{
-		// positions
-		-7.0f,  14.0f, -7.0f,
-		-7.0f,  0.0f, -7.0f,
-		7.0f,   0.0f, -7.0f,
-		7.0f,  0.0f, -7.0f,
-		7.0f,  14.0f, -7.0f,
-		-7.0f,  14.0f, -7.0f,
-
-		-7.0f, 0.0f,  7.0f,
-		-7.0f, 0.0f, -7.0f,
-		-7.0f,  14.0f, -7.0f,
-		-7.0f,  14.0f, -7.0f,
-		-7.0f,  14.0f,  7.0f,
-		-7.0f, 0.0f,  7.0f,
-
-		7.0f,  0.0f, -7.0f,
-		7.0f,  0.0f,  7.0f,
-		7.0f,  14.0f,  7.0f,
-		7.0f,  14.0f,  7.0f,
-		7.0f,  14.0f, -7.0f,
-		7.0f, 0.0f, -7.0f,
-
-		-7.0f, 0.0f,  7.0f,
-		-7.0f,  14.0f,  7.0f,
-		7.0f,  14.0f,  7.0f,
-		7.0f,  14.0f,  7.0f,
-		7.0f,  0.0f,  7.0f,
-		-7.0f, 0.0f,  7.0f,
-
-		-7.0f,  14.0f, -7.0f,
-		7.0f,  14.0f, -7.0f,
-		7.0f,  14.0f,  7.0f,
-		7.0f,  14.0f,  7.0f,
-		-7.0f,  14.0f,  7.0f,
-		-7.0f,  14.0f, -7.0f,
-
-		-7.0f, 0.0f, -7.0f,
-		-7.0f, 0.0f,  7.0f,
-		7.0f,  0.0f, -7.0f,
-		7.0f,  0.0f, -7.0f,
-		-7.0f, 0.0f,  7.0f,
-		7.0f,  0.0f,  7.0f
-	};*/
 	};
 }
 
-void Skybox::init()
-{
+void Skybox::init() {
 	generateVertices();
 
 	glGenVertexArrays(1, &VAO);
@@ -138,23 +96,20 @@ void Skybox::init()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 }
-unsigned int Skybox::loadCubemap(const char* faces[])
-{
+
+unsigned int Skybox::loadCubemap(const char* faces[]) {
 	unsigned int textureID;
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 
 	int width, height, nrChannels;
-	for (unsigned int i = 0; i < 6; i++)
-	{
+	for (unsigned int i = 0; i < 6; i++) {
 		unsigned char *data = stbi_load(faces[i], &width, &height, &nrChannels, 0);
-		if (data)
-		{
+		if (data) {
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 			stbi_image_free(data);
 		}
-		else
-		{
+		else {
 			std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
 			stbi_image_free(data);
 		}
