@@ -44,7 +44,7 @@ vec3 phongLighting(float c_ambient, float c_diffuse, float c_specular, float shi
     vec3 specular = c_specular * spec * color; 
 
 	float isInShadow = depthCompare(fragLightSpacePos);
-    vec3 result =  ambient + (1.0 - 0.0) * (diffuse + specular);
+    vec3 result =  ambient + (1.0 - isInShadow) * (diffuse + specular);
 
     return result;
 }
