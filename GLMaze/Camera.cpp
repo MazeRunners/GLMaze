@@ -51,7 +51,7 @@ Camera::Parameters Camera::calcNextParameter(GUI::UserInput userInput) {
 
 	next.position = next.position + xMove * glm::normalize(glm::cross(next.front, next.up));
 	next.position = next.position + zMove * next.front;
-	next.position.y = 0.16;
+	//next.position.z = 0.1;
 
 	return next;
 }
