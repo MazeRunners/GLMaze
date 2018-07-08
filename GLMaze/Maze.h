@@ -14,7 +14,7 @@ public:
 	void render(glm::vec3 cameraPos, glm::mat4 viewTransformation, Lighting* lighting);
 
 private:
-	GLModel model = GLModel("./resource/maze/maze.blend");
+	GLModel model = GLModel("./resource/maze/maze.obj");
 	GLShader viewShader = GLShader("./shader/view.vert", "./shader/view.frag");
 };
 
