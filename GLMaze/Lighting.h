@@ -28,6 +28,18 @@ private:
 	LightSpace lightSpace;
 	unsigned int shadowDepthFBO;
 	unsigned int shadowDepthMap;
-	GLShader shadowShader = GLShader("./shader/shadow.vert", "./shader/shadow.frag");
+	GLShader shadowShader =
+		GLShader("./shader/shadow.vert", "./shader/shadow.frag");
+	struct {
+		glm::vec3 position;
+		glm::vec3 center;
+		glm::vec3 up;
+		float left;
+		float right;
+		float bottom;
+		float top;
+		float zNear;
+		float zFar;
+	} mConfig;
+	void readConfig();
 };
-

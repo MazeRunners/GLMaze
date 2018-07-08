@@ -47,8 +47,8 @@ void Game::renderScene() {
 
 	maze.drawForShadow(&lighting);
 	maze.render(cameraPos, viewTransformation, &lighting);
-	particles.render(cameraParameter, cameraMat);
+	skybox.render(viewTransformation);
 	cloth.render(cameraPos, viewTransformation, &lighting);
 	text.renderText();
-	skybox.render(viewTransformation);
+	particles.render(cameraParameter, cameraMat);
 }

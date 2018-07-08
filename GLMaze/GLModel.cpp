@@ -57,14 +57,19 @@ GLMesh GLModel::initMesh(aiMesh *mesh, const aiScene *scene) {
 		Vertex vertex;
 		glm::vec3 vector;
 
+		// the coordinate system of Blender is different from that of OpenGL
+		// OpenGL Blender
+		// x = x
+		// y = z
+		// z = -y
 		vector.x = mesh->mVertices[i].x;
-		vector.y = mesh->mVertices[i].y;
-		vector.z = mesh->mVertices[i].z;
+		vector.y = mesh->mVertices[i].z;
+		vector.z = -mesh->mVertices[i].y;
 		vertex.position = vector;
 
 		vector.x = mesh->mNormals[i].x;
-		vector.y = mesh->mNormals[i].y;
-		vector.z = mesh->mNormals[i].z;
+		vector.y = mesh->mNormals[i].z;
+		vector.z = -mesh->mNormals[i].y;
 		vertex.normal = vector;
 
 		if (mesh->mTextureCoords[0]) {

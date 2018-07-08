@@ -13,6 +13,9 @@ ParticleSystem::ParticleSystem() {
 }
 
 void ParticleSystem::init() {
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
@@ -151,9 +154,6 @@ void ParticleSystem::draw(Camera::Parameters parameters, Camera::Matrices matric
 	glBindBuffer(GL_ARRAY_BUFFER, colVBO);
 	glBufferData(GL_ARRAY_BUFFER, MaxParticles * 4 * sizeof(unsigned char), NULL, GL_STREAM_DRAW);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, particlesCount * sizeof(unsigned char) * 4, colorData);
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// Use our shader
 	particleShader.use();
