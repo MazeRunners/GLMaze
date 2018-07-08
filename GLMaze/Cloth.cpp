@@ -15,9 +15,9 @@ using std::vector;
 Cloth::Cloth() {
 	readConfig();
 
-	restLen[0] = gridWidth;               // structural
-	restLen[1] = gridWidth * pow(2, 0.5); // shear
-	restLen[2] = gridWidth * 2;           // flexion
+	mConfig.restLen[0] = gridWidth;               // structural
+	mConfig.restLen[1] = gridWidth * pow(2, 0.5); // shear
+	mConfig.restLen[2] = gridWidth * 2;           // flexion
 
 	createClothVertex();
 	initBuffers();
@@ -59,15 +59,19 @@ void Cloth::readConfig() {
 
 	glm::vec3 stiffVec3 = config.getVec3("stiff");
 
-	stiff[0] = stiffVec3[0]; // structural
-	stiff[1] = stiffVec3[1]; // shear
-	stiff[2] = stiffVec3[2]; // flexion  
+	mConfig.stiff[0] = stiffVec3[0]; // structural
+	mConfig.stiff[1] = stiffVec3[1]; // shear
+	mConfig.stiff[2] = stiffVec3[2]; // flexion  
 
-	coefG = config.getFloat("coefG");
-	coefD = config.getFloat("coefD");
-	coefV = config.getFloat("coefV");
+	mConfig.coefG = config.getFloat("coefG");
+	mConfig.coefD = config.getFloat("coefD");
+	mConfig.coefV = config.getFloat("coefV");
 
-	coefFluid = config.getVec3("coefFluid");
+	mConfig.coefFluid = config.getVec3("coefFluid");
+
+	mConfig.startX = config.getFloat("startX");
+	mConfig.startY = config.getFloat("startY");
+	mConfig.startZ = config.getFloat("startZ");
 }
 
 void Cloth::loadTexture(const char * path) {
@@ -96,16 +100,19 @@ void Cloth::loadTexture(const char * path) {
 void Cloth::createClothVertex() {
 	// vertices
 	cVers = vector<ClothVertex>((width + 1) * (height + 1));
+
 	float x = 0.0f - (float)width * gridWidth * 0.5;
 	float y = 0.0f - (float)height * gridWidth * 0.5;
 	for (int i = 0; i < height + 1; i++) {
 		x = 0.0f - (float)width * gridWidth * 0.5;
+
 		for (int j = 0; j < width + 1; j++) {
-			cVers[i * (width + 1) + j].vPos = glm::vec3(6.0, y + 4.0f, x - 3.0f);
+			cVers[i * (width + 1) + j].vPos = glm::vec3(mConfig.startX + x, mConfig.startY + y, mConfig.startZ);
 			cVers[i * (width + 1) + j].vTex = glm::vec2((float)i / (float)height, (float)j / (float)width);
 			x += gridWidth;
 			initClothVertex(i, j);
 		}
+
 		y += gridWidth;
 	}
 
@@ -219,14 +226,14 @@ glm::vec3 Cloth::calSpringForce(int i, int j) {
 
 glm::vec3 Cloth::calGravityForce(int i, int j) {
 	int index = i * (width + 1) + j;
-	float Fy = -cVers[index].mass * coefG;
+	float Fy = -cVers[index].mass * mConfig.coefG;
 	cVers[index].fGravity = glm::vec3(0, Fy, 0);
 	return cVers[index].fGravity;
 }
 
 glm::vec3 Cloth::calDampingForce(int i, int j) {
 	int index = i * (width + 1) + j;
-	cVers[index].fDamping = -coefD * cVers[index].vVel;
+	cVers[index].fDamping = -mConfig.coefD * cVers[index].vVel;
 	return cVers[index].fDamping;
 }
 
@@ -234,7 +241,7 @@ glm::vec3 Cloth::calViscousForce(int i, int j) {
 	int index = i * (width + 1) + j;
 	calNormal(i, j);
 	cVers[index].fViscous = -glm::vec3((0.5f - rand() / float(RAND_MAX)) * 4.0f, 0, (0.5f - rand() / float(RAND_MAX)) * 4.0f)
-		+ coefV * (cVers[index].vNor * (coefFluid - cVers[index].vVel)) * cVers[index].vNor;
+		+ mConfig.coefV * (cVers[index].vNor * (mConfig.coefFluid - cVers[index].vVel)) * cVers[index].vNor;
 	return cVers[index].fViscous;
 }
 
@@ -244,26 +251,26 @@ glm::vec3 Cloth::calSpringForceStruct(int i, int j) {
 	if (j != width) {
 		Fstruct += calSpringForceBetween(cVers[index].vPos,
 			cVers[index + 1].vPos,
-			stiff[0],
-			restLen[0]);
+			mConfig.stiff[0],
+			mConfig.restLen[0]);
 	}
 	if (i != height) {
 		Fstruct += calSpringForceBetween(cVers[index].vPos,
 			cVers[index + width + 1].vPos,
-			stiff[0],
-			restLen[0]);
+			mConfig.stiff[0],
+			mConfig.restLen[0]);
 	}
 	if (i != 0) {
 		Fstruct += calSpringForceBetween(cVers[index].vPos,
 			cVers[index - width - 1].vPos,
-			stiff[0],
-			restLen[0]);
+			mConfig.stiff[0],
+			mConfig.restLen[0]);
 	}
 	if (j != 0) {
 		Fstruct += calSpringForceBetween(cVers[index].vPos,
 			cVers[index - 1].vPos,
-			stiff[0],
-			restLen[0]);
+			mConfig.stiff[0],
+			mConfig.restLen[0]);
 	}
 	return Fstruct;
 }
@@ -275,28 +282,28 @@ glm::vec3 Cloth::calSpringForceShear(int i, int j) {
 		if (i != 0) {
 			Fshear += calSpringForceBetween(cVers[index].vPos,
 				cVers[index - width].vPos,
-				stiff[1],
-				restLen[1]);
+				mConfig.stiff[1],
+				mConfig.restLen[1]);
 		}
 		if (i != height) {
 			Fshear += calSpringForceBetween(cVers[index].vPos,
 				cVers[index + width + 2].vPos,
-				stiff[1],
-				restLen[1]);
+				mConfig.stiff[1],
+				mConfig.restLen[1]);
 		}
 	}
 	if (j != 0) {
 		if (i != height) {
 			Fshear += calSpringForceBetween(cVers[index].vPos,
 				cVers[index + width].vPos,
-				stiff[1],
-				restLen[1]);
+				mConfig.stiff[1],
+				mConfig.restLen[1]);
 		}
 		if (i != 0) {
 			Fshear += calSpringForceBetween(cVers[index].vPos,
 				cVers[index - width - 2].vPos,
-				stiff[1],
-				restLen[1]);
+				mConfig.stiff[1],
+				mConfig.restLen[1]);
 		}
 	}
 	return Fshear;
@@ -308,26 +315,26 @@ glm::vec3 Cloth::calSpringForceFlexion(int i, int j) {
 	if (j < width - 1) {
 		Fflexion += calSpringForceBetween(cVers[index].vPos,
 			cVers[index + 2].vPos,
-			stiff[2],
-			restLen[2]);
+			mConfig.stiff[2],
+			mConfig.restLen[2]);
 	}
 	if (j > 1) {
 		Fflexion += calSpringForceBetween(cVers[index].vPos,
 			cVers[index - 2].vPos,
-			stiff[2],
-			restLen[2]);
+			mConfig.stiff[2],
+			mConfig.restLen[2]);
 	}
 	if (i < height - 1) {
 		Fflexion += calSpringForceBetween(cVers[index].vPos,
 			cVers[index + width * 2 + 2].vPos,
-			stiff[2],
-			restLen[2]);
+			mConfig.stiff[2],
+			mConfig.restLen[2]);
 	}
 	if (i > 1) {
 		Fflexion += calSpringForceBetween(cVers[index].vPos,
 			cVers[index - width * 2 - 2].vPos,
-			stiff[2],
-			restLen[2]);
+			mConfig.stiff[2],
+			mConfig.restLen[2]);
 	}
 	return Fflexion;
 }

@@ -40,13 +40,19 @@ private:
 	int width;
 	int height;
 
-	// some global params    
-	float restLen[3];   // structural, shear, and flexion    
-	float stiff[3];     // structural, shear, and flexion    
-	float coefG;           // gravity coefficient    
-	float coefD;           // damping coefficient    
-	float coefV;           // viscous coefficient    
-	glm::vec3 coefFluid;   // viscous coefficient
+	// some global params  
+	struct {
+		float restLen[3];   // structural, shear, and flexion    
+		float stiff[3];     // structural, shear, and flexion    
+		float coefG;           // gravity coefficient    
+		float coefD;           // damping coefficient    
+		float coefV;           // viscous coefficient    
+		glm::vec3 coefFluid;   // viscous coefficient
+
+		float startX;
+		float startY;
+		float startZ;
+	}mConfig;
 
 	float lastCalcTime;
 
