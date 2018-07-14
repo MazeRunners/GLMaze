@@ -52,8 +52,8 @@ vec3 phongLighting(float c_ambient, float c_diffuse, float c_specular, float shi
 void main() 
 {
 	float c_ambient = 0.3;
-	float c_diffuse = 0.3;
-	float c_specular = 0.3;
+	float c_diffuse = 0.8;
+	float c_specular = 0.8;
 	float shininess = 1.0;
 
 	vec3 color = texture(texture_diffuse1, texCoord).rgb;
